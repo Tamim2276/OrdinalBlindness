@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader, Subset
 import numpy as np
 import flwr as fl
 from collections import OrderedDict
-
+from tqdm import tqdm
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -181,8 +181,15 @@ class DRClient(fl.client.NumPyClient):
         total_loss    = 0.0
         total_batches = 0
 
+
         for epoch in range(LOCAL_EPOCHS):
-            for images, labels in self.train_loader:
+            pbar = tqdm(
+                self.train_loader,
+                desc    = f"  Client {self.client_id} | Epoch {epoch+1}/{LOCAL_EPOCHS}",
+                leave   = False,   # cleans up the bar after each epoch finishes
+                ncols   = 80       # fixed width — prevents wrapping on narrow terminals
+            )
+            for images, labels in pbar:
                 images, labels = images.to(self.device), labels.to(self.device)
 
                 self.optimizer.zero_grad()
@@ -193,6 +200,9 @@ class DRClient(fl.client.NumPyClient):
 
                 total_loss    += loss.item()
                 total_batches += 1
+
+                # Show current batch loss in the bar
+                pbar.set_postfix({"loss": f"{loss.item():.4f}"})
 
         avg_loss = total_loss / total_batches if total_batches > 0 else 0.0
 
