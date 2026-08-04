@@ -1,0 +1,30 @@
+# Virtual environments
+ordinalfed_env/
+.venv/
+venv/
+env/
+
+# Local data and downloads
+data/
+*.zip
+*.tar
+*.tar.gz
+
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+*.pyo   
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Project-local notes and outputs
+implementation_plan.md
+*.log
+results/
+outputs/
