@@ -118,14 +118,6 @@ def load_checkpoint(path, num_classes=5, device=None, pretrained=False):
 
 
 def count_parameters(model):
-    """
-    Count total and trainable parameters.
-    Useful for the paper's model description section.
-
-    Returns:
-        total     : Total parameter count
-        trainable : Parameters with requires_grad=True
-    """
     total     = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     return total, trainable

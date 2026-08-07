@@ -21,7 +21,7 @@ class DDRDataset(Dataset):
         else:
             if split == "train":
                 self.transform = transforms.Compose([
-                    transforms.Resize((300, 300)),
+                    transforms.Resize((224, 224)),
                     transforms.RandomHorizontalFlip(p=0.5),
                     transforms.RandomRotation(degrees=15),
                     transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
@@ -31,7 +31,7 @@ class DDRDataset(Dataset):
                 ])
             else:
                 self.transform = transforms.Compose([
-                    transforms.Resize((300, 300)),
+                    transforms.Resize((224, 224)),
                     transforms.ToTensor(),
                     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.229, 0.224, 0.225])
@@ -84,7 +84,7 @@ class APTOSDataset(Dataset):
         else:
             if split == "train":
                 self.transform = transforms.Compose([
-                    transforms.Resize((300, 300)),
+                    transforms.Resize((224, 224)),
                     transforms.RandomHorizontalFlip(p=0.5),
                     transforms.RandomRotation(degrees=15),
                     transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
@@ -94,7 +94,7 @@ class APTOSDataset(Dataset):
                 ])
             else:
                 self.transform = transforms.Compose([
-                    transforms.Resize((300, 300)),
+                    transforms.Resize((224, 224)),
                     transforms.ToTensor(),
                     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.229, 0.224, 0.225])

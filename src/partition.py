@@ -137,7 +137,7 @@ def geographic_partition(labels, num_clients=5):
             # Fallback: if no site has any profile weight for this grade, split evenly
             raw_demand = np.ones(num_clients)
 
-        # Normalise across sites so all samples of this class are assigned
+        # Normalize across sites so all samples of this class are assigned
         proportions = raw_demand / raw_demand.sum()
 
         # Same cumulative split logic as dirichlet_partition — no truncation loss
@@ -158,7 +158,7 @@ def load_partition(partition_path):
     """
     Loads a saved partition JSON and casts string keys back to int.
 
-    JSON always serialises dict keys as strings ("0", "1", ...),
+    JSON always serializes dict keys as strings ("0", "1", ...),
     so mapping[0] would raise KeyError without this conversion.
 
     Usage:

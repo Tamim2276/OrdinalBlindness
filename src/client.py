@@ -8,16 +8,18 @@ evaluate() are called directly — no Ray, no subprocess workers.
 Local training: E=5 epochs per round with class-weighted cross entropy.
 """
 
+import os
+import sys
+import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Subset
-import numpy as np
-import flwr as fl
 from collections import OrderedDict
 from tqdm import tqdm
-import os
-import sys
+import numpy as np
+import flwr as fl
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.dataset import DDRDataset
@@ -29,7 +31,7 @@ from src.metrics import compute_qwk, compute_accuracy
 # E=5 local epochs per round — enough to learn signal, not enough to overfit
 # (centralised baseline showed overfitting starts around epoch 11)
 LOCAL_EPOCHS = 5
-BATCH_SIZE   = 16
+BATCH_SIZE   = 64
 
 # Same class weights as centralised baseline — keeps comparison fair
 # DDR imbalance: G0:~46%  G1:~2.5%  G2:~34%  G3:~1.3%  G4:~9%
@@ -107,8 +109,8 @@ class DRClient(fl.client.NumPyClient):
 
         # ── Optimiser ─────────────────────────────────────────────────────
         # Adam with same lr as centralised baseline for fair comparison.
-        # Note: optimizer state is NOT reset between rounds — this lets
-        # momentum accumulate within a session but resets on process restart.
+        # Optimizer state is NOT reset between rounds — momentum accumulates
+        # within a session, which helps convergence in later rounds.
         self.optimizer = optim.Adam(self.model.parameters(), lr=1e-4)
 
     # ── Parameter serialisation ────────────────────────────────────────────────
@@ -118,10 +120,10 @@ class DRClient(fl.client.NumPyClient):
         Pack model weights into a list of NumPy arrays for aggregation.
 
         state_dict() → OrderedDict of {layer_name: tensor}
-        We extract just the tensors, move to CPU (XPU tensors can't convert
-        to NumPy directly), and convert.
+        We move each tensor to CPU first (XPU tensors can't convert to NumPy
+        directly) then convert.
 
-        Example output shape sequence for EfficientNet-B3:
+        Example shape sequence for EfficientNet-B3:
             [array(32,3,3,3), array(32,), array(96,32,1,1), ...]
               ↑ stem weights    ↑ stem bias  ↑ block 0 weights
         """
@@ -139,8 +141,7 @@ class DRClient(fl.client.NumPyClient):
 
         zip() pairs layer names with incoming arrays:
             ("conv_stem.weight", array(...)),
-            ("bn1.weight",       array(...)),
-            ...
+            ("bn1.weight",       array(...)), ...
         strict=True raises immediately if any layer is missing or mismatched.
         """
         params_dict = zip(self.model.state_dict().keys(), parameters)
@@ -181,27 +182,33 @@ class DRClient(fl.client.NumPyClient):
         total_loss    = 0.0
         total_batches = 0
 
-
         for epoch in range(LOCAL_EPOCHS):
+            # tqdm wraps the DataLoader to show a live progress bar.
+            # leave=False cleans up the bar after each epoch so the terminal
+            # doesn't fill up with 25 static bars (5 clients × 5 epochs).
+            # ncols=80 fixes the bar width to prevent wrapping.
             pbar = tqdm(
                 self.train_loader,
-                desc    = f"  Client {self.client_id} | Epoch {epoch+1}/{LOCAL_EPOCHS}",
-                leave   = False,   # cleans up the bar after each epoch finishes
-                ncols   = 80       # fixed width — prevents wrapping on narrow terminals
+                desc  = f"  Client {self.client_id} | Epoch {epoch+1}/{LOCAL_EPOCHS}",
+                leave = False,
+                ncols = 80
             )
+
             for images, labels in pbar:
                 images, labels = images.to(self.device), labels.to(self.device)
 
                 self.optimizer.zero_grad()
-                outputs = self.model(images)
-                loss    = self.criterion(outputs, labels)
+
+                # autocast uses bfloat16 on XPU — halves memory bandwidth, ~1.5x faster
+                with torch.autocast(device_type="xpu", dtype=torch.bfloat16):
+                    outputs = self.model(images)
+                    loss    = self.criterion(outputs, labels)
+
                 loss.backward()
                 self.optimizer.step()
 
                 total_loss    += loss.item()
                 total_batches += 1
-
-                # Show current batch loss in the bar
                 pbar.set_postfix({"loss": f"{loss.item():.4f}"})
 
         avg_loss = total_loss / total_batches if total_batches > 0 else 0.0
@@ -234,17 +241,25 @@ class DRClient(fl.client.NumPyClient):
         self.set_parameters(parameters)
 
         self.model.eval()
-        running_loss  = 0.0
+        running_loss          = 0.0
         all_preds, all_labels = [], []
 
+        pbar = tqdm(
+            self.val_loader,
+            desc  = f"  Client {self.client_id} | Eval",
+            leave = False,
+            ncols = 80
+        )
+
         with torch.no_grad():
-            for images, labels in self.val_loader:
+            for images, labels in pbar:
                 images, labels = images.to(self.device), labels.to(self.device)
-                outputs        = self.model(images)
-                loss           = self.criterion(outputs, labels)
+
+                with torch.autocast(device_type="xpu", dtype=torch.bfloat16):
+                    outputs = self.model(images)
+                    loss    = self.criterion(outputs, labels)
 
                 running_loss += loss.item()
-
                 _, preds = torch.max(outputs, dim=1)
                 all_preds.extend(preds.cpu().numpy())
                 all_labels.extend(labels.cpu().numpy())
@@ -278,7 +293,7 @@ def run_fedavg_round(clients, global_weights):
     Returns:
         new_global_weights : Aggregated weights after this round
         round_metrics      : Dict with avg_train_loss, avg_val_loss,
-                             avg_qwk, per_client_qwk
+                             avg_qwk, avg_accuracy, per_client_qwk
     """
     # ── FIT ───────────────────────────────────────────────────────────────────
     all_weights   = []
@@ -293,6 +308,11 @@ def run_fedavg_round(clients, global_weights):
         all_weights.append(weights)
         all_n_samples.append(n_samples)
         train_losses.append(fit_metrics["train_loss"])
+        print(
+            f"  Client {client.client_id} done | "
+            f"n={n_samples} | "
+            f"train_loss={fit_metrics['train_loss']:.4f}"
+        )
 
     # ── AGGREGATE — FedAvg weighted average ───────────────────────────────────
     # For each layer: new_weight = Σ_k (n_k / n_total) * weight_k
@@ -306,11 +326,12 @@ def run_fedavg_round(clients, global_weights):
         )
         for layer in range(len(global_weights))
     ]
+    print(f"  Aggregated weights from {total_samples} total samples")
 
     # ── EVALUATE ──────────────────────────────────────────────────────────────
-    val_losses   = []
-    val_qwks     = []
-    val_accs     = []
+    val_losses = []
+    val_qwks   = []
+    val_accs   = []
 
     for client in clients:
         loss, n_val, eval_metrics = client.evaluate(
@@ -355,7 +376,6 @@ if __name__ == "__main__":
       5. Loss stays finite across all 5 rounds
       6. All 5 clients participate every round
     """
-    import json
 
     print("=" * 60)
     print("  Task 3.1 — FL Client Smoke Test (5 rounds, IID)")
@@ -367,8 +387,8 @@ if __name__ == "__main__":
     data_dir = os.path.join(base_dir, 'data', 'DDR', 'DR_grading')
 
     # ── Load IID partition ─────────────────────────────────────────────────────
-    # IID is the fairest smoke test — removes data skew as a variable.
-    # If it breaks here, the bug is in the FL machinery, not the data.
+    # IID removes data skew as a variable — if FL breaks here the bug is
+    # in the machinery, not the data distribution.
     partition_path = os.path.join(base_dir, 'data', 'partitions', 'iid.json')
     with open(partition_path, 'r') as f:
         raw = json.load(f)
@@ -384,8 +404,8 @@ if __name__ == "__main__":
         print(f"  Client {i}: {len(train_partition[i])} train samples")
     print(f"  Val set : {len(val_indices)} samples (shared across all clients)\n")
 
-    # ── Instantiate all 5 clients ──────────────────────────────────────────────
-    # All created upfront in the same process — no subprocess spawning.
+    # ── Instantiate all 5 clients upfront ─────────────────────────────────────
+    # All in the same process — no subprocess spawning, no RAM duplication.
     print("[Smoke] Instantiating 5 clients...")
     clients = [
         DRClient(
@@ -399,25 +419,30 @@ if __name__ == "__main__":
     ]
     print("  ✅ All 5 clients instantiated\n")
 
+    # ── Note about first batch ─────────────────────────────────────────────────
+    # XPU compiles kernels on the very first batch — this takes 30-60 seconds
+    # with no output. The tqdm bar will appear after the first batch completes.
+    # Task Manager should show GPU activity during this silent period.
+    print("[Smoke] Note: first batch may take 30-60s while XPU compiles kernels.")
+    print("        GPU activity in Task Manager confirms it is running.\n")
+
     # ── Initialise global weights ──────────────────────────────────────────────
-    # All clients share the same random init (same architecture + same default
-    # torch seed), so client 0's weights are a valid starting point.
     global_weights = clients[0].get_parameters(config={})
     round_losses   = []
 
-    # ── Run 5 FL rounds using the shared helper ────────────────────────────────
+    # ── Run 5 FL rounds ────────────────────────────────────────────────────────
     for round_num in range(1, 6):
         print(f"── Round {round_num}/5 " + "─" * 38)
 
         global_weights, metrics = run_fedavg_round(clients, global_weights)
         round_losses.append(metrics["avg_val_loss"])
 
-        # Per-client fit summary
-        # (run_fedavg_round already ran fit internally — metrics come back aggregated)
-        print(f"  Avg Train Loss : {metrics['avg_train_loss']:.4f}")
-        print(f"  Avg Val Loss   : {metrics['avg_val_loss']:.4f}")
-        print(f"  Avg Val QWK    : {metrics['avg_qwk']:.4f}")
-        print(f"  Per-client QWK : {metrics['per_client_qwk']}\n")
+        print(f"\n  Round {round_num} Summary:")
+        print(f"    Avg Train Loss : {metrics['avg_train_loss']:.4f}")
+        print(f"    Avg Val Loss   : {metrics['avg_val_loss']:.4f}")
+        print(f"    Avg Val QWK    : {metrics['avg_qwk']:.4f}")
+        print(f"    Avg Accuracy   : {metrics['avg_accuracy']:.4f}")
+        print(f"    Per-client QWK : {metrics['per_client_qwk']}\n")
 
     # ── Gate checks ───────────────────────────────────────────────────────────
     print("=" * 60)
@@ -447,8 +472,7 @@ if __name__ == "__main__":
         "🚨 Weight shapes changed during round-trip — serialisation bug"
     print("✅ Weight round-trip (NumPy ↔ model) preserves all layer shapes")
 
-    # 5. All 5 clients participated (checked implicitly — run_fedavg_round
-    #    iterates over all clients and would have raised if any failed)
+    # 5. All 5 clients participated every round
     print("✅ All 5 clients participated every round")
 
     print("\n✅ GATE PASSED — Task 3.1 complete.")
