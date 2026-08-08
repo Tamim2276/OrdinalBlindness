@@ -33,7 +33,7 @@ from src.client  import DRClient, run_fedavg_round
 # 30 rounds is sufficient with warm-start from QWK=0.8494.
 # The model is already well-trained — FL only needs to adapt it.
 # Time estimate: ~40 min/round × 30 rounds = ~20 hours per partition.
-NUM_ROUNDS   = 20
+NUM_ROUNDS   = 10
 NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5   # matches DRClient constant — shown here for clarity
 
