@@ -29,7 +29,7 @@ from src.model   import get_model, get_device, load_checkpoint
 from src.client  import DRClient, run_fedavg_round
 
 
-# ── Config ────────────────────────────────────────────────────────────────────
+#Config
 # 30 rounds is sufficient with warm-start from QWK=0.8494.
 # The model is already well-trained — FL only needs to adapt it.
 # Time estimate: ~40 min/round × 30 rounds = ~20 hours per partition.
@@ -38,7 +38,7 @@ NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5   # matches DRClient constant — shown here for clarity
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+#Helpers
 
 def load_partition(path):
     """Load partition JSON and cast string keys back to int."""
@@ -78,7 +78,7 @@ def weights_to_model(global_weights, device):
     return model
 
 
-# ── Core experiment ───────────────────────────────────────────────────────────
+#Core experiment
 
 def run_experiment(partition_name, train_partition, val_indices,
                    data_dir, results_dir, device, init_weights):
@@ -86,7 +86,7 @@ def run_experiment(partition_name, train_partition, val_indices,
     Run full 30-round FedAvg on one partition and save results to CSV.
 
     Args:
-        partition_name  : e.g. "dirichlet_0.1" — used for filenames + logging
+        partition_name  :"dirichlet_0.1" — used for filenames + logging
         train_partition : Dict mapping client_id -> list of train indices
         val_indices     : Shared val indices for all clients
         data_dir        : Path to data/DDR/DR_grading/
@@ -103,7 +103,7 @@ def run_experiment(partition_name, train_partition, val_indices,
           f"Local epochs: {LOCAL_EPOCHS}")
     print(f"{'='*60}")
 
-    # ── Build clients ─────────────────────────────────────────────────────────
+    #Build clients
     print(f"\n[Setup] Building {NUM_CLIENTS} clients for '{partition_name}'...")
     clients = build_clients(train_partition, val_indices, data_dir, device)
 
@@ -112,12 +112,12 @@ def run_experiment(partition_name, train_partition, val_indices,
         print(f"  Client {client.client_id}: "
               f"{len(client.train_dataset)} train samples")
 
-    # ── Warm-start from centralised checkpoint ────────────────────────────────
+    # Warm-start from centralised checkpoint
     # Each partition gets a fresh independent copy of the init weights.
     # .copy() prevents one experiment from mutating another's starting point.
     global_weights = [w.copy() for w in init_weights]
 
-    # ── CSV setup ─────────────────────────────────────────────────────────────
+    #CSV setup
     csv_path   = os.path.join(results_dir, f"fedavg_{partition_name}.csv")
     fieldnames = [
         "round",
@@ -132,7 +132,7 @@ def run_experiment(partition_name, train_partition, val_indices,
     best_round = -1
     history    = []
 
-    # ── FL rounds ─────────────────────────────────────────────────────────────
+    #FL rounds
     print(f"\n[Train] Starting {NUM_ROUNDS} rounds...\n")
 
     for round_num in range(1, NUM_ROUNDS + 1):
@@ -149,7 +149,7 @@ def run_experiment(partition_name, train_partition, val_indices,
 
         is_best = metrics["avg_qwk"] > best_qwk
 
-        # ── Console output ────────────────────────────────────────────────
+        #Console output
         print(f"\n  Avg Train Loss : {metrics['avg_train_loss']:.4f}")
         print(f"  Avg Val Loss   : {metrics['avg_val_loss']:.4f}")
         print(f"  Avg Val QWK    : {metrics['avg_qwk']:.4f}"
@@ -157,7 +157,7 @@ def run_experiment(partition_name, train_partition, val_indices,
         print(f"  Avg Accuracy   : {metrics['avg_accuracy']:.4f}")
         print(f"  Per-client QWK : {per_client_qwk}\n")
 
-        # ── Save best checkpoint ──────────────────────────────────────────
+        #Save best checkpoint
         if is_best:
             best_qwk   = metrics["avg_qwk"]
             best_round = round_num
@@ -177,7 +177,7 @@ def run_experiment(partition_name, train_partition, val_indices,
             )
             del best_model   # free VRAM immediately after saving
 
-        # ── Accumulate history ────────────────────────────────────────────
+        #Accumulate history
         history.append({
             "round"          : round_num,
             "avg_train_loss" : round(metrics["avg_train_loss"], 6),
@@ -191,7 +191,7 @@ def run_experiment(partition_name, train_partition, val_indices,
             "client_4_qwk"   : round(per_client_qwk[4],        6),
         })
 
-        # ── Write CSV after every round ───────────────────────────────────
+        # Write CSV after every round
         # Writing incrementally means results are never lost if the run
         # is interrupted (Ctrl+C, power cut, etc.)
         with open(csv_path, 'w', newline='') as f:
@@ -199,7 +199,7 @@ def run_experiment(partition_name, train_partition, val_indices,
             writer.writeheader()
             writer.writerows(history)
 
-    # ── Partition complete ────────────────────────────────────────────────────
+    #Partition complete
     print(f"[Done] '{partition_name}' complete.")
     print(f"  Best QWK : {best_qwk:.4f} at round {best_round}")
     print(f"  CSV      : {csv_path}")
@@ -208,11 +208,11 @@ def run_experiment(partition_name, train_partition, val_indices,
     return best_qwk
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+#Main
 
 def main():
 
-    # ── Argument parser — run one partition or all ────────────────────────────
+    #Argument parser — run one partition or all
     parser = argparse.ArgumentParser(
         description="FedAvg baseline for OrdinalFed"
     )
@@ -250,7 +250,7 @@ def main():
 
     device = get_device()
 
-    # ── Paths ─────────────────────────────────────────────────────────────────
+    #Paths
     base_dir       = os.path.abspath(
                          os.path.join(os.path.dirname(__file__), '..')
                      )
@@ -259,7 +259,7 @@ def main():
     results_dir    = os.path.join(base_dir, 'results')
     os.makedirs(results_dir, exist_ok=True)
 
-    # ── Load centralised checkpoint as warm-start ─────────────────────────────
+    #Load centralised checkpoint as warm-start
     # Starting from QWK=0.8494 means:
     #   - Clients fine-tune from a strong, already-converged model
     #   - 30 rounds is enough to see the Non-IID degradation clearly
@@ -282,7 +282,7 @@ def main():
     ]
     del init_model   # free memory — weights are all we need
 
-    # ── Shared val set ────────────────────────────────────────────────────────
+    # Shared val set
     # All clients across all experiments use the same val set.
     # This ensures QWK numbers are directly comparable across partitions.
     full_val    = DDRDataset(root_dir=data_dir, split="valid")
@@ -290,7 +290,7 @@ def main():
     print(f"[Data] Val set: {len(val_indices)} images "
           f"(shared across all clients and partitions)\n")
 
-    # ── Run selected partition(s) ─────────────────────────────────────────────
+    #Run selected partition(s)
     summary = {}   # partition_name → best_qwk
 
     for partition_name in partitions:
@@ -314,7 +314,7 @@ def main():
         )
         summary[partition_name] = best_qwk
 
-    # ── Final summary + gate checks ───────────────────────────────────────────
+    # Final summary + gate checks
     # Only print summary if more than one partition was run, or if all done
     centralised_qwk = float(meta.get("best_qwk", 0.8494))
 

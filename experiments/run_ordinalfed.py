@@ -3,7 +3,7 @@ run_ordinalfed.py — Day 5: OrdinalFed — the paper contribution
 
 OrdinalFed = OrdinalLoss + QWK-weighted aggregation + adaptive β
 
-Expected to outperform FedAvg and FedProx at α=0.1 and real_site.
+Expected to outperform FedAvg and FedProx at alpha=0.1 and real_site.
 This is the headline result of the paper.
 
 Usage:
@@ -38,7 +38,7 @@ from src.strategy_ordinalfed import (
 )
 
 
-# ── Config ────────────────────────────────────────────────────────────────────
+#Config
 NUM_ROUNDS   = 10     # sufficient with warm-start from QWK=0.8494
 NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5      # never reduce — critical for Non-IID effect
@@ -46,7 +46,7 @@ LAM          = 0.5    # OrdinalLoss lambda: 0.5 = equal CE + ordinal
 BETA0        = 0.9    # starting β for adaptive schedule
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+#Helpers
 
 def load_partition(path):
     """Load partition JSON and cast string keys back to int."""
@@ -81,7 +81,7 @@ def build_clients(train_partition, val_indices, data_dir, device):
     ]
 
 
-# ── Core experiment ───────────────────────────────────────────────────────────
+#Core experiment
 
 def run_experiment(partition_name, train_partition, val_indices,
                    server_val_dataset, data_dir, results_dir,
@@ -90,7 +90,7 @@ def run_experiment(partition_name, train_partition, val_indices,
     Run full OrdinalFed experiment on one partition.
 
     Args:
-        partition_name     : e.g. "dirichlet_0.1"
+        partition_name     :"dirichlet_0.1"
         train_partition    : Dict mapping client_id -> list of train indices
         val_indices        : Shared val indices for all clients
         server_val_dataset : 50-image balanced server val set V
@@ -108,23 +108,23 @@ def run_experiment(partition_name, train_partition, val_indices,
           f"λ={LAM} | β₀={BETA0}")
     print(f"{'='*60}")
 
-    # ── Build clients ─────────────────────────────────────────────────────────
+    #Build clients
     print(f"\n[Setup] Building {NUM_CLIENTS} OrdinalFed clients...")
     clients = build_clients(train_partition, val_indices, data_dir, device)
     for client in clients:
         print(f"  Client {client.client_id}: "
               f"{len(client.train_dataset)} train samples")
 
-    # ── Warm-start ────────────────────────────────────────────────────────────
+    #Warm-start
     global_weights = [w.copy() for w in init_weights]
 
-    # ── Print β schedule for this run ─────────────────────────────────────────
+    #Print β schedule for this run
     print(f"\n[β Schedule] β₀={BETA0}, T={NUM_ROUNDS}:")
     for r in [1, 3, 5, 7, NUM_ROUNDS]:
         b = compute_beta(r, NUM_ROUNDS, BETA0)
         print(f"  Round {r:>2}: β={b:.4f}")
 
-    # ── CSV setup ─────────────────────────────────────────────────────────────
+    #CSV setup
     csv_path   = os.path.join(results_dir, f"ordinalfed_{partition_name}.csv")
     fieldnames = [
         "round", "beta", "lam",
@@ -169,7 +169,7 @@ def run_experiment(partition_name, train_partition, val_indices,
 
         is_best = metrics["avg_qwk"] > best_qwk
 
-        # ── Console output ────────────────────────────────────────────────
+        #Console output
         print(f"\n  β              : {metrics['beta']:.4f}")
         print(f"  Avg Train Loss : {metrics['avg_train_loss']:.4f}")
         print(f"  Avg Val Loss   : {metrics['avg_val_loss']:.4f}")
@@ -179,7 +179,7 @@ def run_experiment(partition_name, train_partition, val_indices,
         print(f"  Per-client QWK : {per_client_qwk}")
         print(f"  Server val QWK : {server_val_qwks}\n")
 
-        # ── Save best checkpoint ──────────────────────────────────────────
+        #Save best checkpoint
         if is_best:
             best_qwk   = metrics["avg_qwk"]
             best_round = round_num
@@ -201,7 +201,7 @@ def run_experiment(partition_name, train_partition, val_indices,
             )
             del best_model
 
-        # ── Accumulate history ────────────────────────────────────────────
+        #Accumulate history
         history.append({
             "round"          : round_num,
             "beta"           : round(metrics["beta"],           4),
@@ -222,13 +222,13 @@ def run_experiment(partition_name, train_partition, val_indices,
             "server_qwk_4"   : round(server_val_qwks[4],       6),
         })
 
-        # ── Write CSV after every round (crash-safe) ──────────────────────
+        #Write CSV after every round (crash-safe)
         with open(csv_path, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(history)
 
-    # ── Partition complete ────────────────────────────────────────────────────
+    #Partition complete
     print(f"[Done] '{partition_name}' complete.")
     print(f"  Best QWK : {best_qwk:.4f} at round {best_round}")
     print(f"  CSV      : {csv_path}")
@@ -237,11 +237,11 @@ def run_experiment(partition_name, train_partition, val_indices,
     return best_qwk
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+#Main
 
 def main():
 
-    # ── Argument parser ───────────────────────────────────────────────────────
+    #Argument parser
     parser = argparse.ArgumentParser(
         description="OrdinalFed experiment runner"
     )
@@ -275,7 +275,7 @@ def main():
 
     device = get_device()
 
-    # ── Paths ─────────────────────────────────────────────────────────────────
+    #Paths
     base_dir       = os.path.abspath(
                          os.path.join(os.path.dirname(__file__), '..')
                      )
@@ -284,7 +284,7 @@ def main():
     results_dir    = os.path.join(base_dir, 'results')
     os.makedirs(results_dir, exist_ok=True)
 
-    # ── Load centralised checkpoint ───────────────────────────────────────────
+    #Load centralised checkpoint
     ckpt_path = os.path.join(results_dir, "best_centralised.pth")
     assert os.path.exists(ckpt_path), (
         f"\n🚨 Centralised checkpoint not found:\n   {ckpt_path}\n"
@@ -302,7 +302,7 @@ def main():
     ]
     del init_model
 
-    # ── Load server val set V ─────────────────────────────────────────────────
+    #Load server val set V
     server_val_path = os.path.join(partitions_dir, 'server_val.json')
     assert os.path.exists(server_val_path), (
         f"\n🚨 server_val.json not found:\n   {server_val_path}\n"
@@ -312,13 +312,13 @@ def main():
     print(f"[Data] Server val set V: {len(server_val_dataset)} images "
           f"(10 per grade, balanced)")
 
-    # ── Shared client val set ─────────────────────────────────────────────────
+    #Shared client val set
     full_val    = DDRDataset(root_dir=data_dir, split="valid")
     val_indices = list(range(len(full_val)))
     print(f"[Data] Client val set : {len(val_indices)} images "
           f"(shared across all clients)\n")
 
-    # ── Run experiments ───────────────────────────────────────────────────────
+    #Run experiments
     summary = {}
 
     for partition_name in partitions:
@@ -343,7 +343,7 @@ def main():
         )
         summary[partition_name] = best_qwk
 
-    # ── Final summary + gate check ────────────────────────────────────────────
+    #Final summary + gate check
     centralised_qwk = float(meta.get("best_qwk", 0.8494))
 
     print("\n" + "=" * 60)
@@ -369,7 +369,7 @@ def main():
             print("   Check results vs FedAvg and FedProx CSVs")
 
     print(f"\n  All results saved to: {results_dir}")
-    print("  Next step: write the paper! See Day 4-7 plan.")
+    print("  Next step: write the paper")
 
 
 if __name__ == "__main__":

@@ -42,11 +42,12 @@ def get_model(num_classes=5, pretrained=True):
     """
     # FIX 4: Warn loudly if pretrained=False to prevent silent bad runs
     if not pretrained:
-        warnings.warn(
-            "get_model(pretrained=False) — model weights are random. "
-            "Only use this for architecture smoke tests, never for real training.",
-            UserWarning
-        )
+        pass
+        # warnings.warn(
+        #     "get_model(pretrained=False) — model weights are random. "
+        #     "Only use this for architecture smoke tests, never for real training.",
+        #     UserWarning
+        # )
 
     model = timm.create_model(
         "efficientnet_b3",

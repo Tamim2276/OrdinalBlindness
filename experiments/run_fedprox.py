@@ -2,10 +2,10 @@
 run_fedprox.py — Task 3.3: FedProx baseline across partitions
 
 FedProx adds a proximal term to local training:
-    loss = CrossEntropy(w) + (μ/2) × ||w - w_global||²
+    loss = CrossEntropy(w) + (μ/2) * ||w - w_global||²
 
 This prevents clients from drifting too far from the global model
-under Non-IID conditions, improving over plain FedAvg at α=0.1.
+under Non-IID conditions, improving over plain FedAvg at alpha=0.1.
 
 Usage:
     # Single partition with specific μ:
@@ -41,7 +41,7 @@ from src.model          import get_model, get_device, load_checkpoint
 from src.client_fedprox import DRFedProxClient, run_fedprox_round
 
 
-# ── Config ────────────────────────────────────────────────────────────────────
+#Config
 # 10 rounds is sufficient with warm-start from QWK=0.8494.
 # Pattern (IID vs Non-IID gap) is clearly visible by round 5-8.
 # Time: ~20 min/round × 10 rounds × 3 partitions = ~10 hours overnight.
@@ -53,7 +53,7 @@ LOCAL_EPOCHS = 5
 MU_SWEEP = [0.001, 0.01, 0.1]
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+#Helpers
 
 def load_partition(path):
     """Load partition JSON and cast string keys back to int."""
@@ -91,7 +91,7 @@ def weights_to_model(global_weights, device):
     return model
 
 
-# ── Core experiment ───────────────────────────────────────────────────────────
+#Core experiment
 
 def run_experiment(partition_name, train_partition, val_indices,
                    data_dir, results_dir, device, init_weights, mu):
@@ -99,7 +99,7 @@ def run_experiment(partition_name, train_partition, val_indices,
     Run full FedProx experiment on one partition with one μ value.
 
     Args:
-        partition_name  : e.g. "dirichlet_0.1"
+        partition_name  :"dirichlet_0.1"
         train_partition : Dict mapping client_id -> list of train indices
         val_indices     : Shared val indices for all clients
         data_dir        : Path to data/DDR/DR_grading/
@@ -119,7 +119,7 @@ def run_experiment(partition_name, train_partition, val_indices,
           f"Local epochs: {LOCAL_EPOCHS}")
     print(f"{'='*60}")
 
-    # ── Build clients ─────────────────────────────────────────────────────────
+    #Build clients
     print(f"\n[Setup] Building {NUM_CLIENTS} FedProx clients (μ={mu})...")
     clients = build_clients(
         train_partition, val_indices, data_dir, device, mu
@@ -128,11 +128,10 @@ def run_experiment(partition_name, train_partition, val_indices,
         print(f"  Client {client.client_id}: "
               f"{len(client.train_dataset)} train samples")
 
-    # ── Warm-start ────────────────────────────────────────────────────────────
-    # Fresh copy of centralised weights for each experiment
+    #Warm-start
     global_weights = [w.copy() for w in init_weights]
 
-    # ── CSV setup ─────────────────────────────────────────────────────────────
+    #CSV setup
     csv_path   = os.path.join(results_dir, f"{run_name}.csv")
     fieldnames = [
         "round", "mu",
@@ -163,7 +162,7 @@ def run_experiment(partition_name, train_partition, val_indices,
 
         is_best = metrics["avg_qwk"] > best_qwk
 
-        # ── Console output ────────────────────────────────────────────────
+        #Console output
         print(f"\n  μ              : {mu}")
         print(f"  Avg Train Loss : {metrics['avg_train_loss']:.4f}")
         print(f"  Avg Val Loss   : {metrics['avg_val_loss']:.4f}")
@@ -172,7 +171,7 @@ def run_experiment(partition_name, train_partition, val_indices,
         print(f"  Avg Accuracy   : {metrics['avg_accuracy']:.4f}")
         print(f"  Per-client QWK : {per_client_qwk}\n")
 
-        # ── Save best checkpoint ──────────────────────────────────────────
+        #Save best checkpoint
         if is_best:
             best_qwk   = metrics["avg_qwk"]
             best_round = round_num
@@ -193,7 +192,7 @@ def run_experiment(partition_name, train_partition, val_indices,
             )
             del best_model
 
-        # ── Accumulate history ────────────────────────────────────────────
+        #Accumulate history
         history.append({
             "round"          : round_num,
             "mu"             : mu,
@@ -208,13 +207,13 @@ def run_experiment(partition_name, train_partition, val_indices,
             "client_4_qwk"   : round(per_client_qwk[4],        6),
         })
 
-        # ── Write CSV after every round (crash-safe) ──────────────────────
+        #Write CSV after every round (crash-safe)
         with open(csv_path, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(history)
 
-    # ── Partition complete ────────────────────────────────────────────────────
+    #Partition complete
     print(f"[Done] '{partition_name}' μ={mu} complete.")
     print(f"  Best QWK : {best_qwk:.4f} at round {best_round}")
     print(f"  CSV      : {csv_path}")
@@ -222,11 +221,10 @@ def run_experiment(partition_name, train_partition, val_indices,
     return best_qwk
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
-
+#Main
 def main():
 
-    # ── Argument parser ───────────────────────────────────────────────────────
+    #Argument parser
     parser = argparse.ArgumentParser(
         description="FedProx baseline for OrdinalFed"
     )
@@ -261,7 +259,7 @@ def main():
     )
     args = parser.parse_args()
 
-    # ── Determine what to run ─────────────────────────────────────────────────
+    #Determine what to run
     partitions = (
         ["iid", "dirichlet_1.0", "dirichlet_0.5", "dirichlet_0.1", "real_site"]
         if args.partition == "all"
@@ -282,7 +280,7 @@ def main():
 
     device = get_device()
 
-    # ── Paths ─────────────────────────────────────────────────────────────────
+    #Paths
     base_dir       = os.path.abspath(
                          os.path.join(os.path.dirname(__file__), '..')
                      )
@@ -291,7 +289,7 @@ def main():
     results_dir    = os.path.join(base_dir, 'results')
     os.makedirs(results_dir, exist_ok=True)
 
-    # ── Load centralised checkpoint ───────────────────────────────────────────
+    #Load centralised checkpoint    
     ckpt_path = os.path.join(results_dir, "best_centralised.pth")
     assert os.path.exists(ckpt_path), (
         f"\n🚨 Centralised checkpoint not found at:\n   {ckpt_path}\n"
@@ -309,13 +307,13 @@ def main():
     ]
     del init_model
 
-    # ── Shared val set ────────────────────────────────────────────────────────
+    #Shared val set
     full_val    = DDRDataset(root_dir=data_dir, split="valid")
     val_indices = list(range(len(full_val)))
     print(f"[Data] Val set: {len(val_indices)} images "
           f"(shared across all clients)\n")
 
-    # ── Run experiments ───────────────────────────────────────────────────────
+    #Run experiments
     # summary[partition][mu] = best_qwk
     summary = {p: {} for p in partitions}
 
@@ -342,7 +340,7 @@ def main():
             )
             summary[partition_name][mu] = best_qwk
 
-    # ── Final summary ─────────────────────────────────────────────────────────
+    #Final summary
     centralised_qwk = float(meta.get("best_qwk", 0.8494))
 
     print("\n" + "=" * 60)
@@ -358,7 +356,7 @@ def main():
             print(f"    {status} μ={mu:<6} QWK={qwk:.4f}  (gap={gap:+.4f})")
         print()
 
-    # ── μ sweep recommendation ────────────────────────────────────────────────
+    #μ sweep recommendation
     if args.sweep and "dirichlet_0.1" in summary:
         best_mu  = max(
             summary["dirichlet_0.1"],
@@ -374,21 +372,21 @@ def main():
         print(f"    python experiments/run_fedprox.py "
               f"--partition dirichlet_0.1 --mu {best_mu}")
 
-    # ── Gate check ────────────────────────────────────────────────────────────
+    #Gate check
     if "dirichlet_0.1" in summary:
         best_fedprox_qwk = max(summary["dirichlet_0.1"].values())
 
         print()
         if best_fedprox_qwk > 0.72:
-            print("✅ FedProx improves over FedAvg at α=0.1 "
+            print("✅ FedProx improves over FedAvg at alpha=0.1 "
                   f"(QWK={best_fedprox_qwk:.4f} vs FedAvg ~0.72)")
             print("   OrdinalFed should improve further — proceed to Day 5")
         else:
-            print("⚠️  FedProx did not clearly improve over FedAvg at α=0.1")
+            print("⚠️  FedProx did not clearly improve over FedAvg at alpha=0.1")
             print("   Check μ values — try --sweep for a wider search")
 
     print(f"\n  All results saved to: {results_dir}")
-    print("  Next step: experiments/run_ordinalfed.py (Day 5)")
+    print("  Next step: experiments/run_ordinalfed.py")
 
 
 if __name__ == "__main__":
