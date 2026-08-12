@@ -1,3 +1,5 @@
+from collections.abc import Set
+
 import numpy as np
 import os
 import json
@@ -171,7 +173,8 @@ def load_partition(partition_path):
 
 
 if __name__ == "__main__":
-
+    # Set a fixed random seed for reproducibility of partitions
+    np.random.seed(42) 
     #1. Load labels from DDR train.txt
     data_dir = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'data', 'DDR', 'DR_grading')

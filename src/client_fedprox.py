@@ -89,7 +89,7 @@ class DRFedProxClient(DRClient):
         # These must not change during local training — detach() removes them
         # from the computation graph so they're treated as constants
         global_params = [
-            param.detach().clone()
+            param.detach().clone().to(self.device)
             for param in self.model.parameters()
         ]
 
@@ -128,7 +128,7 @@ class DRFedProxClient(DRClient):
                     self.model.parameters(), global_params
                 ):
                     proximal_term += (
-                        (local_param - global_param.to(self.device)) ** 2
+                        (local_param - global_param) ** 2
                     ).sum()
 
                 # ── Combined loss ─────────────────────────────────────────
