@@ -60,45 +60,22 @@ class DRFedProxClient(DRClient):
         # Initialise everything from DRClient — data, model, optimizer, etc.
         super().__init__(*args, **kwargs)
         self.mu = mu
-
+        
     def fit(self, parameters, config):
-        """
-        FedProx local training — same as FedAvg but adds proximal term.
-
-        The proximal term ||w - w_global||² is computed as the sum of
-        squared differences between current local weights and the global
-        weights received at the start of this round.
-
-        Args:
-            parameters : Global model weights (list of NumPy arrays)
-            config     : Dict from server. May contain {"mu": 0.01} to
-                         override the instance-level mu at runtime.
-
-        Returns:
-            Same as DRClient.fit():
-            (updated_weights, num_train_samples, metrics_dict)
-        """
-        # Allow server to override mu via config dict at runtime
-        # e.g. during μ sweep: run_fedprox.py passes {"mu": 0.001}
         mu = config.get("mu", self.mu)
-
-        # Step 1 — Load the latest global model
         self.set_parameters(parameters)
 
-        # Step 2 — Store a FROZEN copy of the global weights for proximal term
-        # These must not change during local training — detach() removes them
-        # from the computation graph so they're treated as constants
+        # Store FROZEN copy of global weights
         global_params = [
             param.detach().clone().to(self.device)
             for param in self.model.parameters()
         ]
 
-        # Step 3 — Local training with proximal term
         self.model.train()
         total_loss    = 0.0
         total_batches = 0
 
-        for epoch in range(self.mu and 5 or 5):   # always LOCAL_EPOCHS=5
+        for epoch in range(5):
             pbar = tqdm(
                 self.train_loader,
                 desc  = f"  Client {self.client_id} | Epoch {epoch+1}/5",
@@ -106,58 +83,48 @@ class DRFedProxClient(DRClient):
                 ncols = 80
             )
 
-            for images, labels in pbar:
+            for batch_idx, (images, labels) in enumerate(pbar):
                 images, labels = images.to(self.device), labels.to(self.device)
 
                 self.optimizer.zero_grad()
-                outputs = self.model(images)
 
-                # ── Task loss (cross entropy with class weights) ───────────
-                task_loss = self.criterion(outputs, labels)
+                # ── Mixed precision forward pass ──────────────────────────────
+                with torch.autocast(device_type="xpu", dtype=torch.bfloat16):
+                    outputs   = self.model(images)
+                    task_loss = self.criterion(outputs, labels)
 
-                # ── Proximal term: (μ/2) × ||w - w_global||² ─────────────
-                # Iterates over all parameter tensors in the model and
-                # accumulates the squared L2 distance from global weights.
-                #
-                # Why sum of squared differences (not L2 norm)?
-                # The L2 norm would be sqrt(Σ(w-w_g)²) which is harder to
-                # differentiate and scale. Squared form is standard in
-                # the FedProx paper and well-behaved numerically.
-                proximal_term = 0.0
-                for local_param, global_param in zip(
-                    self.model.parameters(), global_params
-                ):
-                    proximal_term += (
-                        (local_param - global_param) ** 2
-                    ).sum()
+                # Only task loss goes through autograd graph (super fast)
+                task_loss.backward()
 
-                # ── Combined loss ─────────────────────────────────────────
-                # μ=0.01: proximal term contributes ~1% of task loss magnitude
-                # This is a soft constraint — training still mostly follows
-                # local data but can't drift too far from the global model
-                loss = task_loss + (mu / 2.0) * proximal_term
+                # ── Proximal term (Applied directly to gradients) ─────────────
+                # This mathematically equals adding the penalty to the loss,
+                # but bypasses the autograd graph entirely. No PROX_FREQ needed!
+                proximal_term_val = 0.0
+                with torch.no_grad():
+                    for local_param, global_param in zip(self.model.parameters(), global_params):
+                        diff = local_param - global_param
+                        
+                        # Add gradient: d/dw [ (mu/2) * ||w - w_global||^2 ] = mu * (w - w_global)
+                        if local_param.grad is not None:
+                            local_param.grad.add_(mu * diff)
+                        
+                        # Accumulate penalty value for logging
+                        proximal_term_val += (diff ** 2).sum().item()
 
-                loss.backward()
                 self.optimizer.step()
 
-                total_loss    += task_loss.item()   # log task loss only
+                total_loss    += task_loss.item()
                 total_batches += 1
-
                 pbar.set_postfix({
-                    "task" : f"{task_loss.item():.4f}",
-                    "prox" : f"{(mu/2)*proximal_term.item():.4f}"
+                    "task": f"{task_loss.item():.4f}",
+                    "prox": f"{(mu/2)*proximal_term_val:.4f}"
                 })
 
         avg_loss = total_loss / total_batches if total_batches > 0 else 0.0
-
         return (
             self.get_parameters(config={}),
             len(self.train_dataset),
-            {
-                "train_loss" : float(avg_loss),
-                "client_id"  : self.client_id,
-                "mu"         : mu
-            }
+            {"train_loss": float(avg_loss), "client_id": self.client_id, "mu": mu}
         )
 
 

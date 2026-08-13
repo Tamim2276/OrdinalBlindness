@@ -43,7 +43,7 @@ NUM_ROUNDS   = 10     # sufficient with warm-start from QWK=0.8494
 NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5      # never reduce — critical for Non-IID effect
 LAM          = 0.5    # OrdinalLoss lambda: 0.5 = equal CE + ordinal
-BETA0        = 0.9    # starting β for adaptive schedule
+BETA0        = 0.5    # starting β for adaptive schedule
 
 
 #Helpers

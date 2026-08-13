@@ -32,6 +32,7 @@ OrdinalFed improves over FedAvg and FedProx in two ways:
 
 import os
 import sys
+from numpy.random import beta
 import torch
 import torch.nn as nn
 import numpy as np
@@ -138,22 +139,24 @@ def ordinalfed_aggregate(all_weights, all_n_samples, qwk_scores, beta):
     # ── QWK weights: κ_k / Σκ ─────────────────────────────────────────────
     # QWK can be negative (worse than random) — shift to [0, ∞) first
     # by taking max(0, κ_k). This means clients with negative QWK get
-    # zero weight — they don't contribute to aggregation at all.
-    qwk_clipped = [max(0.0, q) for q in qwk_scores]
-    qwk_total   = sum(qwk_clipped)
-
-    if qwk_total == 0.0:
-        # All clients have non-positive QWK — fall back to FedAvg weighting
-        # This can happen in very early rounds before the model has learned
-        qwk_weights = fedavg_weights
-    else:
-        qwk_weights = [q / qwk_total for q in qwk_clipped]
+    # zero weight — they don't contribute to aggregation at all. 
+    TEMPERATURE = 3.0   # higher = more uniform, lower = more selective
+    qwk_shifted = [max(0.1, q) for q in qwk_scores]  # floor at 0.1
+    exp_scores  = [np.exp(q / TEMPERATURE) for q in qwk_shifted]
+    exp_total   = sum(exp_scores)
+    qwk_weights = [e / exp_total for e in exp_scores]
 
     # ── Hybrid weights: β × FedAvg + (1-β) × QWK ─────────────────────────
-    hybrid_weights = [
+    MIN_WEIGHT = 0.03
+    raw_weights = [
         beta * fedavg_weights[k] + (1 - beta) * qwk_weights[k]
         for k in range(num_clients)
     ]
+    # Apply floor
+    floored = [max(w, MIN_WEIGHT) for w in raw_weights]
+    # Renormalise to sum to 1
+    weight_sum     = sum(floored)
+    hybrid_weights = [w / weight_sum for w in floored]
 
     # Normalise to ensure they sum exactly to 1.0 (floating point safety)
     weight_sum     = sum(hybrid_weights)
