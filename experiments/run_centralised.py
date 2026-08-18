@@ -22,7 +22,7 @@ from tqdm import tqdm
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.dataset import DDRDataset
-from src.model   import get_model, get_device, save_checkpoint, count_parameters
+from src.model   import get_model, get_device, get_autocast_context, save_checkpoint, count_parameters
 from src.metrics import compute_qwk, compute_accuracy, per_grade_metrics
 
 
@@ -41,13 +41,14 @@ def train_one_epoch(model, loader, criterion, optimizer, device):
         images, labels = images.to(device), labels.to(device)
 
         optimizer.zero_grad()
-        outputs = model(images)
-        loss    = criterion(outputs, labels)
+        # Mixed precision: float16 on CUDA, bfloat16 on XPU, disabled on CPU
+        with get_autocast_context(device):
+            outputs = model(images)
+            loss    = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
 
         running_loss += loss.item()
-        # Show current batch loss in the progress bar
         pbar.set_postfix({"batch_loss": f"{loss.item():.4f}"})
 
     avg_loss = running_loss / len(loader)

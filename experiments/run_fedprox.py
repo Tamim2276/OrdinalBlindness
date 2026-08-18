@@ -41,16 +41,20 @@ from src.model          import get_model, get_device, load_checkpoint
 from src.client_fedprox import DRFedProxClient, run_fedprox_round
 
 
-#Config
-# 10 rounds is sufficient with warm-start from QWK=0.8494.
-# Pattern (IID vs Non-IID gap) is clearly visible by round 5-8.
-# Time: ~20 min/round × 10 rounds × 3 partitions = ~10 hours overnight.
-NUM_ROUNDS   = 10
+# Rounds: 30 for the hardest partition (dirichlet_0.1), 10 for others.
+# Pattern (IID vs Non-IID gap) is clearly visible by round 5-8 for IID.
+DEFAULT_ROUNDS       = 10
+DIRICHLET_01_ROUNDS  = 30
 NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5
 
 # μ values to sweep — run on dirichlet_0.1 to find best μ for paper
 MU_SWEEP = [0.001, 0.01, 0.1]
+
+
+def get_num_rounds(partition_name):
+    """Return the appropriate number of rounds for this partition."""
+    return DIRICHLET_01_ROUNDS if partition_name == "dirichlet_0.1" else DEFAULT_ROUNDS
 
 
 #Helpers
@@ -111,11 +115,12 @@ def run_experiment(partition_name, train_partition, val_indices,
     Returns:
         best_qwk : Best validation QWK achieved across all rounds
     """
+    num_rounds = get_num_rounds(partition_name)
     run_name = f"fedprox_{partition_name}_mu{mu}"
 
     print(f"\n{'='*60}")
     print(f"  FedProx | Partition: {partition_name} | μ={mu}")
-    print(f"  Rounds: {NUM_ROUNDS} | Clients: {NUM_CLIENTS} | "
+    print(f"  Rounds: {num_rounds} | Clients: {NUM_CLIENTS} | "
           f"Local epochs: {LOCAL_EPOCHS}")
     print(f"{'='*60}")
 
@@ -146,10 +151,10 @@ def run_experiment(partition_name, train_partition, val_indices,
     best_round = -1
     history    = []
 
-    print(f"\n[Train] Starting {NUM_ROUNDS} rounds (μ={mu})...\n")
+    print(f"\n[Train] Starting {num_rounds} rounds (μ={mu})...\n")
 
-    for round_num in range(1, NUM_ROUNDS + 1):
-        print(f"── Round {round_num}/{NUM_ROUNDS}  "
+    for round_num in range(1, num_rounds + 1):
+        print(f"── Round {round_num}/{num_rounds}  "
               f"[{partition_name} | μ={mu}] " + "─" * 15)
 
         global_weights, metrics = run_fedprox_round(

@@ -39,11 +39,19 @@ from src.strategy_ordinalfed import (
 
 
 #Config
-NUM_ROUNDS   = 10     # sufficient with warm-start from QWK=0.8494
+# 30 rounds for dirichlet_0.1 to capture the full collapse + recovery arc.
+# 10 rounds is sufficient for IID and real_site.
+DEFAULT_ROUNDS       = 10
+DIRICHLET_01_ROUNDS  = 30
 NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5      # never reduce — critical for Non-IID effect
 LAM          = 0.5    # OrdinalLoss lambda: 0.5 = equal CE + ordinal
 BETA0        = 0.5    # starting β for adaptive schedule
+
+
+def get_num_rounds(partition_name):
+    """Return the appropriate number of rounds for this partition."""
+    return DIRICHLET_01_ROUNDS if partition_name == "dirichlet_0.1" else DEFAULT_ROUNDS
 
 
 #Helpers
@@ -102,9 +110,11 @@ def run_experiment(partition_name, train_partition, val_indices,
     Returns:
         best_qwk : Best validation QWK achieved
     """
+    num_rounds = get_num_rounds(partition_name)
+
     print(f"\n{'='*60}")
     print(f"  OrdinalFed | Partition: {partition_name}")
-    print(f"  Rounds: {NUM_ROUNDS} | Clients: {NUM_CLIENTS} | "
+    print(f"  Rounds: {num_rounds} | Clients: {NUM_CLIENTS} | "
           f"λ={LAM} | β₀={BETA0}")
     print(f"{'='*60}")
 
@@ -119,9 +129,9 @@ def run_experiment(partition_name, train_partition, val_indices,
     global_weights = [w.copy() for w in init_weights]
 
     #Print β schedule for this run
-    print(f"\n[β Schedule] β₀={BETA0}, T={NUM_ROUNDS}:")
-    for r in [1, 3, 5, 7, NUM_ROUNDS]:
-        b = compute_beta(r, NUM_ROUNDS, BETA0)
+    print(f"\n[β Schedule] β₀={BETA0}, T={num_rounds}:")
+    for r in [1, 3, 5, 7, num_rounds]:
+        b = compute_beta(r, num_rounds, BETA0)
         print(f"  Round {r:>2}: β={b:.4f}")
 
     #CSV setup
@@ -142,10 +152,10 @@ def run_experiment(partition_name, train_partition, val_indices,
     best_round = -1
     history    = []
 
-    print(f"\n[Train] Starting {NUM_ROUNDS} rounds...\n")
+    print(f"\n[Train] Starting {num_rounds} rounds...\n")
 
-    for round_num in range(1, NUM_ROUNDS + 1):
-        print(f"── Round {round_num}/{NUM_ROUNDS}  "
+    for round_num in range(1, num_rounds + 1):
+        print(f"── Round {round_num}/{num_rounds}  "
               f"[{partition_name}] " + "─" * 20)
 
         global_weights, metrics = run_ordinalfed_round(
@@ -154,7 +164,7 @@ def run_experiment(partition_name, train_partition, val_indices,
             server_val_dataset = server_val_dataset,
             device             = device,
             round_num          = round_num,
-            total_rounds       = NUM_ROUNDS,
+            total_rounds       = num_rounds,
             beta0              = BETA0
         )
 

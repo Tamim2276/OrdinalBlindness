@@ -23,7 +23,7 @@ import flwr as fl
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.dataset import DDRDataset
-from src.model   import get_model, get_device
+from src.model   import get_model, get_device, get_autocast_context
 from src.metrics import compute_qwk, compute_accuracy
 
 
@@ -82,19 +82,22 @@ class DRClient(fl.client.NumPyClient):
         # pin_memory=False — pin_memory only speeds up host→GPU transfers on
         # CUDA. On XPU (Intel Arc) and CPU it has no effect, so we disable it
         # to avoid wasting memory on page-locked buffers.
+        # pin_memory=True speeds up host→GPU transfers on CUDA.
+        # On XPU and CPU it has no effect so we set it conditionally.
+        _pin = (device.type == "cuda")
         self.train_loader = DataLoader(
             self.train_dataset,
             batch_size  = BATCH_SIZE,
             shuffle     = True,
             num_workers = 0,
-            pin_memory  = False
+            pin_memory  = _pin
         )
         self.val_loader = DataLoader(
             self.val_dataset,
             batch_size  = BATCH_SIZE,
             shuffle     = False,
             num_workers = 0,
-            pin_memory  = False
+            pin_memory  = _pin
         )
 
         # ── Model ─────────────────────────────────────────────────────────
@@ -199,8 +202,8 @@ class DRClient(fl.client.NumPyClient):
 
                 self.optimizer.zero_grad()
 
-                # autocast uses bfloat16 on XPU — halves memory bandwidth, ~1.5x faster
-                with torch.autocast(device_type="xpu", dtype=torch.bfloat16):
+                # Mixed-precision forward: float16 on CUDA, bfloat16 on XPU, disabled on CPU
+                with get_autocast_context(self.device):
                     outputs = self.model(images)
                     loss    = self.criterion(outputs, labels)
 
@@ -255,7 +258,7 @@ class DRClient(fl.client.NumPyClient):
             for images, labels in pbar:
                 images, labels = images.to(self.device), labels.to(self.device)
 
-                with torch.autocast(device_type="xpu", dtype=torch.bfloat16):
+                with get_autocast_context(self.device):
                     outputs = self.model(images)
                     loss    = self.criterion(outputs, labels)
 

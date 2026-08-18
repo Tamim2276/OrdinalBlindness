@@ -33,7 +33,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.client  import DRClient, run_fedavg_round
 from src.dataset import DDRDataset
-from src.model   import get_device
+from src.model   import get_device, get_autocast_context
 from tqdm import tqdm
 
 
@@ -88,8 +88,8 @@ class DRFedProxClient(DRClient):
 
                 self.optimizer.zero_grad()
 
-                # ── Mixed precision forward pass ──────────────────────────────
-                with torch.autocast(device_type="xpu", dtype=torch.bfloat16):
+                # Mixed-precision forward: float16 on CUDA, bfloat16 on XPU, disabled on CPU
+                with get_autocast_context(self.device):
                     outputs   = self.model(images)
                     task_loss = self.criterion(outputs, labels)
 

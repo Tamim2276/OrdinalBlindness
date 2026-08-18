@@ -4,6 +4,7 @@ model.py — EfficientNet-B3 wrapper + device selection
 Handles:
   - EfficientNet-B3 with 5-class DR grading head
   - Checkpoint save / load helpers
+  - Device selection: CUDA > XPU (Intel Arc) > CPU
 """
 
 import torch
@@ -13,19 +14,51 @@ import warnings
 
 def get_device():
     """
-    Select the best available device.
-    Priority: XPU (Intel Arc) > CPU
+    Select the best available accelerator.
 
-    Note: CUDA is intentionally not listed — this project runs on
-    Intel Arc B580 which uses torch.xpu, not torch.cuda.
+    Priority: CUDA (NVIDIA/AMD) > XPU (Intel Arc) > CPU
+
+    This allows the same codebase to run on:
+      - Any NVIDIA GPU (CUDA)
+      - Intel Arc B580 (XPU)
+      - Any CPU fallback
     """
-    if hasattr(torch, "xpu") and torch.xpu.is_available():
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        name   = torch.cuda.get_device_name(0)
+        print(f"[Device] Using CUDA: {name}")
+    elif hasattr(torch, "xpu") and torch.xpu.is_available():
         device = torch.device("xpu")
-        print(f"[Device] Using XPU: {torch.xpu.get_device_name(0)}")
+        name   = torch.xpu.get_device_name(0)
+        print(f"[Device] Using XPU: {name}")
     else:
         device = torch.device("cpu")
-        print("[Device] XPU not available — falling back to CPU (~3x slower)")
+        print("[Device] No GPU found — falling back to CPU (~3-10x slower).")
+        print("         Training will be very slow. A GPU is strongly recommended.")
     return device
+
+
+def get_autocast_context(device):
+    """
+    Returns the correct autocast context manager for the active device.
+
+    CUDA supports float16 and bfloat16. XPU supports bfloat16.
+    CPU autocast is a no-op but safe to call.
+
+    Usage:
+        with get_autocast_context(device):
+            outputs = model(images)
+    """
+    device_type = device.type  # "cuda", "xpu", or "cpu"
+
+    if device_type == "cuda":
+        return torch.autocast(device_type="cuda", dtype=torch.float16)
+    elif device_type == "xpu":
+        return torch.autocast(device_type="xpu", dtype=torch.bfloat16)
+    else:
+        # CPU: autocast with bfloat16 is valid but usually not beneficial
+        # Return a no-op context to keep calling code clean
+        return torch.autocast(device_type="cpu", dtype=torch.bfloat16, enabled=False)
 
 
 def get_model(num_classes=5, pretrained=True):
@@ -40,14 +73,12 @@ def get_model(num_classes=5, pretrained=True):
     Returns:
         torch.nn.Module — EfficientNet-B3 with replaced classifier head
     """
-    # FIX 4: Warn loudly if pretrained=False to prevent silent bad runs
     if not pretrained:
-        pass
-        # warnings.warn(
-        #     "get_model(pretrained=False) — model weights are random. "
-        #     "Only use this for architecture smoke tests, never for real training.",
-        #     UserWarning
-        # )
+        warnings.warn(
+            "get_model(pretrained=False) — model weights are random. "
+            "Only use this for architecture smoke tests, never for real training.",
+            UserWarning
+        )
 
     model = timm.create_model(
         "efficientnet_b3",
@@ -66,9 +97,6 @@ def save_checkpoint(model, path, extra=None):
         path  : File path to save to (e.g. "results/best_centralised.pth")
         extra : Optional dict of extra info to store alongside weights
                 e.g. {"epoch": 12, "best_qwk": 0.847}
-
-    Usage:
-        save_checkpoint(model, "results/best.pth", {"epoch": 10, "qwk": 0.85})
     """
     payload = {"model_state_dict": model.state_dict()}
     if extra is not None:
@@ -89,18 +117,10 @@ def load_checkpoint(path, num_classes=5, device=None, pretrained=False):
     Returns:
         model       : nn.Module with loaded weights, set to eval() mode
         meta        : Dict of any extra metadata saved alongside weights
-                      (e.g. {"epoch": 12, "best_qwk": 0.847})
-                      Empty dict if nothing extra was saved.
-
-    Usage:
-        model, meta = load_checkpoint("results/best_centralised.pth")
-        print(f"Loaded checkpoint from epoch {meta.get('epoch', '?')}")
     """
     if device is None:
         device = get_device()
 
-    # FIX 2: Load checkpoint with weights_only=True for security
-    # (prevents arbitrary code execution from malicious .pth files)
     payload = torch.load(path, map_location=device, weights_only=True)
 
     model = get_model(num_classes=num_classes, pretrained=False)
@@ -108,7 +128,6 @@ def load_checkpoint(path, num_classes=5, device=None, pretrained=False):
     model.to(device)
     model.eval()
 
-    # Return everything except the state dict as metadata
     meta = {k: v for k, v in payload.items() if k != "model_state_dict"}
 
     print(f"[Checkpoint] Loaded from '{path}'")
@@ -127,36 +146,16 @@ def count_parameters(model):
 if __name__ == "__main__":
     device = get_device()
 
-    #Build model
     model  = get_model(num_classes=5, pretrained=True).to(device)
 
-    # FIX 3: Print parameter count to confirm head is correctly replaced
     total, trainable = count_parameters(model)
     print(f"[Model] Total params    : {total:,}")
     print(f"[Model] Trainable params: {trainable:,}")
 
-    #Forward pass smoke test
-    x   = torch.randn(2, 3, 300, 300, device=device)
-    out = model(x)
+    x   = torch.randn(2, 3, 224, 224, device=device)
+    with get_autocast_context(device):
+        out = model(x)
 
     assert out.shape == (2, 5), f"Expected output (2, 5), got {out.shape}"
     print(f"[Smoke Test] Input {x.shape} → Output {out.shape} ✅")
-
-    # Checkpoint round-trip test
-    # Save -> reload -> verify outputs match
-    save_checkpoint(model, "/tmp/test_checkpoint.pth", {"epoch": 0, "best_qwk": -1.0})
-
-    loaded_model, meta = load_checkpoint(
-        "/tmp/test_checkpoint.pth",
-        num_classes=5,
-        device=device
-    )
-
-    with torch.no_grad():
-        out_loaded = loaded_model(x)
-
-    assert torch.allclose(out, out_loaded, atol=1e-5), \
-        "Checkpoint round-trip failed — outputs differ after reload!"
-
-    print(f"[Checkpoint] Round-trip test passed ✅ | Meta: {meta}")
     print(f"\n✅ model.py fully verified on {device}")

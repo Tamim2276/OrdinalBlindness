@@ -29,13 +29,18 @@ from src.model   import get_model, get_device, load_checkpoint
 from src.client  import DRClient, run_fedavg_round
 
 
-#Config
-# 30 rounds is sufficient with warm-start from QWK=0.8494.
-# The model is already well-trained — FL only needs to adapt it.
-# Time estimate: ~40 min/round × 30 rounds = ~20 hours per partition.
-NUM_ROUNDS   = 10
+# Rounds: 30 for the hardest partition (dirichlet_0.1) so the paper
+# captures enough rounds to see both collapse AND recovery patterns.
+# 10 rounds is sufficient for IID and real_site (already converge by round 8).
+DEFAULT_ROUNDS  = 10
+DIRICHLET_01_ROUNDS = 30
 NUM_CLIENTS  = 5
 LOCAL_EPOCHS = 5   # matches DRClient constant — shown here for clarity
+
+
+def get_num_rounds(partition_name):
+    """Return the appropriate number of rounds for this partition."""
+    return DIRICHLET_01_ROUNDS if partition_name == "dirichlet_0.1" else DEFAULT_ROUNDS
 
 
 #Helpers
@@ -83,7 +88,8 @@ def weights_to_model(global_weights, device):
 def run_experiment(partition_name, train_partition, val_indices,
                    data_dir, results_dir, device, init_weights):
     """
-    Run full 30-round FedAvg on one partition and save results to CSV.
+    Run full FedAvg on one partition and save results to CSV.
+    Uses 30 rounds for dirichlet_0.1, 10 rounds for all others.
 
     Args:
         partition_name  :"dirichlet_0.1" — used for filenames + logging
@@ -97,9 +103,11 @@ def run_experiment(partition_name, train_partition, val_indices,
     Returns:
         best_qwk : Best validation QWK achieved across all rounds
     """
+    num_rounds = get_num_rounds(partition_name)
+
     print(f"\n{'='*60}")
     print(f"  FedAvg | Partition: {partition_name}")
-    print(f"  Rounds: {NUM_ROUNDS} | Clients: {NUM_CLIENTS} | "
+    print(f"  Rounds: {num_rounds} | Clients: {NUM_CLIENTS} | "
           f"Local epochs: {LOCAL_EPOCHS}")
     print(f"{'='*60}")
 
@@ -133,11 +141,11 @@ def run_experiment(partition_name, train_partition, val_indices,
     history    = []
 
     #FL rounds
-    print(f"\n[Train] Starting {NUM_ROUNDS} rounds...\n")
+    print(f"\n[Train] Starting {num_rounds} rounds...\n")
 
-    for round_num in range(1, NUM_ROUNDS + 1):
+    for round_num in range(1, num_rounds + 1):
 
-        print(f"── Round {round_num}/{NUM_ROUNDS}  [{partition_name}] "
+        print(f"── Round {round_num}/{num_rounds}  [{partition_name}] "
               + "─" * 20)
 
         global_weights, metrics = run_fedavg_round(clients, global_weights)
