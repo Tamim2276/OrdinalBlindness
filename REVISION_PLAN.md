@@ -1,6 +1,8 @@
 # OrdinalFed: 4-Day Revision Plan, Step by Step
 
-**Paper:** WIECON-ECE 2026, paper #518. Page limit: **6 pages**. A response to the reviewers is required.
+**Paper:** WIECON-ECE 2026, paper #518. Status: **conditionally accepted**.
+
+**What must be submitted:** the revised paper (≤ 6 pages, still anonymous) and a **separate one-page response PDF**. Both are due **within 5 days of the notification email**, through the Google Form linked in that email. The similarity score should stay below 30%.
 
 **Setup:** Intel Arc B580 on Windows, using **Git Bash**. Every command below is bash.
 
@@ -29,7 +31,8 @@ Everything below was tested on your B580 with a small fake dataset, including si
 | `src/strategy_accwt.py` | The new AccWt baseline. |
 | `resume_queue.sh` | Activates the environment and resumes the queue. |
 | `paper/revision/method_eq4_5.tex` | **New Eq. 4–6 text matching the code** (your decision D1), in passive voice. |
-| `paper/revision/response_to_reviewers.md` | Response letter skeleton. Fill in the numbers on Day 4. |
+| `overleaf/response/response_to_reviewers.tex` | One-page response to the reviewers (LaTeX). Fill in the red `[TBD]` markers on Day 4. |
+| `overleaf/ordinalfed_multifile/` | Paper source with Reviewer #3 fixes, verified references and the new Eq. 4–6 already applied (Steps 15–16). |
 | Bug fixes | `NUM_ROUNDS` crash; FedProx GPU syncs; GPU kernel cache (saved ~1 min per round); emoji crash in Git Bash. |
 
 **Measured on your B580:** training 282 img/s, evaluation 981 img/s. That gives **≈3 min per round**, plus ~1 min of GPU kernel compilation at the start of each run and after every power cut.
@@ -393,15 +396,24 @@ Copy the tables and figures into Overleaf, then back up (Step 13).
 | V-E | Use the measured `server_score_time_s` (about 1 s per round) instead of "under 200 ms" |
 | V-F (Limitations) | One dataset; 3 seeds; V requires labelled data on the server |
 
-### Step 28: Response to reviewers [OFF] (1 h)
+### Step 28: One-page response PDF [NET] (1 h)
 
-Fill in every `[TBD]` in `paper/revision/response_to_reviewers.md` from the final tables, and delete any row whose change wasn't made.
+The conference requires a **separate one-page PDF**. The source is `overleaf/response/response_to_reviewers.tex`.
+
+1. Replace every red `\TBD{...}` with the final numbers and table numbers. Delete any row whose change wasn't made.
+2. Zip it and upload it as a **second** Overleaf project (New Project → Upload Project):
+   ```bash
+   python -c "import shutil; shutil.make_archive('response_upload', 'zip', 'overleaf/response')"
+   ```
+3. Compile it, check that it is **exactly one page** with no red text left, and download the PDF.
 
 ### Step 29: Final checks [OFF] (1 h)
 
 - [ ] ≤ 6 pages
 - [ ] `grep -rn "TODO(Day" overleaf/` prints nothing (every marked number has been updated)
-- [ ] **If this is the camera-ready (accepted paper):** author names and affiliations are added (`main.tex` still has them removed for double-blind review), the IEEE copyright notice from the WIECON-ECE author kit is included, and the PDF passes IEEE PDF eXpress if the conference requires it
+- [ ] The response PDF is one page and has no red `[TBD]` text
+- [ ] **No author names** in the paper or the response. This is still the double-blind revision; author details come later with the camera-ready instructions.
+- [ ] Similarity stays below 30%: no sentences copied from cited papers (your own wording is fine)
 - [ ] Figure fonts are readable with the PDF at 100% zoom
 - [ ] Every figure and table is described in the text before it appears
 - [ ] Every reference has a DOI or a URL
@@ -410,7 +422,9 @@ Fill in every `[TBD]` in `paper/revision/response_to_reviewers.md` from the fina
 
 ### Step 30: Submit [NET] (at least 3 h before the deadline)
 
-- Export the final PDF early and keep a copy on your phone.
+- Submit **both PDFs** (revised paper + one-page response) through the form linked in the conditional-acceptance email (`forms.gle/KmTRvCdf5pLsM6Fs5`), **not** through CMT.
+- Then keep checking the CMT portal for the final Accept/Reject decision and the camera-ready instructions.
+- Export both PDFs early and keep copies on your phone.
 - If power or internet cuts out near the deadline, submit from a laptop on battery or through your phone's mobile hotspot.
 
 ---
