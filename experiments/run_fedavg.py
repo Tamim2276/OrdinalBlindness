@@ -252,7 +252,7 @@ def main():
 
     print("=" * 60)
     print("  OrdinalFed — Task 3.2: FedAvg Baseline")
-    print(f"  {NUM_ROUNDS} rounds × {NUM_CLIENTS} clients × {LOCAL_EPOCHS} local epochs")
+    print(f"  {DEFAULT_ROUNDS} rounds ({DIRICHLET_01_ROUNDS} for dirichlet_0.1) × {NUM_CLIENTS} clients × {LOCAL_EPOCHS} local epochs")
     print(f"  Partition(s): {args.partition}")
     print("=" * 60)
 

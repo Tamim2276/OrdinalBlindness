@@ -7,9 +7,15 @@ Handles:
   - Device selection: CUDA > XPU (Intel Arc) > CPU
 """
 
+import os
+import sys
 import torch
 import timm
 import warnings
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from src.run_utils import atomic_torch_save
 
 
 def get_device():
@@ -101,7 +107,8 @@ def save_checkpoint(model, path, extra=None):
     payload = {"model_state_dict": model.state_dict()}
     if extra is not None:
         payload.update(extra)
-    torch.save(payload, path)
+    # Crash-safe: a power cut mid-save can't leave a half-written checkpoint
+    atomic_torch_save(payload, path)
 
 
 def load_checkpoint(path, num_classes=5, device=None, pretrained=False):

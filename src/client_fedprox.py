@@ -31,7 +31,7 @@ import torch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.client  import DRClient, run_fedavg_round
+from src.client  import DRClient, run_fedavg_round, LOCAL_EPOCHS
 from src.dataset import DDRDataset
 from src.model   import get_device, get_autocast_context
 from tqdm import tqdm
@@ -75,10 +75,10 @@ class DRFedProxClient(DRClient):
         total_loss    = 0.0
         total_batches = 0
 
-        for epoch in range(5):
+        for epoch in range(LOCAL_EPOCHS):
             pbar = tqdm(
                 self.train_loader,
-                desc  = f"  Client {self.client_id} | Epoch {epoch+1}/5",
+                desc  = f"  Client {self.client_id} | Epoch {epoch+1}/{LOCAL_EPOCHS}",
                 leave = False,
                 ncols = 80
             )
@@ -99,17 +99,18 @@ class DRFedProxClient(DRClient):
                 # ── Proximal term (Applied directly to gradients) ─────────────
                 # This mathematically equals adding the penalty to the loss,
                 # but bypasses the autograd graph entirely. No PROX_FREQ needed!
-                proximal_term_val = 0.0
+                proximal_sq = torch.zeros((), device=self.device)
                 with torch.no_grad():
                     for local_param, global_param in zip(self.model.parameters(), global_params):
                         diff = local_param - global_param
-                        
+
                         # Add gradient: d/dw [ (mu/2) * ||w - w_global||^2 ] = mu * (w - w_global)
                         if local_param.grad is not None:
                             local_param.grad.add_(mu * diff)
-                        
-                        # Accumulate penalty value for logging
-                        proximal_term_val += (diff ** 2).sum().item()
+
+                        # Accumulate penalty on the device for logging — calling .item() here
+                        # would force a GPU sync for every parameter tensor, every batch
+                        proximal_sq += (diff ** 2).sum()
 
                 self.optimizer.step()
 
@@ -117,7 +118,7 @@ class DRFedProxClient(DRClient):
                 total_batches += 1
                 pbar.set_postfix({
                     "task": f"{task_loss.item():.4f}",
-                    "prox": f"{(mu/2)*proximal_term_val:.4f}"
+                    "prox": f"{(mu/2)*proximal_sq.item():.4f}"
                 })
 
         avg_loss = total_loss / total_batches if total_batches > 0 else 0.0

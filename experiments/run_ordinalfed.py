@@ -277,7 +277,7 @@ def main():
 
     print("=" * 60)
     print("  OrdinalFed — Day 5: Paper Contribution")
-    print(f"  {NUM_ROUNDS} rounds × {NUM_CLIENTS} clients × "
+    print(f"  {DEFAULT_ROUNDS} rounds ({DIRICHLET_01_ROUNDS} for dirichlet_0.1) × {NUM_CLIENTS} clients × "
           f"{LOCAL_EPOCHS} local epochs")
     print(f"  λ={LAM} | β₀={BETA0}")
     print(f"  Partition(s): {args.partition}")
