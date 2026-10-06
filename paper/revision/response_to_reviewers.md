@@ -31,9 +31,9 @@ The authors thank both reviewers for their careful reading and constructive comm
 
 | # | Comment | Response | Where |
 |---|---|---|---|
-| 1 | Check the format of multiple consecutive references, e.g. [1-2]. | All multi-reference citations now use a single `\cite{}`, so they are typeset consistently in IEEE style (e.g. [5], [6] and [5]–[7]). | Throughout |
+| 1 | Check the format of multiple consecutive references, e.g. [1-2]. | Consecutive citations are now given as a range (e.g. [5]–[6]), and references are numbered in order of first citation. | Sec. I, References |
 | 2 | Tiny font inside Figs. 1–2. | Both figures were regenerated at their printed width with all text at 8 pt or larger. | Figs. 1–2 |
-| 3 | Description is missing for Figs. 1–2. | Each figure is now introduced and described in the text before it appears. | Secs. IV-B, V-B |
-| 4 | Follow IEEE citation format; DOI is required. | All references follow IEEE style and include a DOI (or a URL and access date where none exists). Incomplete entries [7] and [8] were completed. | References |
+| 3 | Description is missing for Figs. 1–2. | Each figure is now introduced in the text before it appears, with a description of what its panels, bars and lines show. | Secs. IV-B, V-B |
+| 4 | Follow IEEE citation format; DOI is required. | All references were verified against Crossref and arXiv and now follow IEEE style with a DOI (a URL and access date for the IDF Atlas, which has none). Incomplete or incorrect entries were corrected, including venues, author lists, volumes and pages. | References |
 | 5 | Passive voice is preferred. | The manuscript was revised to use the passive voice throughout. | Throughout |
 | 6 | Description should be placed just before all figures and tables. | Every figure and table is now referenced and described in the text before the float. | Throughout |

@@ -1,0 +1,26 @@
+% TODO(Day 4): replace every number below with the new multi-seed test-set
+% results, and mention the ablation, AccWt baseline and repeated runs.
+\begin{abstract}
+Diabetic Retinopathy (DR) remains a major cause of preventable blindness worldwide, 
+impacting roughly 35\% of diabetic patients. Federated learning (FL) enables multiple 
+hospitals to grade DR collaboratively without sharing sensitive retinal images. 
+However, baseline algorithms like FedAvg and FedProx degrade severely under non-IID 
+data distributions caused by varying patient demographics across hospital tiers. To
+address this, \textbf{OrdinalFed} is introduced, which incorporates two components:
+(1)~an \emph{OrdinalLoss} that penalizes grade-skipping errors based on their squared 
+clinical distance, and (2)~a \emph{QWK-weighted aggregation} scheme that uses a 
+cosine-annealing schedule to shift from sample counts to Quadratic Weighted Kappa 
+(QWK) validation scores on a 50-image server set. On the DDR benchmark across three 
+heterogeneity settings, OrdinalFed matches baseline peak QWK ($\approx$0.799) under 
+heavy non-IID skew ($\alpha=0.1$) while raising the worst-case floor to \textbf{0.6238} 
+(compared to 0.5963 for FedProx and 0.4064 for FedAvg), which narrows the best-to-worst 
+gap to 0.1751 rather than 0.2024 and 0.3929. In a realistic multi-tier hospital partition, 
+OrdinalFed achieves a higher peak QWK of \textbf{0.8325} (versus 0.8312 for FedProx 
+and 0.8223 for FedAvg) with no added communication overhead.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Diabetic Retinopathy, Federated Learning, Non-IID,
+Ordinal Loss, QWK-Weighted Aggregation, EfficientNet-B3,
+Medical Imaging
+\end{IEEEkeywords}

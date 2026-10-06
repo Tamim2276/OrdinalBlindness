@@ -1,0 +1,165 @@
+%% ── Section 5: Results and Discussion ───────────────────────
+\section{Results and Discussion}
+\label{sec:results}
+
+% TODO(Day 4): every number in this section comes from the SUBMITTED version
+% (single run, validation split). Replace Tables I-II with
+% results/tables/table_main.tex and table_stability.tex, add
+% table_ablation.tex and table_pergrade.tex, and rewrite the text to match.
+
+\subsection{Peak Diagnostic Performance}
+
+Table~\ref{tab:results} reports the peak validation QWK achieved over 10
+communication rounds. Under the ideal \textbf{IID} setting, all federated algorithms
+reach comparable peak QWK values (0.8357--0.8386), remaining within 0.014 of the
+centralised ceiling (0.8494), confirming that algorithmic overhead is negligible
+when data is evenly distributed.
+
+On the clinically modeled \textbf{Real-Site} partition, OrdinalFed achieves the
+highest peak QWK of \textbf{0.8325}, outperforming FedProx (0.8312) and FedAvg
+(0.8223), closing the gap to the centralised ceiling to just 1.69~pp. Under extreme
+\textbf{Dirichlet ($\alpha=0.1$)} skew, all three methods achieve near-identical
+peak QWK ($\approx$0.799), owing to the strong warm-start initialisation. However,
+peak performance is misleading in Non-IID regimes; the fundamental advantage of
+OrdinalFed lies in its resilience against catastrophic forgetting.
+
+\begin{table}[t]
+\caption{Peak Validation QWK Across 10 Communication Rounds.
+Bold: best FL method per column.}
+\label{tab:results}
+\centering
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Method} &
+\textbf{IID} &
+\textbf{Dirichlet ($\alpha=0.1$)} &
+\textbf{Real-Site} \\
+\midrule
+Centralised (Ceiling) & 0.8494 & 0.8494 & 0.8494 \\
+\midrule
+FedAvg~\cite{mcmahan2017fedavg}
+  & \textbf{0.8386} & \textbf{0.7993} & 0.8223 \\
+FedProx~\cite{li2020fedprox} ($\mu=0.01$)
+  & 0.8357 & 0.7987 & 0.8312 \\
+\textbf{OrdinalFed (Ours)}
+  & 0.8372 & 0.7988 & \textbf{0.8325} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Resilience to Catastrophic Forgetting}
+
+Fig.~\ref{fig:qwk_curves} plots the validation QWK of the global model after each
+communication round for the three partitions (one panel per partition); the dashed
+line marks the centralised ceiling and the dotted line the 0.80 reference threshold.
+% TODO(Day 3): update this description once Fig. 2 is regenerated with
+% mean +/- std bands over seeds.
+As visualised in the central panel, FedAvg suffers
+catastrophic collapse under extreme skew ($\alpha=0.1$), plunging from 0.7870 to
+0.4064 in round~9. This occurs because Client~0's monochromatic Grade~0 dataset
+forces its local gradients to predict all inputs as Grade~0. When aggregated via
+sample counts, this corrupted update shatters the global decision boundaries.
+% TODO(Day 4): the Client 0 explanation is not supported: Client 0 holds 32
+% images (0.5% of the FedAvg weight) and takes only 5 optimiser steps per round.
+% Rewrite from results/runs/*/history.csv (weight_k, server_score_k columns).
+FedProx dampens this instability partially by tethering local weights to the global
+model but still crashes to 0.5963 in round~10. In contrast, OrdinalFed maintains
+consistent diagnostic performance, never falling below a QWK floor of \textbf{0.6238}.
+
+%% FULL-WIDTH FIGURE: QWK Trajectories
+%% (placed after its description — Reviewer #3, comments 3 and 6)
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig4_qwk_combined.pdf}
+  \caption{\normalsize Validation QWK trajectories across 10 communication rounds for
+  IID, Dirichlet ($\alpha=0.1$), and real-site partitions. While FedAvg
+  and FedProx suffer catastrophic collapse under extreme skew ($\alpha=0.1$),
+  OrdinalFed (green curve) maintains robust stability ($\mathrm{QWK} \geq 0.6238$)
+  while achieving the highest peak performance in the realistic real-site partition.}
+  % TODO(Day 4): rewrite caption to match the regenerated figure and new results.
+  \label{fig:qwk_curves}
+\end{figure*}
+
+As quantified in Table~\ref{tab:stability}, OrdinalFed achieves the narrowest
+peak-to-trough fluctuation range (\textbf{0.1751} vs.\ 0.2024 for FedProx and
+0.3929 for FedAvg), ensuring the round-to-round consistency required for reliable
+clinical deployment.
+
+\begin{table}[t]
+\caption{Stability Metrics Under Extreme Dirichlet Skew ($\alpha=0.1$).
+Bold: best value per column ($\uparrow$ Peak/Worst/Mean; $\downarrow$ Range).}
+\label{tab:stability}
+\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method} &
+\textbf{Peak} &
+\textbf{Worst} &
+\textbf{Mean} &
+\textbf{Range} \\
+\midrule
+FedAvg~\cite{mcmahan2017fedavg}
+  & \textbf{0.7993} & 0.4064 & 0.7286 & 0.3929 \\
+FedProx~\cite{li2020fedprox}
+  & 0.7987 & 0.5963 & \textbf{0.7524} & 0.2024 \\
+\textbf{OrdinalFed (Ours)}
+  & 0.7988 & \textbf{0.6238} & 0.7453 & \textbf{0.1751} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Mechanistic Analysis of Stability}
+
+% TODO(Day 4): rewrite this subsection. With the aggregation of Eqs. (5)-(6),
+% no client weight can be pushed "to near zero" (the quality term changes a
+% client's weight by at most 1.35x, and every client keeps >= 0.08).
+% Base the explanation on the logged server scores and weights, and on the
+% ablation table (which component actually provides the stability).
+
+OrdinalFed's stability is driven by two explicit mechanisms acting jointly.
+First, by penalising squared grade distance, \textbf{OrdinalLoss} prevents local
+representations from collapsing into single-class degenerate states. The severe
+penalty for Grade~4 $\to$ Grade~0 misclassifications ensures the network retains
+its ordinal hierarchy even when trained exclusively on Grade~0 images. Second,
+under $\alpha=0.1$, Client~0 produces severe validation degradation on $\mathcal{V}$
+($\kappa_0^t \to 0$). As $\beta(t) \to 0$ in later rounds,
+\textbf{QWK-Weighted Aggregation} automatically suppresses Client~0's weight
+$\omega_0^t$ to near zero, dynamically quarantining the corrupted update before it
+can poison the global model --- the mechanism that prevents the collapse seen in
+FedAvg and FedProx.
+
+\subsection{Clinical Relevance in Real-Site Deployments}
+
+% TODO(Day 4): "1.02 pp" does not match the means quoted below (0.8261 - 0.8176
+% = 0.85 pp); recompute from the new results.
+In the real-site setting (Fig.~\ref{fig:qwk_curves}, right panel), OrdinalFed
+delivers a sustained 1.02~pp gain over FedAvg, yielding a 10-round mean QWK of
+0.8261 versus 0.8176 for FedAvg and 0.8241 for FedProx. The specialist referral
+centre (Client~2, G3/G4-heavy, 643 images) receives moderated aggregation weight
+due to sub-optimal balanced validation performance ($\kappa_2^t \in [0.57, 0.74]$),
+whereas the balanced urban hospital (Client~4) is up-weighted despite its smaller
+sample size (9\%). This demonstrates clinically rational aggregation that aligns
+model influence with diagnostic quality rather than raw data volume.
+
+\subsection{Communication and Computational Overhead}
+
+Because OrdinalFed evaluates QWK scores strictly on the server using proxy set
+$\mathcal{V}$, it requires zero additional communication overhead compared to
+standard FedAvg. The computational burden is limited to exactly $K \times 50$
+forward passes on the server per round, executing in under 200~ms on standard
+hardware, making OrdinalFed highly scalable to larger federations.
+% TODO(Day 4): replace "under 200 ms" with the measured median of the
+% server_score_time_s column in results/runs/ordinalfed_*/history.csv
+% (about 1 s per round for K = 5 on an Intel Arc B580 in testing).
+
+\subsection{Limitations}
+
+Due to severe natural dataset scarcity in the DDR benchmark (Grade~1 represents
+only 5.0\% of the training set), Grade~1 sensitivity remains below 0.15
+across all tested methods.
+% TODO(Day 4): check "below 0.15" against results/tables/table_pergrade.tex. Furthermore, the 50-image server set $\mathcal{V}$
+introduces minor QWK estimation noise in final rounds when $\beta(t) \to 0$.
+Setting a non-zero $\beta$ lower bound and expanding $\mathcal{V}$ via generative
+augmentation are promising directions for future work.

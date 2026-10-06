@@ -140,7 +140,9 @@ git commit -m "Revision: resumable runner, image cache, seeds, test-set eval, Ac
 python -c "from src.dataset import DDRDataset as D; r='data/DDR/DR_grading'; print({s: len(D(r, split=s, use_cache=False)) for s in ['train','valid','test']})"
 ```
 
-Expected: `{'train': 6260, 'valid': 2503, 'test': 2514}`
+Expected: `{'train': 6260, 'valid': 2503, 'test': 3759}`
+
+The old README and the submitted paper said 2,514 test images. That was wrong: 6,260 + 2,503 + 3,759 = 12,522, the gradable total the paper itself quotes.
 
 ### Step 8: Create the partitions and server set V [PC] (2 min)
 
@@ -256,23 +258,38 @@ bash resume_queue.sh --status
 
 It shows runs done, rounds left and estimated GPU hours left.
 
-### Step 15: Put the new Eq. 4–6 into the paper [NET] (30 min)
+### Step 15: Upload the revised paper source to Overleaf [NET] (10 min)
 
-Open `paper/revision/method_eq4_5.tex`:
-1. Replace Sections III-E and III-F with the text at the top of the file.
-2. Make the 5 consistency edits listed at the bottom of the file: Algorithm 1 line 8, contribution 2, delete the old "clamped to zero" sentence, and flag Sections V-C and V-E for Day 4.
+Claude has already edited the LaTeX source in `overleaf/ordinalfed_multifile/`. The untouched submitted version is backed up in `paper/revision/overleaf_submitted_original/`.
 
-The text states honestly that the QWK term shifts a client's weight by at most 1.35×. Keep that in; the ablation will be judged against it.
+1. Zip the revised source:
+   ```bash
+   python -c "import shutil; shutil.make_archive('overleaf_revised', 'zip', 'overleaf/ordinalfed_multifile')"
+   ```
+2. In Overleaf, choose **New Project → Upload Project** and pick `overleaf_revised.zip`. This creates a new project, so your original one stays as a backup.
+3. Click **Recompile** and check that it compiles without errors.
+4. From now on, **edit only the new project**, or only the local files and re-upload. Don't edit both, or the two copies will drift apart.
 
-### Step 16: Reviewer #3 fixes [OFF], DOIs [NET] (3–4 h)
+Every number that depends on the new runs is marked with a comment. To list them all:
+```bash
+grep -rn "TODO(Day" overleaf/
+```
 
-| Reviewer #3 comment | What to do |
+### Step 16: Reviewer #3 fixes [OFF] (mostly done)
+
+| Reviewer #3 comment | Status |
 |---|---|
-| 1. Consecutive citation format ("[1-2]") | Add `\usepackage{cite}` and use one `\cite{a,b,c}` at each place, so IEEE style prints [5], [6] and [5]–[7] consistently. |
-| 2. Tiny fonts in Figs. 1–2 | Claude regenerates both figures at their printed width with fonts of at least 8 pt (Step 18). |
-| 3 & 6. Missing figure descriptions; descriptions must come before figures and tables | Describe every figure and table in the text **before** it appears, and move each float after the paragraph that first mentions it. For example, Fig. 1 currently appears before Section IV-B describes it. |
-| 4. IEEE citation format with DOIs | Use the `IEEEtran` style and add a `doi` field to every entry (search.crossref.org).<br>• [7]: "Semantic Scholar" isn't a venue; find the real journal or conference.<br>• [8]: give the full authors, volume and pages.<br>• [6]: `10.48550/arXiv.2412.01246`.<br>• [1]: the IDF Atlas has no DOI; give the URL and access date. |
-| 5. Passive voice | For example, "We introduce OrdinalFed" becomes "OrdinalFed is introduced". Go through the abstract, introduction, method and conclusion. |
+| 1. Consecutive citation format ("[1-2]") | ✅ Done: now prints as [5]–[6]. |
+| 2. Tiny fonts in Figs. 1–2 | ⏳ Claude regenerates both figures (Step 18). |
+| 3 & 6. Figure descriptions, placed before figures and tables | ✅ Done: Fig. 1 moved to Sec. IV-B and Fig. 2 to Sec. V-B, each after a paragraph describing it. Tables were already placed after their first mention. |
+| 4. IEEE citation format with DOIs | ✅ Done: all 12 references verified against Crossref and arXiv, now in IEEE style with DOIs, and numbered in citation order. Errors fixed: [4] wrong author (Smola → Talwalkar); [7] real venue (PeerJ Comput. Sci.); [8] full title, year 2026, volume and pages; [11] wrong journal (it's IEEE Trans. Cogn. Commun. Netw.); [12] wrong DOI and pages. |
+| 5. Passive voice | ✅ Done for the abstract, introduction, method, setup and conclusion. ⏳ The results section is rewritten on Day 4; use the passive voice there. |
+
+**Also fixed while editing:**
+- The test-set size: 3,759 images, not 2,514.
+- The class percentages.
+- The incorrect "centre-cropped" and "stratified" claims.
+- The new Eq. 4–6 (decision D1), the AccWt baseline, the ablations and the evaluation protocol were added to Sec. IV.
 
 ### Step 17: SCAFFOLD by Claude [PC][NET] (if R ≤ 3.5 min)
 
@@ -365,7 +382,7 @@ Copy the tables and figures into Overleaf, then back up (Step 13).
 |---|---|
 | Abstract, Conclusion | New numbers (mean ± std, test split); soften "decisively eliminates" if the results don't support it |
 | Intro | New centralised ceiling (Step 10); contribution 2 wording (from `method_eq4_5.tex`) |
-| III-E, III-F | Already replaced in Step 15 |
+| III-E, III-F, IV | Already done by Claude (see Step 16); only the `TODO(Day 4)` numbers remain |
 | IV-A | Remove "centre-cropped" (the code only resizes) |
 | IV-B | The IID split is uniform random, not "stratified" |
 | IV-C | Add: 3 seeds; T = 10 for all partitions; test protocol (best-validation round, DDR test split minus V); AccWt (and SCAFFOLD); note that seeds fix data order and augmentation, but GPU bf16 arithmetic is not bit-exact |
@@ -383,6 +400,8 @@ Fill in every `[TBD]` in `paper/revision/response_to_reviewers.md` from the fina
 ### Step 29: Final checks [OFF] (1 h)
 
 - [ ] ≤ 6 pages
+- [ ] `grep -rn "TODO(Day" overleaf/` prints nothing (every marked number has been updated)
+- [ ] **If this is the camera-ready (accepted paper):** author names and affiliations are added (`main.tex` still has them removed for double-blind review), the IEEE copyright notice from the WIECON-ECE author kit is included, and the PDF passes IEEE PDF eXpress if the conference requires it
 - [ ] Figure fonts are readable with the PDF at 100% zoom
 - [ ] Every figure and table is described in the text before it appears
 - [ ] Every reference has a DOI or a URL
