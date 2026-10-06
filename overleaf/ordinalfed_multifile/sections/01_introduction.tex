@@ -1,76 +1,58 @@
 %% ── Section 1: Introduction ─────────────────────────────────
 \section{Introduction}
 
-Diabetic Retinopathy (DR) is the primary microvascular complication
-of diabetes mellitus and the leading cause of preventable blindness
-among working-age adults globally. The disease is characterised by
-progressive damage to the retinal blood vessels, presenting visually
-as microaneurysms, haemorrhages, hard exudates, and in severe cases,
-neovascularisation. In developing nations such as Bangladesh, where over
-13.1~million individuals live with diabetes~\cite{idf2021}, the clinical
-impact of DR is intensified by a severe deficit of retinal specialists
-outside major urban centres. Clinically, DR progresses along a strict
-five-grade ordinal scale: Grade~0 (No DR), Grade~1 (Mild Non-Proliferative
-DR, NPDR), Grade~2 (Moderate NPDR), Grade~3 (Severe NPDR), and Grade~4
-(Proliferative DR). Timely identification of referable disease (Grade~$\geq$~2)
-is paramount to prevent permanent vision loss, making automated screening
-systems highly desirable.
+Diabetic Retinopathy (DR) is a common complication of diabetes and a leading
+cause of preventable blindness in working-age adults. It damages the small blood
+vessels of the retina, which appears in fundus photographs as microaneurysms,
+haemorrhages, hard exudates and, in advanced cases, the growth of new vessels.
+In countries such as Bangladesh, where more than 13.1~million people live with
+diabetes~\cite{idf2021}, the burden is made worse by a shortage of retinal
+specialists outside the major cities. DR is graded on a five-level ordinal scale:
+Grade~0 (no DR), Grade~1 (mild non-proliferative DR, NPDR), Grade~2 (moderate
+NPDR), Grade~3 (severe NPDR), and Grade~4 (proliferative DR). Referable disease
+(Grade~$\geq$~2) has to be detected early to prevent vision loss, which makes
+automated screening attractive.
 
-In centralised environments, deep convolutional neural networks achieve
-expert-level diagnostic precision. On the highly imbalanced DDR dataset~\cite{li2019ddr},
-an EfficientNet-B3 architecture achieves a Quadratic Weighted Kappa
-(QWK) of 0.8494. % TODO(Day 4): new centralised QWK (results/centralised_test.json)
-QWK serves as the clinical benchmark metric for
-ordinal grading because it penalises misclassifications quadratically
-relative to grade distance: misclassifying a Grade~4 proliferative
-retinopathy image as Grade~0 incurs a drastically higher penalty than
-predicting Grade~3. However, centralising patient fundus photographs
-from multiple healthcare institutions violates strict medical data
-privacy regulations, such as HIPAA and GDPR. Federated Learning (FL)~\cite{mcmahan2017fedavg}
-addresses this fundamental challenge by training a shared global model across
-distributed hospitals via iterative weight exchanges, keeping raw patient
-records strictly localised.
+When all images are pooled in one place, deep convolutional networks grade DR
+accurately. On the imbalanced DDR dataset~\cite{li2019ddr}, an EfficientNet-B3
+model reaches a Quadratic Weighted Kappa (QWK) of 0.8494.
+% TODO(Day 4): new centralised QWK (results/centralised_test.json)
+QWK is the standard metric for ordinal grading because it penalises an error by
+the square of its distance: predicting Grade~0 for a Grade~4 image costs far more
+than predicting Grade~3. Pooling patient images from several hospitals, however,
+is restricted by privacy regulations such as HIPAA and GDPR. Federated Learning
+(FL)~\cite{mcmahan2017fedavg} avoids this problem: the hospitals train a shared
+model by exchanging model weights, and the images never leave each site.
 
-The primary algorithmic obstacle in clinical FL is \emph{statistical
-heterogeneity}, commonly referred to as Non-IID data. Retinal patient
-distributions vary drastically depending on the hospital tier: community
-screening clinics observe overwhelmingly healthy (Grade~0) cohorts,
-tertiary referral centres encounter high concentrations of severe
-proliferative cases (Grades~3--4), and rural primary clinics observe
-intermediate presentations. Under extreme Dirichlet skew ($\alpha=0.1$),
-standard FedAvg is observed to undergo catastrophic forgetting, crashing
-from a peak QWK of 0.7993 down to 0.4064 in a single communication round.
-Proximal methods such as FedProx~\cite{li2020fedprox} provide partial
-regularisation against local weight divergence but remain highly
-susceptible to severe degradation (dropping to 0.5963).
+The main difficulty in clinical FL is that hospitals see different patients, so
+their data are not identically distributed (non-IID). Screening clinics see
+mostly healthy (Grade~0) eyes, referral centres see many severe cases
+(Grades~3--4), and rural clinics see cases in between. Under extreme Dirichlet
+skew ($\alpha=0.1$), standard FedAvg is observed to undergo catastrophic
+forgetting, crashing from a peak QWK of 0.7993 down to 0.4064 in a single
+communication round. FedProx~\cite{li2020fedprox}, which limits how far each local
+model can move away from the global model, reduces but does not prevent this
+drop (down to 0.5963).
 % TODO(Day 4): replace 0.7993 / 0.4064 / 0.5963 with the new multi-seed results,
 % and soften "in a single communication round" if the new runs do not show it.
-Crucially,
-both of these foundational methods aggregate parameters proportionally to
-client sample counts, allowing large screening centres with massive but
-monochromatic Grade~0 cohorts to dominate aggregation and heavily distort
-the global ordinal decision boundaries.
+Both methods weight each hospital by its number of images, so a large clinic that
+sees mostly one grade can dominate the global model.
 
-Furthermore, standard Cross-Entropy loss is fundamentally
-\emph{ordinal-blind}: it penalises all non-diagonal misclassifications
-equally regardless of clinical severity. While ordinal loss
-formulations~\cite{toledocortes2022dqor}--[\citen{polat2024cdwce}] have proven
-highly effective in single-institution settings for guiding feature
-extraction, their capacity to regularise local client drift within
-federated networks has not been explored.
+In addition, the standard cross-entropy loss ignores the order of the grades:
+mistaking Grade~4 for Grade~0 costs the same as mistaking it for Grade~3. Ordinal
+losses~\cite{toledocortes2022dqor}--[\citen{polat2024cdwce}] address this in
+centralised training, but their effect on client drift in FL has received little
+attention.
 
-To address these challenges, \textbf{OrdinalFed} is proposed: a federated
-framework designed specifically for ordinal medical imaging. Its two key
-contributions are:
+To address both problems, \textbf{OrdinalFed} is proposed: a federated framework
+for ordinal medical grading with two components.
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Distance-Aware OrdinalLoss:} A differentiable hybrid
-  objective combining class-weighted Cross-Entropy with a squared
-  expected-grade penalty to explicitly suppress severe, multi-grade
-  misclassifications during local client training.
-  \item \textbf{QWK-Weighted Quality Aggregation with Adaptive $\beta$:}
-  A server-side scoring protocol evaluating client models on a balanced
-  50-image proxy server set $\mathcal{V}$. This mechanism gradually
-  shifts aggregation weights from sample-count proportionality towards
-  ordinal diagnostic quality via a cosine-annealing schedule, limiting the
-  influence of clients whose updates degrade on $\mathcal{V}$.
+  \item \textbf{Distance-aware OrdinalLoss:} a local training loss that adds a
+  squared expected-grade penalty to class-weighted cross-entropy, so that
+  predictions far from the true grade are penalised more heavily.
+  \item \textbf{QWK-weighted aggregation with an adaptive $\beta$:} the server
+  scores each client model on a small balanced set $\mathcal{V}$ of 50 images and
+  gradually shifts the aggregation weights from image counts towards these QWK
+  scores, which limits the influence of clients whose updates degrade on
+  $\mathcal{V}$.
 \end{enumerate}
