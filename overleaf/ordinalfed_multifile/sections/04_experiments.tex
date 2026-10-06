@@ -17,8 +17,9 @@ and Grade~4 (7.3\%).
 
 $K = 5$ clients are instantiated under three statistical scenarios, shown in
 Fig.~\ref{fig:distributions}. In the figure, each bar represents one client: its
-coloured segments give the share of each DR grade among that client's images, and
-the number above the bar is the client's total image count.
+segments give the share of each DR grade among that client's images, shaded from
+light (Grade~0) to dark (Grade~4), and the number under each client label is the
+client's total image count.
 \begin{itemize}[leftmargin=*,noitemsep,topsep=2pt]
   \item \textbf{IID Partition:} Uniform random assignment (1,252 samples per
   client). This serves as the homogeneous upper bound for FL.
@@ -29,11 +30,12 @@ the number above the bar is the client's total image count.
   solely 32 images (100\% Grade~0), while Client~4 holds 2,087 images dominated
   (98\%) by Grade~2.
   \item \textbf{Real-Site Clinical Partition:} Data are distributed according to
-  fixed grade profiles that model five clinical archetypes: Site~0 (general
-  screening clinic, G0-heavy, 40\% volume), Site~1 (rural primary care,
-  G1/G2-heavy, 22\%), Site~2 (specialist referral eye hospital, G3/G4-heavy,
-  10\%), Site~3 (diabetic retinopathy clinic, G2/G3-heavy, 19\%), and Site~4
-  (balanced urban hospital, 9\%).
+  fixed grade profiles that model five clinical archetypes, yielding: Site~0
+  (general screening clinic; 40\% of images, 84\% Grade~0), Site~1 (rural primary
+  care; 22\%, mainly Grades~0 and~2, with the largest Grade~1 share at 11\%),
+  Site~2 (specialist referral eye hospital; 10\%, the largest Grade~3--4 share at
+  38\%), Site~3 (diabetic retinopathy clinic; 19\%, 67\% Grade~2), and Site~4
+  (urban hospital; 9\%, mixed grades).
 \end{itemize}
 
 %% FULL-WIDTH FIGURE: Per-client grade distributions

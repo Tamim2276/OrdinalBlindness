@@ -51,10 +51,11 @@ FedProx~\cite{li2020fedprox} ($\mu=0.01$)
 \subsection{Resilience to Catastrophic Forgetting}
 
 Fig.~\ref{fig:qwk_curves} plots the validation QWK of the global model after each
-communication round for the three partitions (one panel per partition); the dashed
-line marks the centralised ceiling and the dotted line the 0.80 reference threshold.
-% TODO(Day 3): update this description once Fig. 2 is regenerated with
-% mean +/- std bands over seeds.
+communication round for the three partitions (one panel per partition). Lines show
+the mean over seeds, shaded bands $\pm$ one standard deviation, and the dashed line
+the validation QWK of the centralised model.
+% TODO(Day 3): regenerate Fig. 2 with "python experiments/generate_figures.py --fig 2"
+% once the runs finish, and upload fig4_qwk_combined.pdf to Overleaf.
 As visualised in the central panel, FedAvg suffers
 catastrophic collapse under extreme skew ($\alpha=0.1$), plunging from 0.7870 to
 0.4064 in round~9. This occurs because Client~0's monochromatic Grade~0 dataset
