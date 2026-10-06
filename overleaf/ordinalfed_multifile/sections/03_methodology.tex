@@ -4,59 +4,52 @@
 
 \subsection{Problem Formulation}
 
-Let $K = 5$ participating hospital clients hold private datasets
-$\mathcal{D}_k = \{(x_i, y_i)\}_{i=1}^{n_k}$ with retinal fundus images $x_i$
-and ordinal grades $y_i \in \{0, 1, 2, 3, 4\}$. The objective is to collaboratively
-train a shared EfficientNet-B3 global model parameterised by $w$ over $T$
-communication rounds without ever transmitting $\mathcal{D}_k$ to a central server.
-Heterogeneity causes the local empirical distributions $P_k(y)$ to diverge sharply
-from the global distribution $P(y)$, resulting in severe client drift and weight
-divergence during the local updating phase.
+$K = 5$ hospital clients each hold a private dataset
+$\mathcal{D}_k = \{(x_i, y_i)\}_{i=1}^{n_k}$ of fundus images $x_i$ with ordinal
+grades $y_i \in \{0, 1, 2, 3, 4\}$. A shared EfficientNet-B3 model with weights $w$
+is trained over $T$ communication rounds, and no $\mathcal{D}_k$ ever leaves its
+client. Because the local grade distributions $P_k(y)$ differ strongly from the
+global distribution $P(y)$, the local models drift apart during local training.
 
 \subsection{Limitations of Nominal Objectives}
 
-Standard FL approaches employ Cross-Entropy (CE) loss during local training.
-Let $\mathbf{p}(x) \in \mathbb{R}^5$ be the softmax probabilities. The CE loss for
-a true grade $y$ is $-\log p_y(x)$. Crucially, this formulation does not differentiate
-between a model predicting $y+1$ or $y+4$; both are treated identically as incorrect
-classes. In heavily skewed federated clients (e.g., a clinic with only Grade~0 patients),
-CE loss rapidly forces the local decision boundaries to classify all incoming features
-as Grade~0, destroying the network's previously learned ability to recognise severe
-pathology.
+FL clients are usually trained with cross-entropy (CE). With softmax probabilities
+$\mathbf{p}(x) \in \mathbb{R}^5$, the CE loss for true grade $y$ is $-\log p_y(x)$.
+This loss does not distinguish a prediction of $y+1$ from one of $y+4$: both are
+simply wrong. On a heavily skewed client, for example a clinic with only Grade~0
+patients, CE quickly pushes the local model to predict Grade~0 for every image,
+and the model loses what it had learned about severe disease.
 
 \subsection{Distance-Aware OrdinalLoss}
 
-To regularise local client models against ordinal degradation, a hybrid objective,
-OrdinalLoss, is applied during local client training:
+To limit this degradation, a hybrid loss, OrdinalLoss, is used during local
+training:
 \begin{equation}
 \mathcal{L}_{\text{ord}}(f(x), y) =
   (1 - \lambda)\,\mathcal{L}_{\text{CE}}(f(x), y)
   + \lambda\,(\hat{y} - y)^2
 \label{eq:ordloss}
 \end{equation}
-where $\mathcal{L}_{\text{CE}}$ is class-weighted cross-entropy with fixed empirical
-weights $\mathbf{c} = [1.0, 5.0, 1.5, 10.0, 4.0]$ to counter natural dataset imbalance,
-and $\lambda = 0.5$ balances the two terms. The parameter $\hat{y}$ is the
-continuous expected grade under the softmax output distribution:
+where $\mathcal{L}_{\text{CE}}$ is cross-entropy with fixed class weights
+$\mathbf{c} = [1.0, 5.0, 1.5, 10.0, 4.0]$ to counter class imbalance, and
+$\lambda = 0.5$ balances the two terms. $\hat{y}$ is the expected grade under the
+softmax distribution:
 \begin{equation}
 \hat{y} = \sum_{c=0}^{4} c \cdot p_c(x)
 \label{eq:expgrade}
 \end{equation}
-The penalty term $(\hat{y} - y)^2$ scales quadratically with misclassification
-distance. Misclassifying a Grade~4 proliferative case as Grade~0 incurs $16\times$
-the penalty of predicting Grade~3. This strong continuous gradient forces local
-optimisers to maintain globally aligned ordinal boundaries, even when the client's
-local data is overwhelmingly skewed toward a single class.
+The penalty $(\hat{y} - y)^2$ grows with the square of the grade error: for a
+confident prediction, calling a Grade~4 case Grade~0 costs $16\times$ as much as
+calling it Grade~3. Local training is therefore discouraged from predictions far
+from the true grade, even when a client's data are dominated by a single grade.
 
 \subsection{Server Validation Set $\mathcal{V}$ and QWK Estimation}
 
-To dynamically assess client model quality without accessing private records, the
-server maintains a compact validation set $\mathcal{V}$ comprising exactly 50 images
-(10 images per grade, sampled uniformly from the independent DDR test split with
-seed~42). Because $\mathcal{V}$ is strictly balanced across all five severity grades,
-evaluation on this set provides an unbiased global measurement of ordinal discrimination
-capability. At communication round $t$, after receiving locally updated weights
-$\tilde{w}_k^t$, the server evaluates:
+To judge client models without access to their data, the server keeps a small
+validation set $\mathcal{V}$ of exactly 50 images: 10 per grade, sampled at random
+(seed~42) from the DDR test split, which is separate from all client data. Because
+$\mathcal{V}$ is balanced, every grade counts equally in its score. In round $t$,
+after receiving the locally updated weights $\tilde{w}_k^t$, the server computes
 \begin{equation}
 \kappa_k^t =
 \mathrm{QWK}\!\left(\{y_i\}_{x_i \in \mathcal{V}},\,
@@ -66,48 +59,47 @@ $\tilde{w}_k^t$, the server evaluates:
 
 \subsection{Adaptive Cosine Schedule $\beta(t)$}
 
-In early rounds, the locally updated models produce high-variance predictions on
-$\mathcal{V}$, and each score $\kappa_k^t$ is estimated from only 50 images. The
-aggregation weights are therefore moved gradually from sample-count weighting
-towards quality-driven weighting by a half-cosine schedule:
+In early rounds, the client models' predictions on $\mathcal{V}$ vary widely, and
+each $\kappa_k^t$ is estimated from only 50 images. The aggregation weights are
+therefore moved gradually from image counts towards quality scores by a
+half-cosine schedule:
 \begin{equation}
 \beta(t) = \beta_0 \cos\!\left(\frac{\pi (t - 1)}{2 (T - 1)}\right)
 \label{eq:beta}
 \end{equation}
-where $\beta_0 = 0.5$ and $T = 10$. In the first round, sample counts and
-server-set quality contribute equally ($\beta(1) = 0.5$); by the final round,
-$\beta(T) = 0$ and the weights are determined by the quality scores alone.
+where $\beta_0 = 0.5$ and $T = 10$. In the first round, image counts and quality
+scores count equally ($\beta(1) = 0.5$); in the last round, $\beta(T) = 0$ and only
+the quality scores are used.
 
 \subsection{QWK-Weighted Aggregation}
 
-The server-set scores are converted into quality weights by a temperature-scaled
-softmax, applied after a lower floor $\kappa_{\min}$:
+The server-set scores are first floored at $\kappa_{\min}$ and turned into quality
+weights with a temperature-scaled softmax:
 \begin{equation}
 q_k^t = \frac{\exp\!\big(\max(\kappa_k^t, \kappa_{\min}) / \tau\big)}
              {\sum_{j=1}^{K} \exp\!\big(\max(\kappa_j^t, \kappa_{\min}) / \tau\big)}
 \label{eq:quality}
 \end{equation}
-where $\kappa_{\min} = 0.1$ and $\tau = 3$. The aggregation weight of client $k$ in
-round $t$ is obtained by blending $q_k^t$ with the sample-count share:
+where $\kappa_{\min} = 0.1$ and $\tau = 3$. Each client's aggregation weight blends
+this quality weight with the client's share of the images:
 \begin{equation}
 \omega_k^t = \beta(t)\,\frac{n_k}{\sum_{j=1}^{K} n_j}
            + \big(1 - \beta(t)\big)\, q_k^t
 \label{eq:weights}
 \end{equation}
 and the global model is updated as $w^{t+1} = \sum_{k=1}^{K} \omega_k^t \tilde{w}_k^t$.
-A minimum share of $\omega_{\min} = 0.03$ per client, followed by renormalisation,
-is additionally enforced as a safeguard; with $\beta_0 = 0.5$ and $K = 5$ this floor
-never binds, because every client already receives at least
-$(1-\beta_0)\,q_{\min} \approx 0.08$. The complete procedure is detailed in
+A minimum weight of $\omega_{\min} = 0.03$ per client, followed by renormalisation,
+is also enforced as a safeguard; with $\beta_0 = 0.5$ and $K = 5$ it never takes
+effect, because every client already receives at least
+$(1-\beta_0)\,q_{\min} \approx 0.08$. The full procedure is given in
 Algorithm~\ref{alg:ordinalfed}.
 
-The softmax and the floor on $\kappa$ make the scheme deliberately conservative.
-No client is excluded from aggregation, since a single 50-image estimate of
-$\kappa_k^t$ is too noisy to justify discarding an entire hospital's update. With
-$\tau = 3$ and $\kappa \in [0.1, 1]$, the quality term can change a client's relative
-weight by at most a factor of $e^{0.9/3} \approx 1.35$. The aggregation therefore
-acts as a bounded re-weighting away from pure sample-count proportionality, rather
-than as a hard filter on client updates.
+The scheme is deliberately conservative. No client is ever excluded, because a
+single 50-image estimate of $\kappa_k^t$ is too noisy to justify discarding a
+hospital's update. With $\tau = 3$ and $\kappa \in [0.1, 1]$, the quality term can
+change a client's relative weight by at most a factor of $e^{0.9/3} \approx 1.35$,
+so the aggregation is a bounded re-weighting of the image-count weights rather
+than a hard filter on client updates.
 
 \begin{algorithm}[t]
 \caption{OrdinalFed Training Pipeline}
