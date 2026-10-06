@@ -1,0 +1,16 @@
+%% ── Section 6: Conclusion ───────────────────────────────────
+\section{Conclusion}
+
+We presented OrdinalFed, an ordinal-aware federated learning framework tailored
+for multi-grade Diabetic Retinopathy screening across heterogeneous hospital
+networks. By integrating a distance-penalising OrdinalLoss with QWK-weighted
+adaptive quality aggregation, OrdinalFed decisively eliminates the catastrophic
+stability collapses observed in standard FedAvg and FedProx under extreme
+statistical skew ($\alpha=0.1$). Specifically, it reduces peak-to-trough
+fluctuation from 0.3929 down to 0.1751, ensuring diagnostic consistency. In
+realistic multi-tier hospital partitions, OrdinalFed achieves a peak QWK of
+0.8325, narrowing the gap to the centralised ceiling to just 1.69~pp while
+strictly preserving patient privacy and adding zero communication overhead.
+Future work will explore formal differential privacy bounds, cross-dataset
+validation on APTOS~2019, and federated Grad-CAM interpretability to facilitate
+clinical deployment.

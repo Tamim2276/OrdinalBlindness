@@ -1,0 +1,46 @@
+%% ── Section 4: Experimental Setup ───────────────────────────
+\section{Experimental Setup}
+\label{sec:experiments}
+
+\subsection{Dataset and Preprocessing}
+
+We evaluate all frameworks on the \textbf{DDR benchmark dataset}~\cite{li2019ddr},
+comprising 12,522 fundus photographs. Excluding ungradable Grade~5 images leaves
+6,260 training, 2,503 validation, and 2,514 test images. Images are centre-cropped
+to remove black borders and resized to $224 \times 224$ pixels. During local training,
+standard augmentations (random horizontal flips, slight rotations) are applied to
+prevent overfitting. The training set displays heavy natural class imbalance:
+Grade~0 (50.0\%), Grade~1 (4.9\%), Grade~2 (36.0\%), Grade~3 (2.3\%), and Grade~4 (6.8\%).
+
+\subsection{Modeling Clinical Heterogeneity}
+
+We instantiate $K = 5$ clients under three statistical scenarios (visualised in
+Fig.~\ref{fig:distributions}):
+\begin{itemize}[leftmargin=*,noitemsep,topsep=2pt]
+  \item \textbf{IID Partition:} Equal stratified random assignment (1,252 samples
+  per client). This serves as the homogeneous theoretical upper bound for FL.
+  \item \textbf{Dirichlet Non-IID ($\alpha=0.1$):} Pathological skew generated
+  via a Dirichlet distribution $p_k \sim \mathrm{Dir}(\alpha)$. An $\alpha=0.1$
+  forces each client to draw samples almost exclusively from a single class.
+  Consequently, client sizes range from 32 to 2,087 samples; Client~0 contains
+  solely 32 images (100\% Grade~0), while Client~4 holds 2,087 images dominated
+  (98\%) by Grade~2.
+  \item \textbf{Real-Site Clinical Partition:} We manually distribute data to model
+  five realistic clinical archetypes: Site~0 (general screening clinic, G0-heavy,
+  40\% volume), Site~1 (rural primary care, G1/G2-heavy, 22\%), Site~2 (specialist
+  referral eye hospital, G3/G4-heavy, 10\%), Site~3 (diabetic retinopathy clinic,
+  G2/G3-heavy, 19\%), and Site~4 (balanced urban hospital, 9\%).
+\end{itemize}
+
+\subsection{Network Architecture and Baselines}
+
+All federated experiments utilise an EfficientNet-B3 backbone, chosen for its
+optimal balance between parameter efficiency and feature extraction capability for
+$224 \times 224$ resolution images. To simulate real-world deployment where
+pre-trained weights are adapted, all FL runs warm-start from a centralised model
+trained for 30 epochs (peak QWK = 0.8494). We benchmark OrdinalFed against:
+(1)~\textbf{Centralised Baseline}, (2)~\textbf{FedAvg}~\cite{mcmahan2017fedavg},
+and (3)~\textbf{FedProx}~\cite{li2020fedprox} with proximal coefficient $\mu = 0.01$.
+All methods execute $T = 10$ communication rounds with $E = 5$ local epochs,
+batch size 64, Adam optimiser ($\eta = 10^{-4}$), and use the same empirical
+class-imbalance weights $\mathbf{c}$.

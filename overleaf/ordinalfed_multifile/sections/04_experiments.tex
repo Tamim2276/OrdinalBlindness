@@ -1,0 +1,86 @@
+%% ── Section 4: Experimental Setup ───────────────────────────
+\section{Experimental Setup}
+\label{sec:experiments}
+
+\subsection{Dataset and Preprocessing}
+
+All frameworks are evaluated on the \textbf{DDR benchmark dataset}~\cite{li2019ddr},
+which contains 13,673 fundus photographs, 12,522 of them gradable. Excluding the
+ungradable images leaves 6,260 training, 2,503 validation, and 3,759 test images.
+All images are resized to $224 \times 224$ pixels. During local training, random
+horizontal flips, rotations of up to $\pm 15^{\circ}$, and mild colour jitter are
+applied to reduce overfitting. The training set displays heavy natural class
+imbalance: Grade~0 (50.0\%), Grade~1 (5.0\%), Grade~2 (35.8\%), Grade~3 (1.9\%),
+and Grade~4 (7.3\%).
+
+\subsection{Modeling Clinical Heterogeneity}
+
+$K = 5$ clients are instantiated under three statistical scenarios, shown in
+Fig.~\ref{fig:distributions}. In the figure, each bar represents one client: its
+coloured segments give the share of each DR grade among that client's images, and
+the number above the bar is the client's total image count.
+\begin{itemize}[leftmargin=*,noitemsep,topsep=2pt]
+  \item \textbf{IID Partition:} Uniform random assignment (1,252 samples per
+  client). This serves as the homogeneous upper bound for FL.
+  \item \textbf{Dirichlet Non-IID ($\alpha=0.1$):} Pathological skew generated
+  via a Dirichlet distribution $p_k \sim \mathrm{Dir}(\alpha)$. An $\alpha=0.1$
+  forces each client to draw samples almost exclusively from a single class.
+  Consequently, client sizes range from 32 to 2,087 samples; Client~0 contains
+  solely 32 images (100\% Grade~0), while Client~4 holds 2,087 images dominated
+  (98\%) by Grade~2.
+  \item \textbf{Real-Site Clinical Partition:} Data are distributed according to
+  fixed grade profiles that model five clinical archetypes: Site~0 (general
+  screening clinic, G0-heavy, 40\% volume), Site~1 (rural primary care,
+  G1/G2-heavy, 22\%), Site~2 (specialist referral eye hospital, G3/G4-heavy,
+  10\%), Site~3 (diabetic retinopathy clinic, G2/G3-heavy, 19\%), and Site~4
+  (balanced urban hospital, 9\%).
+\end{itemize}
+
+%% FULL-WIDTH FIGURE: Per-client grade distributions
+%% (placed after its description — Reviewer #3, comments 3 and 6)
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig5_distributions.pdf}
+  \caption{\normalsize Per-client grade distributions under the IID, Dirichlet
+  ($\alpha=0.1$), and real-site partitions. Under $\alpha=0.1$, client sizes range
+  from 32 images (Client~0, 100\% Grade~0) to 2,087 images (Client~4, 98\% Grade~2).
+  The real-site partition models five clinical archetypes, from screening clinics to
+  specialist referral centres.}
+  \label{fig:distributions}
+\end{figure*}
+
+\subsection{Network Architecture and Baselines}
+
+All federated experiments use an EfficientNet-B3 backbone, chosen for its balance
+between parameter efficiency and feature extraction capability at
+$224 \times 224$ resolution. To simulate real-world deployment where pre-trained
+weights are adapted, all FL runs are warm-started from a centralised model trained
+for 30 epochs (validation QWK = 0.8494).
+% TODO(Day 4): new centralised validation QWK (results/centralised_done.json)
+OrdinalFed is benchmarked against:
+(1)~\textbf{Centralised Baseline}; (2)~\textbf{FedAvg}~\cite{mcmahan2017fedavg};
+(3)~\textbf{FedProx}~\cite{li2020fedprox} with proximal coefficient $\mu = 0.01$; and
+(4)~\textbf{AccWt}, an accuracy-weighted aggregation baseline in the spirit of
+server-side validation scoring~\cite{bejenar2023aggregation}. AccWt uses the same
+schedule and softmax weighting as OrdinalFed (Eqs.~\ref{eq:beta}--\ref{eq:weights})
+but scores each client by plain accuracy on $\mathcal{V}$ instead of QWK, and its
+clients train with class-weighted cross-entropy.
+All methods execute $T = 10$ communication rounds with $E = 5$ local epochs,
+batch size 64, Adam optimiser ($\eta = 10^{-4}$), and the same class-imbalance
+weights $\mathbf{c}$.
+
+\subsection{Ablations and Evaluation Protocol}
+
+To isolate the contribution of each component, three ablations of OrdinalFed are
+evaluated: (i)~OrdinalLoss with sample-count aggregation; (ii)~class-weighted
+cross-entropy with QWK-weighted aggregation; and (iii)~class-weighted cross-entropy
+with uniform aggregation ($\omega_k^t = 1/K$).
+
+Every configuration is repeated with three random seeds, which control data order
+and augmentation, and results are reported as mean $\pm$ standard deviation.
+% TODO(Day 4): confirm seed counts match what finished (run_queue.py --status).
+After each round, the global model is evaluated on the DDR validation split and on
+the DDR test split excluding the 50 images of $\mathcal{V}$ (3,709 images). For each
+run, the reported model is the one from the round with the highest validation QWK.
+The test split is never used for training, aggregation, or model selection, and
+therefore provides an independent estimate of performance.
