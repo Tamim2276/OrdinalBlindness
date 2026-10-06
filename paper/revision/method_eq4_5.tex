@@ -1,0 +1,84 @@
+% =============================================================================
+% OrdinalFed revision: replacement text for Sections III-E and III-F (Eqs. 4-5)
+% -----------------------------------------------------------------------------
+% Matches the code that produced the results:
+%   compute_beta()           src/strategy_ordinalfed.py   (Eq. 4)
+%   ordinalfed_aggregate()   src/strategy_ordinalfed.py   (Eqs. 5-6)
+%   BETA0 = 0.5, T = 10      experiments/run_fl.py
+%   TEMPERATURE = 3.0, kappa floor 0.1, MIN_WEIGHT = 0.03
+% Written in the passive voice (Reviewer #3, comment 5).
+% Replace \ref{alg:ordinalfed} with your Algorithm 1 label.
+% =============================================================================
+
+\subsection{Adaptive Cosine Schedule $\beta(t)$}
+In early rounds, the locally updated models produce high-variance
+predictions on $\mathcal{V}$, and each score $\kappa_k^t$ is estimated from
+only 50 images. The aggregation weights are therefore moved gradually from
+sample-count weighting towards quality-driven weighting by a half-cosine
+schedule:
+\begin{equation}
+  \beta(t) = \beta_0 \cos\!\left(\frac{\pi (t-1)}{2(T-1)}\right),
+  \label{eq:beta}
+\end{equation}
+where $\beta_0 = 0.5$ and $T = 10$. In the first round, sample counts and
+server-set quality contribute equally ($\beta(1) = 0.5$). By the final
+round, $\beta(T) = 0$, and the weights are determined by the quality scores
+alone.
+
+\subsection{QWK-Weighted Aggregation}
+The server-set scores are converted into quality weights by a
+temperature-scaled softmax, applied after a lower floor $\kappa_{\min}$:
+\begin{equation}
+  q_k^t = \frac{\exp\!\big(\max(\kappa_k^t, \kappa_{\min}) / \tau\big)}
+               {\sum_{j=1}^{K} \exp\!\big(\max(\kappa_j^t, \kappa_{\min}) / \tau\big)},
+  \label{eq:quality}
+\end{equation}
+where $\kappa_{\min} = 0.1$ and $\tau = 3$. The aggregation weight of client
+$k$ in round $t$ is obtained by blending $q_k^t$ with the sample-count share:
+\begin{equation}
+  \omega_k^t = \beta(t)\,\frac{n_k}{\sum_{j=1}^{K} n_j}
+             + \big(1 - \beta(t)\big)\, q_k^t ,
+  \label{eq:weights}
+\end{equation}
+and the global model is updated as
+$w^{t+1} = \sum_{k=1}^{K} \omega_k^t \, \tilde{w}_k^t$
+(Algorithm~\ref{alg:ordinalfed}). A minimum share of $\omega_{\min} = 0.03$
+per client, followed by renormalisation, is additionally enforced as a
+safeguard. With $\beta_0 = 0.5$ and $K = 5$, this floor never binds, because
+every client already receives at least $(1-\beta_0)\,q_{\min} \approx 0.08$.
+
+The softmax and the floor on $\kappa$ make the scheme deliberately
+conservative. No client is excluded from aggregation, since a single
+50-image estimate of $\kappa_k^t$ is too noisy to justify discarding an
+entire hospital's update. With $\tau = 3$ and $\kappa \in [0.1, 1]$, the
+quality term can change a client's relative weight by at most a factor of
+$e^{0.9/3} \approx 1.35$. The aggregation therefore acts as a bounded
+re-weighting that moves away from pure sample-count proportionality, rather
+than as a hard filter on client updates.
+
+% =============================================================================
+% Other places in the paper that must change to stay consistent
+% =============================================================================
+%
+% 1. Algorithm 1, line 8. Replace with:
+%      Compute aggregation weights $\omega_k^t$ for all $k$ (Eqs.~\ref{eq:quality}--\ref{eq:weights})
+%
+% 2. Introduction, contribution 2. Replace "effectively quarantining corrupted
+%    client updates" with:
+%      ... shifts aggregation weights from sample-count proportionality towards
+%      ordinal diagnostic quality via a cosine-annealing schedule, limiting the
+%      influence of clients whose updates degrade on $\mathcal{V}$.
+%
+% 3. Old Section III-F sentence to DELETE (it described the previous design):
+%      "Negative kappa values are clamped to zero, excluding catastrophically
+%       collapsed client models from aggregation entirely."
+%
+% 4. Section V-C ("Mechanistic Analysis") claims that Client 0's weight is
+%    pushed "to near zero". With the scheme above that cannot happen. Rewrite
+%    V-C from the logged server scores and aggregation weights
+%    (results/runs/ordinalfed_*/history.csv, columns server_score_k and
+%    weight_k) after the new runs finish.
+%
+% 5. Section V-E: replace "under 200 ms" with the measured server-scoring
+%    time (history.csv column server_score_time_s; about 1 s per round for
+%    5 clients on an Arc B580 in testing).

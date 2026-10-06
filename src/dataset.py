@@ -1,4 +1,6 @@
 import os
+import json
+import numpy as np
 from PIL import Image
 import torch
 from torch.utils.data import Dataset
@@ -6,12 +8,28 @@ import pandas as pd
 from torchvision import transforms
 
 
+# Pre-resized image cache written by src/cache_images.py
+CACHE_DIRNAME = "cache_224"
+
+
+def cache_paths(root_dir, split):
+    """Return (pixels .npy path, image-name list .json path) for one split's cache."""
+    cache_dir = os.path.join(root_dir, CACHE_DIRNAME)
+    return (os.path.join(cache_dir, f"{split}.npy"),
+            os.path.join(cache_dir, f"{split}_names.json"))
+
+
 class DDRDataset(Dataset):
     """
     DDR Dataset loader for Diabetic Retinopathy grading.
     Skips ungradable images (Grade 5).
+
+    If src/cache_images.py has been run, images are read from the
+    pre-resized 224×224 cache instead of decoding the original ~1 MB JPEGs.
+    The cache holds exactly what Resize((224, 224)) produces, so the
+    transforms below see the same pixels either way.
     """
-    def __init__(self, root_dir, split="train", transform=None):
+    def __init__(self, root_dir, split="train", transform=None, use_cache=True):
         self.root_dir = root_dir
         self.split = split
 
@@ -51,11 +69,41 @@ class DDRDataset(Dataset):
         # 3. Define the image folder path
         self.img_dir = os.path.join(root_dir, split)
 
+        # 4. Use the pre-resized cache when it exists and matches this split's image list
+        self.cache_path = None
+        self._cache     = None   # opened lazily, see __getitem__
+        npy_path, names_path = cache_paths(root_dir, split)
+        if use_cache and os.path.exists(npy_path) and os.path.exists(names_path):
+            with open(names_path, 'r') as f:
+                cached_names = json.load(f)
+            if cached_names != [name for name, _ in self.samples]:
+                raise ValueError(
+                    f"Image cache {npy_path} does not match {split}.txt. "
+                    f"Rebuild it with: python src/cache_images.py"
+                )
+            self.cache_path = npy_path
+
     def __len__(self):
         return len(self.samples)
 
+    def __getstate__(self):
+        # Never pickle the memory-mapped cache into DataLoader worker processes —
+        # each worker re-opens the file itself (shared OS page cache, no copies).
+        state = self.__dict__.copy()
+        state["_cache"] = None
+        return state
+
     def __getitem__(self, idx):
         img_name, label = self.samples[idx]
+
+        if self.cache_path is not None:
+            if self._cache is None:
+                self._cache = np.load(self.cache_path, mmap_mode='r')
+            image = Image.fromarray(np.array(self._cache[idx]))
+            if self.transform is not None:
+                image = self.transform(image)
+            return image, torch.tensor(label, dtype=torch.long)
+
         img_path = os.path.join(self.img_dir, img_name)
 
         # FIX: explicit existence check with clear error message

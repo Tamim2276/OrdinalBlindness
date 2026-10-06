@@ -30,7 +30,7 @@ import torch
 from torch.utils.data import DataLoader, Subset
 from src.dataset import DDRDataset
 from src.model   import get_device
-from src.metrics import compute_qwk
+from src.metrics import compute_qwk, compute_accuracy
 
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -123,6 +123,25 @@ def evaluate_on_server_val(model, val_dataset, device, batch_size=8):
     Returns:
         qwk : float — Quadratic Weighted Kappa on server val set V
     """
+    all_labels, all_preds = predict_on_server_val(model, val_dataset, device, batch_size)
+    return compute_qwk(all_labels, all_preds)
+
+
+def score_on_server_val(model, val_dataset, device, metric="qwk"):
+    """
+    Score a client model on V with either QWK (OrdinalFed) or plain
+    accuracy (AccWt baseline). Same forward pass as evaluate_on_server_val.
+    """
+    all_labels, all_preds = predict_on_server_val(model, val_dataset, device)
+    if metric == "qwk":
+        return float(compute_qwk(all_labels, all_preds))
+    if metric == "accuracy":
+        return float(compute_accuracy(all_labels, all_preds))
+    raise ValueError(f"Unknown server metric '{metric}'")
+
+
+def predict_on_server_val(model, val_dataset, device, batch_size=8):
+    """Return (labels, predictions) of a model on server set V (fp32, no autocast)."""
     loader = DataLoader(
         val_dataset,
         batch_size  = batch_size,
@@ -142,7 +161,7 @@ def evaluate_on_server_val(model, val_dataset, device, batch_size=8):
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.numpy())
 
-    return compute_qwk(all_labels, all_preds)
+    return all_labels, all_preds
 
 
 def save_server_val_indices(val_indices, output_path):
