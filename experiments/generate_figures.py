@@ -1,426 +1,312 @@
 """
-generate_figures.py — Generate all paper figures from experiment CSVs
+generate_figures.py — Paper figures, drawn at the printed IEEE page width
 
-Produces:
-  1. fig1_qwk_curves_dirichlet.pdf  — QWK vs rounds for α=0.1
-  2. fig2_qwk_curves_realsite.pdf   — QWK vs rounds for real_site
-  3. fig3_qwk_curves_iid.pdf        — QWK vs rounds for IID
-  4. fig4_distributions.pdf         — Client grade distributions for all 3 partitions
-  5. fig4_qwk_combined.pdf          — 3-panel QWK comparison
+Reviewer #3 found the text in Figs. 1–2 too small: the old figures were drawn
+15 in wide and shrunk to fit the page, so 9 pt text printed at ~4 pt. Both
+figures are now drawn at the printed width of a two-column IEEE figure
+(7.14 in), so the 8 pt text here is 8 pt on paper.
+
+  Fig. 1  fig5_distributions.pdf  per-client grade mix of the three partitions
+  Fig. 2  fig4_qwk_combined.pdf   validation QWK per round, mean ± std over seeds
+
+The file names match the \\includegraphics names in the paper source. Each
+figure is written to figures/ and copied into overleaf/ordinalfed_multifile/
+so the local paper source stays in sync; upload the two PDFs to Overleaf.
+
+Colour: DR grade is ordinal, so Fig. 1 uses one blue ramp from light
+(Grade 0) to dark (Grade 4), which also survives grayscale printing. Fig. 2
+gives each method a fixed colour plus its own marker shape, so identity
+never depends on colour alone. Both palettes pass the colour-vision checks.
 
 Usage:
-    python experiments/generate_figures.py
-
-Requires: matplotlib, pandas, numpy, json
+    python experiments/generate_figures.py            # both figures
+    python experiments/generate_figures.py --fig 1    # only Fig. 1 (needs data/partitions)
+    python experiments/generate_figures.py --partial  # Fig. 2 preview incl. unfinished runs
 """
 
 import os
 import sys
 import json
+import shutil
+import argparse
+
 import numpy as np
-import pandas as pd
 import matplotlib
 matplotlib.use('Agg')   # non-interactive backend — works without display
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.gridspec import GridSpec
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from src.run_utils import use_utf8_output
+
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 BASE_DIR       = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-RESULTS_DIR    = os.path.join(BASE_DIR, 'results')
+DATA_DIR       = os.path.join(BASE_DIR, 'data', 'DDR', 'DR_grading')
 PARTITIONS_DIR = os.path.join(BASE_DIR, 'data', 'partitions')
-FIGURES_DIR    = os.path.join(BASE_DIR, 'results', 'figures')
-os.makedirs(FIGURES_DIR, exist_ok=True)
+RUNS_DIR       = os.path.join(BASE_DIR, 'results', 'runs')
+FIGURES_DIR    = os.path.join(BASE_DIR, 'figures')
+OVERLEAF_DIR   = os.path.join(BASE_DIR, 'overleaf', 'ordinalfed_multifile')
 
-# ── Style ─────────────────────────────────────────────────────────────────────
-COLORS = {
-    'fedavg'    : '#E74C3C',   # red
-    'fedprox'   : '#F39C12',   # orange
-    'ordinalfed': '#2ECC71',   # green
-    'central'   : '#95A5A6',   # grey (dashed ceiling)
-}
-LABELS = {
-    'fedavg'    : 'FedAvg',
-    'fedprox'   : 'FedProx (μ=0.01)',
-    'ordinalfed': 'OrdinalFed (ours)',
-}
-MARKERS = {
-    'fedavg'    : 'o',
-    'fedprox'   : 's',
-    'ordinalfed': 'D',
-}
-CENTRALISED_QWK = 0.8494
+# ── Page geometry & type ──────────────────────────────────────────────────────
+PAGE_WIDTH_IN = 7.14   # IEEE two-column \textwidth (figure*)
+FONT_PT       = 8      # minimum text size on paper
 
-GRADE_COLORS = ['#3498DB','#2ECC71','#F39C12','#E74C3C','#9B59B6']
-GRADE_LABELS = ['Grade 0','Grade 1','Grade 2','Grade 3','Grade 4']
+INK       = '#0b0b0b'  # primary text
+INK_2     = '#52514e'  # secondary text
+MUTED     = '#898781'  # axis tick labels / reference line
+GRID      = '#e1e0d9'  # hairline gridlines
+BASELINE  = '#c3c2b7'  # axis spines
+
+plt.rcParams.update({
+    'font.family'      : 'sans-serif',
+    'font.sans-serif'  : ['Arial', 'Helvetica', 'DejaVu Sans'],
+    'font.size'        : FONT_PT,
+    'axes.titlesize'   : FONT_PT + 0.5,
+    'axes.labelsize'   : FONT_PT,
+    'xtick.labelsize'  : FONT_PT,
+    'ytick.labelsize'  : FONT_PT,
+    'legend.fontsize'  : FONT_PT,
+    'axes.edgecolor'   : BASELINE,
+    'axes.labelcolor'  : INK_2,
+    'xtick.color'      : MUTED,
+    'ytick.color'      : MUTED,
+    'xtick.labelcolor' : INK_2,
+    'ytick.labelcolor' : INK_2,
+    'axes.linewidth'   : 0.6,
+    'xtick.major.width': 0.6,
+    'ytick.major.width': 0.6,
+    'xtick.major.size' : 2.5,
+    'ytick.major.size' : 2.5,
+    'pdf.fonttype'     : 42,   # embed TrueType, not Type 3 (IEEE PDF eXpress)
+    'ps.fonttype'      : 42,
+})
+
+# Fig. 1 — ordinal ramp, Grade 0 (lightest) → Grade 4 (darkest)
+GRADE_COLORS = ['#86b6ef', '#5598e7', '#2a78d6', '#1c5cab', '#104281']
+GRADE_LABELS = ['Grade 0', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4']
+
+# Fig. 2 — colour follows the method in every figure; marker = second channel
+METHOD_STYLE = {
+    'ordinalfed': dict(color='#2a78d6', marker='o', label='OrdinalFed (ours)', z=4),
+    'fedavg'    : dict(color='#eb6834', marker='s', label='FedAvg',            z=3),
+    'fedprox'   : dict(color='#1baf7a', marker='D', label=r'FedProx ($\mu$ = 0.01)', z=3),
+}
+METHOD_ORDER = ['fedavg', 'fedprox', 'ordinalfed']
+
+PANELS = [
+    ('iid',           'IID'),
+    ('dirichlet_0.1', r'Dirichlet ($\alpha$ = 0.1)'),
+    ('real_site',     'Real-site'),
+]
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def load_qwk_series(csv_path):
-    """Load per-round QWK from a results CSV. Returns list of QWK values."""
-    if not os.path.exists(csv_path):
-        return None
-    df = pd.read_csv(csv_path)
-    if 'avg_qwk' not in df.columns:
-        return None
-    return df['avg_qwk'].tolist()
+def style_axes(ax):
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(axis='y', color=GRID, linewidth=0.5, linestyle='-')
+    ax.set_axisbelow(True)
 
 
-def load_partition_distributions(partition_name, data_dir):
-    """
-    Load per-client grade distributions from partition JSON + DDR train labels.
-    Returns dict: client_id -> array of grade counts [G0..G4]
-    """
-    # Load labels
-    txt_path = os.path.join(data_dir, 'train.txt')
+def save(fig, filename):
+    os.makedirs(FIGURES_DIR, exist_ok=True)
+    path = os.path.join(FIGURES_DIR, filename)
+    fig.savefig(path, bbox_inches='tight', pad_inches=0.02)
+    fig.savefig(path.replace('.pdf', '.png'), dpi=200, bbox_inches='tight', pad_inches=0.02)
+    plt.close(fig)
+    if os.path.isdir(OVERLEAF_DIR):
+        shutil.copy(path, os.path.join(OVERLEAF_DIR, filename))
+        print(f"  Saved: {path}  (+ copied to overleaf/ordinalfed_multifile/)")
+    else:
+        print(f"  Saved: {path}")
+
+
+def load_train_labels():
     labels = []
-    with open(txt_path, 'r') as f:
+    with open(os.path.join(DATA_DIR, 'train.txt'), 'r') as f:
         for line in f:
             parts = line.strip().split()
             if len(parts) == 2 and int(parts[1]) != 5:
                 labels.append(int(parts[1]))
-    labels = np.array(labels)
-
-    # Load partition
-    partition_path = os.path.join(PARTITIONS_DIR, f'{partition_name}.json')
-    if not os.path.exists(partition_path):
-        return None
-    with open(partition_path, 'r') as f:
-        raw = json.load(f)
-    partition = {int(k): v for k, v in raw.items()}
-
-    # Compute per-client grade counts
-    distributions = {}
-    for client_id, indices in partition.items():
-        client_labels = labels[indices]
-        counts = np.zeros(5, dtype=int)
-        for grade in range(5):
-            counts[grade] = int(np.sum(client_labels == grade))
-        distributions[client_id] = counts
-
-    return distributions
+    return np.array(labels)
 
 
-# ── Figure 1-3: QWK vs Rounds ─────────────────────────────────────────────────
+# ── Fig. 1: per-client grade distributions ────────────────────────────────────
 
-def plot_qwk_curves(partition_name, title, output_path, default_lower=0.45):
-    """
-    Plot QWK vs FL round for FedAvg, FedProx, OrdinalFed on one partition.
-    Dynamically scales the Y-axis if a model crashes below the default_lower limit.
-    """
-    # Build CSV paths
-    csv_paths = {
-        'fedavg'    : os.path.join(RESULTS_DIR, f'fedavg_{partition_name}.csv'),
-        'fedprox'   : os.path.join(RESULTS_DIR, f'fedprox_{partition_name}_mu0.01.csv'),
-        'ordinalfed': os.path.join(RESULTS_DIR, f'ordinalfed_{partition_name}.csv'),
-    }
+def plot_distributions(filename='fig5_distributions.pdf'):
+    labels = load_train_labels()
+    fig, axes = plt.subplots(1, 3, figsize=(PAGE_WIDTH_IN, 2.1), sharey=True)
 
-    fig, ax = plt.subplots(figsize=(7, 4.5))
+    for ax, (partition, title) in zip(axes, PANELS):
+        path = os.path.join(PARTITIONS_DIR, f'{partition}.json')
+        if not os.path.exists(path):
+            raise SystemExit(f"🚨 Missing {path} — run: python src/partition.py")
+        with open(path, 'r') as f:
+            partition_map = {int(k): v for k, v in json.load(f).items()}
 
-    all_series = {}
-    min_qwk = 0.80  # Baseline tracking minimum
-    
-    # 1. Load data and find the minimum value across all methods
-    for method, csv_path in csv_paths.items():
-        qwk_series = load_qwk_series(csv_path)
-        if qwk_series is not None:
-            all_series[method] = qwk_series
-            min_qwk = min(min_qwk, min(qwk_series))
-        else:
-            print(f"  [Skip] {method} on {partition_name} — CSV not found: {csv_path}")
+        clients = sorted(partition_map)
+        counts  = np.array([[np.sum(labels[partition_map[c]] == g) for g in range(5)]
+                            for c in clients])
+        totals  = counts.sum(axis=1)
+        shares  = counts / np.maximum(totals[:, None], 1) * 100
+        x       = np.arange(len(clients))
 
-    if not all_series:
-        print(f"  [Skip] No data available for {partition_name} yet")
-        plt.close()
-        return False
-        
-    # 2. Dynamic Y-Axis lower bound
-    # Expand chart downwards if min_qwk is lower than the default
-    lower_ylim = min(default_lower, min_qwk - 0.05)
-    lower_ylim = max(-0.1, lower_ylim) # Hard floor at -0.1 to avoid massive blank spaces
+        bottom = np.zeros(len(clients))
+        for g in range(5):
+            present = shares[:, g] > 0   # an empty segment would still draw its edge
+            # white edges = the surface gap between stacked segments
+            ax.bar(x[present], shares[present, g], bottom=bottom[present], width=0.66,
+                   color=GRADE_COLORS[g], edgecolor='white', linewidth=0.8, zorder=2)
+            bottom += shares[:, g]
 
-    # 3. Plot the data
-    for method, qwk_series in all_series.items():
-        rounds = list(range(1, len(qwk_series) + 1))
-        ax.plot(
-            rounds, qwk_series,
-            color     = COLORS[method],
-            marker    = MARKERS[method],
-            linewidth = 2,
-            markersize= 6,
-            label     = LABELS[method],
-            zorder    = 3
-        )
-
-    # Centralised ceiling
-    ax.axhline(
-        y         = CENTRALISED_QWK,
-        color     = COLORS['central'],
-        linestyle = '--',
-        linewidth = 1.5,
-        label     = f'Centralised (ceiling = {CENTRALISED_QWK})',
-        zorder    = 2
-    )
-
-    # 0.80 gate line
-    ax.axhline(
-        y         = 0.80,
-        color     = '#BDC3C7',
-        linestyle = ':',
-        linewidth = 1.0,
-        label     = 'Clinical threshold (QWK=0.80)',
-        zorder    = 1
-    )
-
-    ax.set_xlabel('FL Round', fontsize=12)
-    ax.set_ylabel('Validation QWK', fontsize=12)
-    ax.set_title(title, fontsize=13, fontweight='bold')
-    ax.set_xlim(0.5, 10.5)
-    
-    # Apply dynamic Y-limit
-    ax.set_ylim(lower_ylim, 0.90)
-    
-    ax.set_xticks(range(1, 11))
-    
-    # Move legend to the left for dirichlet_0.1 so it doesn't block the dip
-    if partition_name == 'dirichlet_0.1':
-        ax.legend(loc='lower left', fontsize=9, framealpha=0.9)
-    else:
-        ax.legend(loc='lower right', fontsize=9, framealpha=0.9)
-        
-    ax.grid(True, alpha=0.3, linestyle='--')
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=150, bbox_inches='tight')
-    plt.close()
-    print(f"  Saved: {output_path}")
-    return True
-
-
-def plot_all_qwk_curves_combined(output_path):
-    """
-    3-panel figure: IID | α=0.1 | real_site side by side.
-    This is the main figure for the paper.
-    """
-    partitions = [
-        ('iid',           'IID',              0.75),
-        ('dirichlet_0.1', 'Dirichlet α=0.1',  0.45),
-        ('real_site',     'Real-site',        0.75),
-    ]
-
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), sharey=False)
-
-    for ax, (partition_name, title, default_lower) in zip(axes, partitions):
-        csv_paths = {
-            'fedavg'    : os.path.join(RESULTS_DIR, f'fedavg_{partition_name}.csv'),
-            'fedprox'   : os.path.join(RESULTS_DIR, f'fedprox_{partition_name}_mu0.01.csv'),
-            'ordinalfed': os.path.join(RESULTS_DIR, f'ordinalfed_{partition_name}.csv'),
-        }
-
-        all_series = {}
-        min_qwk = 0.80
-        
-        # Discover min_qwk for dynamic limits
-        for method, csv_path in csv_paths.items():
-            qwk_series = load_qwk_series(csv_path)
-            if qwk_series is not None:
-                all_series[method] = qwk_series
-                min_qwk = min(min_qwk, min(qwk_series))
-
-        lower_ylim = min(default_lower, min_qwk - 0.05)
-        lower_ylim = max(-0.1, lower_ylim)
-
-        for method, qwk_series in all_series.items():
-            rounds = list(range(1, len(qwk_series) + 1))
-            ax.plot(
-                rounds, qwk_series,
-                color     = COLORS[method],
-                marker    = MARKERS[method],
-                linewidth = 2,
-                markersize= 5,
-                label     = LABELS[method],
-                zorder    = 3
-            )
-
-        ax.axhline(
-            y=CENTRALISED_QWK, color=COLORS['central'],
-            linestyle='--', linewidth=1.5,
-            label=f'Centralised ({CENTRALISED_QWK})', zorder=2
-        )
-        ax.axhline(
-            y=0.80, color='#BDC3C7',
-            linestyle=':', linewidth=1.0,
-            label='Threshold (0.80)', zorder=1
-        )
-
-        ax.set_xlabel('FL Round', fontsize=11)
-        ax.set_ylabel('Validation QWK' if ax == axes[0] else '', fontsize=11)
-        ax.set_title(title, fontsize=12, fontweight='bold')
-        ax.set_xlim(0.5, 10.5)
-        
-        # Apply dynamic limit
-        ax.set_ylim(lower_ylim, 0.90)
-        
-        ax.set_xticks(range(1, 11))
-        ax.grid(True, alpha=0.3, linestyle='--')
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-
-        if ax == axes[2]:
-            ax.legend(loc='lower right', fontsize=8, framealpha=0.9)
-
-    plt.suptitle(
-        'OrdinalFed vs Baselines: Validation QWK Across FL Rounds',
-        fontsize=13, fontweight='bold', y=1.02
-    )
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=150, bbox_inches='tight')
-    plt.close()
-    print(f"  Saved: {output_path}")
-
-
-# ── Figure 4: Data Distributions ──────────────────────────────────────────────
-
-def plot_distributions(output_path):
-    """
-    3×5 stacked bar chart showing per-client grade distributions
-    for IID, dirichlet_0.1, and real_site.
-    """
-    data_dir = os.path.join(BASE_DIR, 'data', 'DDR', 'DR_grading')
-
-    partitions_to_plot = [
-        ('iid',           'IID Partition'),
-        ('dirichlet_0.1', 'Dirichlet α=0.1'),
-        ('real_site',     'Real-site Partition'),
-    ]
-
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-
-    for ax, (partition_name, title) in zip(axes, partitions_to_plot):
-        dists = load_partition_distributions(partition_name, data_dir)
-        if dists is None:
-            ax.set_title(f'{title}\n(no data)', fontsize=11)
-            continue
-
-        num_clients = len(dists)
-        client_ids  = sorted(dists.keys())
-        x           = np.arange(num_clients)
-        bar_width   = 0.6
-
-        # Convert to percentages
-        pct = np.zeros((num_clients, 5))
-        totals = []
-        for i, cid in enumerate(client_ids):
-            counts = dists[cid]
-            total  = counts.sum()
-            totals.append(total)
-            pct[i] = counts / total * 100 if total > 0 else 0
-
-        # Stacked bar
-        bottom = np.zeros(num_clients)
-        for grade in range(5):
-            ax.bar(
-                x, pct[:, grade],
-                bottom    = bottom,
-                width     = bar_width,
-                color     = GRADE_COLORS[grade],
-                label     = GRADE_LABELS[grade],
-                edgecolor = 'white',
-                linewidth = 0.5
-            )
-            bottom += pct[:, grade]
-
-        # Add total sample count above each bar
-        for i, total in enumerate(totals):
-            ax.text(
-                i, 102, f'n={total}',
-                ha='center', va='bottom',
-                fontsize=8, color='#2C3E50', fontweight='bold'
-            )
-
-        ax.set_xlabel('Client', fontsize=11)
-        ax.set_ylabel('Grade Distribution (%)' if ax == axes[0] else '', fontsize=11)
-        ax.set_title(title, fontsize=12, fontweight='bold')
+        style_axes(ax)
+        ax.set_title(title, color=INK, pad=4)
         ax.set_xticks(x)
-        ax.set_xticklabels([f'C{i}' for i in client_ids])
-        ax.set_ylim(0, 115)
+        # client id on the first line, number of images it holds on the second
+        ax.set_xticklabels([f'C{c}\n{t:,}' for c, t in zip(clients, totals)])
+        ax.set_ylim(0, 100)
         ax.set_yticks([0, 25, 50, 75, 100])
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.grid(axis='y', alpha=0.3, linestyle='--')
+        ax.tick_params(axis='x', length=0)
 
-        if ax == axes[2]:
-            ax.legend(
-                loc='upper right', fontsize=8,
-                framealpha=0.9, ncol=1
-            )
+    axes[0].set_ylabel('Share of client images (%)')
+    axes[1].set_xlabel('Client and number of images held')
 
-    plt.suptitle(
-        'Per-Client Grade Distributions Under Three Federated Partitions',
-        fontsize=13, fontweight='bold', y=1.02
-    )
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=150, bbox_inches='tight')
-    plt.close()
-    print(f"  Saved: {output_path}")
+    handles = [Patch(facecolor=c, edgecolor='white', label=l)
+               for c, l in zip(GRADE_COLORS, GRADE_LABELS)]
+    fig.legend(handles=handles, loc='upper center', ncol=5, frameon=False,
+               bbox_to_anchor=(0.5, 1.08), handlelength=1.2, columnspacing=1.6)
+    fig.tight_layout(w_pad=1.2)
+    save(fig, filename)
+
+
+# ── Fig. 2: validation QWK per round ──────────────────────────────────────────
+
+def load_val_curves(include_partial):
+    """Return {(method, partition): array (n_seeds, rounds)} from results/runs/."""
+    curves = {}
+    if not os.path.isdir(RUNS_DIR):
+        return curves
+    for name in sorted(os.listdir(RUNS_DIR)):
+        run_dir = os.path.join(RUNS_DIR, name)
+        cfg_path, hist_path = (os.path.join(run_dir, 'config.json'),
+                               os.path.join(run_dir, 'history.json'))
+        if not (os.path.exists(cfg_path) and os.path.exists(hist_path)):
+            continue
+        if not include_partial and not os.path.exists(os.path.join(run_dir, 'done.json')):
+            continue
+        with open(cfg_path, 'r') as f:
+            cfg = json.load(f)
+        if name != f"{cfg['method']}_{cfg['partition']}_s{cfg['seed']}":
+            continue   # tagged test run (e.g. _smoke)
+        with open(hist_path, 'r') as f:
+            qwk = [r['val_qwk'] for r in json.load(f)]
+        if qwk:
+            curves.setdefault((cfg['method'], cfg['partition']), []).append(qwk)
+
+    out = {}
+    for key, runs in curves.items():
+        length   = min(len(r) for r in runs)   # partial runs: common prefix only
+        out[key] = np.array([r[:length] for r in runs])
+    return out
+
+
+def centralised_val_qwk():
+    path = os.path.join(BASE_DIR, 'results', 'centralised_done.json')
+    if not os.path.exists(path):
+        return None
+    with open(path, 'r') as f:
+        return json.load(f)['best_val_qwk']
+
+
+def plot_qwk_curves(include_partial, filename='fig4_qwk_combined.pdf'):
+    curves = load_val_curves(include_partial)
+    if not any((m, p) in curves for m in METHOD_ORDER for p, _ in PANELS):
+        print("  [Skip] Fig. 2 — no finished runs in results/runs/ yet "
+              "(use --partial for a preview)")
+        return False
+
+    ceiling = centralised_val_qwk()
+    fig, axes = plt.subplots(1, 3, figsize=(PAGE_WIDTH_IN, 2.2))
+    seed_counts = set()
+
+    for ax, (partition, title) in zip(axes, PANELS):
+        lows, highs = [], []
+        for method in METHOD_ORDER:
+            if (method, partition) not in curves:
+                continue
+            runs   = curves[(method, partition)]
+            style  = METHOD_STYLE[method]
+            rounds = np.arange(1, runs.shape[1] + 1)
+            mean   = runs.mean(axis=0)
+            std    = runs.std(axis=0, ddof=1) if len(runs) > 1 else np.zeros_like(mean)
+            seed_counts.add(len(runs))
+
+            ax.fill_between(rounds, mean - std, mean + std, color=style['color'],
+                            alpha=0.15, linewidth=0, zorder=style['z'] - 1)
+            ax.plot(rounds, mean, color=style['color'], marker=style['marker'],
+                    markersize=3.5, markeredgecolor='white', markeredgewidth=0.5,
+                    linewidth=1.4, zorder=style['z'])
+            lows.append((mean - std).min())
+            highs.append((mean + std).max())
+
+        if ceiling is not None:
+            ax.axhline(ceiling, color=MUTED, linewidth=0.8, linestyle=(0, (4, 2)), zorder=1)
+            highs.append(ceiling)
+
+        if lows:
+            pad = 0.015
+            ax.set_ylim(min(lows) - pad, max(highs) + pad)
+        style_axes(ax)
+        ax.set_title(title, color=INK, pad=4)
+        ax.set_xticks([2, 4, 6, 8, 10])
+        ax.set_xlim(0.6, 10.4)
+        ax.set_xlabel('FL round')
+
+    axes[0].set_ylabel('Validation QWK')
+
+    handles = [Line2D([], [], color=METHOD_STYLE[m]['color'], marker=METHOD_STYLE[m]['marker'],
+                      markersize=4, linewidth=1.4, label=METHOD_STYLE[m]['label'])
+               for m in METHOD_ORDER]
+    if ceiling is not None:
+        handles.append(Line2D([], [], color=MUTED, linewidth=0.8, linestyle=(0, (4, 2)),
+                              label=f'Centralised ({ceiling:.3f})'))
+    fig.legend(handles=handles, loc='upper center', ncol=len(handles), frameon=False,
+               bbox_to_anchor=(0.5, 1.09), handlelength=2.2, columnspacing=1.6)
+    fig.tight_layout(w_pad=1.4)
+    save(fig, filename)
+
+    n = sorted(seed_counts)
+    print(f"  Fig. 2: mean ± std over {n[0] if len(n) == 1 else f'{n[0]}–{n[-1]}'} seeds"
+          + ("  (PREVIEW — includes unfinished runs)" if include_partial else ""))
+    return True
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
+    use_utf8_output()
+    parser = argparse.ArgumentParser(description="Generate the paper figures")
+    parser.add_argument("--fig", type=int, choices=[1, 2], help="Only this figure")
+    parser.add_argument("--partial", action="store_true",
+                        help="Fig. 2 preview: include unfinished runs")
+    args = parser.parse_args()
+
     print("=" * 60)
     print("  Generating Paper Figures")
     print("=" * 60)
 
-    # ── Figure 1: QWK curves — dirichlet_0.1 (main result) ────────────────
-    print("\n[1] QWK curves — Dirichlet α=0.1")
-    plot_qwk_curves(
-        partition_name = 'dirichlet_0.1',
-        title          = 'Validation QWK vs FL Round (Dirichlet α=0.1)',
-        output_path    = os.path.join(FIGURES_DIR, 'fig1_qwk_dirichlet01.pdf')
-    )
+    if args.fig in (None, 1):
+        print("\n[Fig. 1] Per-client grade distributions")
+        plot_distributions()
+    if args.fig in (None, 2):
+        print("\n[Fig. 2] Validation QWK per round")
+        plot_qwk_curves(args.partial)
 
-    # ── Figure 2: QWK curves — real_site ──────────────────────────────────
-    print("\n[2] QWK curves — Real-site")
-    plot_qwk_curves(
-        partition_name = 'real_site',
-        title          = 'Validation QWK vs FL Round (Real-site)',
-        output_path    = os.path.join(FIGURES_DIR, 'fig2_qwk_realsite.pdf')
-    )
-
-    # ── Figure 3: QWK curves — IID ────────────────────────────────────────
-    print("\n[3] QWK curves — IID")
-    plot_qwk_curves(
-        partition_name = 'iid',
-        title          = 'Validation QWK vs FL Round (IID)',
-        output_path    = os.path.join(FIGURES_DIR, 'fig3_qwk_iid.pdf')
-    )
-
-    # ── Figure 4: Combined 3-panel QWK (main paper figure) ────────────────
-    print("\n[4] Combined QWK curves (all 3 partitions)")
-    plot_all_qwk_curves_combined(
-        output_path = os.path.join(FIGURES_DIR, 'fig4_qwk_combined.pdf')
-    )
-
-    # ── Figure 5: Data distributions ──────────────────────────────────────
-    print("\n[5] Data distributions")
-    plot_distributions(
-        output_path = os.path.join(FIGURES_DIR, 'fig5_distributions.pdf')
-    )
-
-    print("\n" + "=" * 60)
-    print(f"  All figures saved to: {FIGURES_DIR}")
-    print("=" * 60)
-    print("\nFiles generated:")
-    for f in sorted(os.listdir(FIGURES_DIR)):
-        path = os.path.join(FIGURES_DIR, f)
-        size = os.path.getsize(path) // 1024
-        print(f"  {f}  ({size} KB)")
+    print("\nUpload the updated PDFs from overleaf/ordinalfed_multifile/ to Overleaf.")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 
 **Paper:** WIECON-ECE 2026, paper #518. Status: **conditionally accepted**.
 
-**What must be submitted:** the revised paper (≤ 6 pages, still anonymous) and a **separate one-page response PDF**. Both are due **within 5 days of the notification email**, through the Google Form linked in that email. The similarity score should stay below 30%.
+**What must be submitted:** the revised paper (≤ 6 pages, still anonymous) and a **separate one-page response PDF**. Both are due **within 5 days of the notification email (received Tue 6 Oct)**, through the Google Form linked in that email. **Target: submit by Sat 10 Oct evening.** The email gives no exact closing time, so Sun 11 Oct is only an emergency buffer. The similarity score should stay below 30%.
 
 **Setup:** Intel Arc B580 on Windows, using **Git Bash**. Every command below is bash.
 
@@ -61,7 +61,7 @@ The first round after a restart takes about 1 minute longer while the GPU compil
 
 ---
 
-# DAY 1: Setup and start the experiments
+# DAY 1 (Wed 7 Oct): Setup and start the experiments
 
 ### Step 1: Prepare the PC [PC] (5 min)
 1. Settings → Windows Update → **Pause updates for 1 week**.
@@ -249,7 +249,7 @@ Upload the `.tar.gz` file (a few MB) to Google Drive.
 
 ---
 
-# DAY 2: GPU runs; you fix the paper
+# DAY 2 (Thu 8 Oct): GPU runs; you fix the paper
 
 After every power cut, use the 2-minute routine at the top of this file.
 
@@ -298,11 +298,14 @@ grep -rn "TODO(Day" overleaf/
 
 Ask Claude to implement SCAFFOLD. When it's ready, set `INCLUDE_SCAFFOLD = True` in `experiments/run_queue.py`. The running queue picks it up the next time it is started; there is no need to stop it.
 
-### Step 18: Figures by Claude [PC][NET] (30 min)
+### Step 18: Figures ✅ script done (Fig. 1 final; Fig. 2 after the runs)
 
-Ask Claude to update `experiments/generate_figures.py`:
-- Fig. 1 (client distributions): printed width 7.16 in, fonts ≥ 8 pt.
-- Fig. 2 (QWK over rounds): mean ± std bands from `results/runs/`, with the centralised line read from `results/centralised_test.json`.
+`experiments/generate_figures.py` now draws both figures at the printed page width (8 pt text on paper) and copies them into `overleaf/ordinalfed_multifile/`.
+
+| Figure | Status |
+|---|---|
+| **Fig. 1** (client distributions) | **Final.** It was built from your real labels file and is already in the paper folder. Upload `fig5_distributions.pdf` to Overleaf. |
+| **Fig. 2** (QWK over rounds) | Mean ± std bands over seeds, with the centralised line taken from `results/centralised_done.json`. Generate it when the runs finish (Steps 23 and 26). For a preview while the queue is still running: `python experiments/generate_figures.py --fig 2 --partial` |
 
 ### Step 19: Evening preview [PC] (15 min)
 
@@ -318,7 +321,7 @@ Repeat Step 13.
 
 ---
 
-# DAY 3: Finish the runs, build tables and figures
+# DAY 3 (Fri 9 Oct): Finish the runs, build tables and figures
 
 ### Step 21: Midday trim check [PC] (5 min)
 
@@ -326,11 +329,11 @@ Repeat Step 13.
 bash resume_queue.sh --status
 ```
 
-If the estimated GPU time left plus expected outages runs past **Day 3 midnight**, shrink the queue:
+If the estimated GPU time left plus expected outages runs past **Fri 9 Oct, midnight**, shrink the queue:
 1. Set `INCLUDE_SCAFFOLD = False`.
 2. Then set `IID_SEEDS = (1,)`.
 
-**Hard stop:** anything not finished by **Day 4, 8 am** stays out of the paper. Stop the queue with Ctrl+C at that time.
+**Hard stop:** anything not finished by **Sat 10 Oct, 8 am** stays out of the paper. Stop the queue with Ctrl+C at that time.
 
 ### Step 22: Tables [PC] (10 min)
 
@@ -366,7 +369,7 @@ Repeat Step 13.
 
 ---
 
-# DAY 4: Write and submit (no GPU needed)
+# DAY 4 (Sat 10 Oct): Write and submit (no GPU needed)
 
 ### Step 26: Final numbers [PC] (15 min)
 
@@ -420,7 +423,7 @@ The conference requires a **separate one-page PDF**. The source is `overleaf/res
 - [ ] All numbers match between the abstract, the tables and the conclusion
 - [ ] Eq. 4–6 match the code (β₀ = 0.5, τ = 3, κ floor 0.1)
 
-### Step 30: Submit [NET] (at least 3 h before the deadline)
+### Step 30: Submit [NET] (by Sat 10 Oct evening)
 
 - Submit **both PDFs** (revised paper + one-page response) through the form linked in the conditional-acceptance email (`forms.gle/KmTRvCdf5pLsM6Fs5`), **not** through CMT.
 - Then keep checking the CMT portal for the final Accept/Reject decision and the camera-ready instructions.
