@@ -1,0 +1,109 @@
+%% ============================================================
+%%  Response to reviewers: WIECON-ECE 2026, Paper #518
+%%  Must fit on ONE page (conference requirement). Compile with pdflatex.
+%%  On Day 4: replace every \TBD{...} (printed in red) and check it
+%%  still fits on one page.
+%% ============================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[skip=2pt]{caption}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\newcommand{\TBD}[1]{\textcolor{red}{[TBD: #1]}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Response to Reviewers --- Paper \#518}\\[2pt]
+\textit{OrdinalFed: Federated Learning with Ordinal-Aware Aggregation for Diabetic Retinopathy Grading}
+\end{center}
+
+The authors thank both reviewers for their constructive comments. Each comment
+is answered below; section, table and figure numbers refer to the revised manuscript.
+
+\textbf{Reviewer \#2:} \textit{``\ldots stronger experimental validation through
+ablation studies, additional recent baselines, independent validation data,
+repeated experiments, and detailed class-wise performance analysis\ldots''}
+
+{\small
+\begin{tabular}{@{}L{3.1cm}L{11.0cm}L{2.4cm}@{}}
+\toprule
+\textbf{Request} & \textbf{Response} & \textbf{Where} \\
+\midrule
+Ablation studies &
+Each component was ablated under $\alpha=0.1$ and the real-site partition:
+OrdinalLoss with sample-count weights, cross-entropy with QWK weights,
+cross-entropy with uniform weights, and full OrdinalFed.
+\TBD{one-sentence finding from the ablation table} &
+Sec.~IV-D, Table~\TBD{n} \\
+Additional baselines &
+A quality-aware aggregation baseline (AccWt), representative of server-side
+validation scoring [9], was added. It uses OrdinalFed's scoring and schedule but
+weights clients by accuracy instead of QWK, isolating the value of the ordinal
+signal. \TBD{one-sentence comparison} &
+Sec.~IV-C, Table~I \\
+Independent validation data &
+All headline results are now reported on the DDR test split excluding the 50
+server-set images (3,709 images), which is never used for training,
+aggregation or model selection; the reported round is chosen by validation QWK. &
+Sec.~IV-D, Table~I \\
+Repeated experiments &
+Every configuration was repeated with \TBD{3} random seeds and is reported as
+mean $\pm$ standard deviation. &
+Tables~I--\TBD{n} \\
+Class-wise analysis &
+Per-grade recall and F1 on the test split are reported for FedAvg, FedProx and
+OrdinalFed. \TBD{one sentence on Grades 1 and 3} &
+Sec.~V-\TBD{x}, Table~\TBD{n} \\
+\bottomrule
+\end{tabular}
+}
+
+\textit{Further corrections:} Eqs.~(4)--(6) now state the exact aggregation used in
+the experiments; the mechanistic analysis (Sec.~V-C) was rewritten from the logged
+per-round server scores and aggregation weights; the server-side overhead is reported
+as measured (\TBD{x}\,s per round); the dataset statistics in Sec.~IV-A were corrected.
+
+\textbf{Reviewer \#3}
+
+{\small
+\begin{tabular}{@{}L{5.2cm}L{9.3cm}L{2.0cm}@{}}
+\toprule
+\textbf{Comment} & \textbf{Response} & \textbf{Where} \\
+\midrule
+1.~Multiple consecutive reference format, e.g.\ [1-2] &
+Consecutive citations are given as a range (e.g.\ [5]--[6]), and references are
+numbered in order of first citation. &
+Sec.~I, Refs. \\
+2.~Tiny font inside Figs.~1--2 &
+Both figures were regenerated at their printed width with all text at 8\,pt or larger. &
+Figs.~1--2 \\
+3.~Description missing for Figs.~1--2 &
+Each figure is introduced in the text with a description of what its panels, bars
+and lines show. &
+Secs.~IV-B, V-B \\
+4.~IEEE citation format; DOI required &
+All references were verified against Crossref and arXiv and follow IEEE style with
+a DOI (URL and access date for the IDF Atlas). Incorrect venues, author lists,
+volumes and pages were corrected. &
+References \\
+5.~Passive voice preferred &
+The manuscript was revised to use the passive voice throughout. &
+Throughout \\
+6.~Description before all figures and tables &
+Every figure and table is referenced and described in the text before the float;
+Figs.~1--2 were moved accordingly. &
+Throughout \\
+\bottomrule
+\end{tabular}
+}
+
+\end{document}
