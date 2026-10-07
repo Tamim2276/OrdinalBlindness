@@ -205,8 +205,7 @@ Then choose the experiment set from your R:
 
 | R (round 2 time) | What to run | GPU hours |
 |---|---|---|
-| ≤ 3.5 min | Everything (SCAFFOLD is added on Day 2) | ≈ 30–34 h |
-| 3.5–4.5 min | Everything except SCAFFOLD | ≈ 30–39 h |
+| ≤ 4.5 min | Everything (51 runs) | ≈ 27–39 h |
 | 4.5–6 min | In `experiments/run_queue.py`, set `ABLATION_SEEDS = (1, 2)` and `IID_SEEDS = (1,)` | ≈ 30–38 h |
 | > 6 min | **Stop and tell Claude.** Something isn't using the cache or the GPU properly. | — |
 
@@ -233,7 +232,7 @@ The queue order is:
 |---|---|
 | **Tier 1** | FedAvg, FedProx and OrdinalFed on α=0.1 and real-site |
 | **Tier 2** | 3 ablations + AccWt on α=0.1 and real-site; FedAvg, FedProx and OrdinalFed on IID with seed 1 |
-| **Tier 3** | IID seeds 2–3 (SCAFFOLD added on Day 2) |
+| **Tier 3** | IID seeds 2–3 |
 
 That's 51 runs. Whatever finishes always forms complete tables.
 
@@ -294,9 +293,9 @@ grep -rn "TODO(Day" overleaf/
 - The incorrect "centre-cropped" and "stratified" claims.
 - The new Eq. 4–6 (decision D1), the AccWt baseline, the ablations and the evaluation protocol were added to Sec. IV.
 
-### Step 17: SCAFFOLD by Claude [PC][NET] (if R ≤ 3.5 min)
+### Step 17: ~~SCAFFOLD~~ (skipped, your decision)
 
-Ask Claude to implement SCAFFOLD. When it's ready, set `INCLUDE_SCAFFOLD = True` in `experiments/run_queue.py`. The running queue picks it up the next time it is started; there is no need to stop it.
+AccWt is the added baseline for Reviewer #2. Nothing to do here.
 
 ### Step 18: Figures ✅ script done (Fig. 1 final; Fig. 2 after the runs)
 
@@ -330,8 +329,8 @@ bash resume_queue.sh --status
 ```
 
 If the estimated GPU time left plus expected outages runs past **Fri 9 Oct, midnight**, shrink the queue:
-1. Set `INCLUDE_SCAFFOLD = False`.
-2. Then set `IID_SEEDS = (1,)`.
+1. Set `IID_SEEDS = (1,)` in `experiments/run_queue.py`.
+2. If still behind, set `ABLATION_SEEDS = (1, 2)`.
 
 **Hard stop:** anything not finished by **Sat 10 Oct, 8 am** stays out of the paper. Stop the queue with Ctrl+C at that time.
 
@@ -391,7 +390,7 @@ Copy the tables and figures into Overleaf, then back up (Step 13).
 | III-E, III-F, IV | Already done by Claude (see Step 16); only the `TODO(Day 4)` numbers remain |
 | IV-A | Remove "centre-cropped" (the code only resizes) |
 | IV-B | The IID split is uniform random, not "stratified" |
-| IV-C | Add: 3 seeds; T = 10 for all partitions; test protocol (best-validation round, DDR test split minus V); AccWt (and SCAFFOLD); note that seeds fix data order and augmentation, but GPU bf16 arithmetic is not bit-exact |
+| IV-C | Add: 3 seeds; T = 10 for all partitions; test protocol (best-validation round, DDR test split minus V); AccWt; note that seeds fix data order and augmentation, but GPU bf16 arithmetic is not bit-exact |
 | V-A, V-B | Tables I–II from `make_tables.py` |
 | New subsections | Ablation and per-grade analysis (Grades 1 and 3) |
 | V-C | Rewrite from `results/runs/ordinalfed_*/history.csv` (columns `server_score_k`, `weight_k`). Client 0 (32 images) has only 0.5% of the FedAvg weight and 5 optimiser steps per round, so it is not the cause of the collapse. |

@@ -44,7 +44,6 @@ DECIMALS   = 3
 METHOD_LABELS = {
     "fedavg"      : "FedAvg",
     "fedprox"     : r"FedProx ($\mu=0.01$)",
-    "scaffold"    : "SCAFFOLD",
     "accwt"       : "AccWt",
     "ordinalfed"  : r"\textbf{OrdinalFed (Ours)}",
     "abl_ordloss" : "OrdinalLoss + sample-count weights",
@@ -56,7 +55,7 @@ PARTITION_LABELS = {
     "dirichlet_0.1": r"Dirichlet ($\alpha=0.1$)",
     "real_site"    : "Real-Site",
 }
-MAIN_ROWS     = ["fedavg", "fedprox", "scaffold", "accwt", "ordinalfed"]
+MAIN_ROWS     = ["fedavg", "fedprox", "accwt", "ordinalfed"]
 ABLATION_ROWS = ["abl_ordloss", "abl_qwkagg", "abl_uniform", "ordinalfed"]
 PERGRADE_ROWS = ["fedavg", "fedprox", "ordinalfed"]
 GRADES        = range(5)

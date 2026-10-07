@@ -96,10 +96,13 @@ Algorithm~\ref{alg:ordinalfed}.
 
 The scheme is deliberately conservative. No client is ever excluded, because a
 single 50-image estimate of $\kappa_k^t$ is too noisy to justify discarding a
-hospital's update. With $\tau = 3$ and $\kappa \in [0.1, 1]$, the quality term can
-change a client's relative weight by at most a factor of $e^{0.9/3} \approx 1.35$,
-so the aggregation is a bounded re-weighting of the image-count weights rather
-than a hard filter on client updates.
+hospital's update. With $\tau = 3$ and $\kappa \in [0.1, 1]$, the quality weights
+$q_k^t$ differ from one another by at most a factor of $e^{0.9/3} \approx 1.35$,
+so they are close to equal. As $\beta(t)$ decreases, the aggregation therefore
+moves from image-count weights towards near-equal client weights, with a mild
+preference for clients that score higher on $\mathcal{V}$. Small clients thus
+gain influence in later rounds; the uniform-aggregation ablation ($\omega_k^t = 1/K$,
+Sec.~IV-D) separates this effect from that of the QWK scores.
 
 \begin{algorithm}[t]
 \caption{OrdinalFed Training Pipeline}

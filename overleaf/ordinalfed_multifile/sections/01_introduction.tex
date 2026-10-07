@@ -15,9 +15,9 @@ NPDR), Grade~3 (severe NPDR), and Grade~4 (proliferative DR). Referable disease
 automated screening attractive.
 
 When all images are pooled in one place, deep convolutional networks grade DR
-accurately. On the imbalanced DDR dataset~\cite{li2019ddr}, an EfficientNet-B3
-model reaches a Quadratic Weighted Kappa (QWK) of 0.8494.
-% TODO(Day 4): new centralised QWK (results/centralised_test.json)
+well. On the imbalanced DDR dataset~\cite{li2019ddr}, an EfficientNet-B3 model
+trained in this way reaches a Quadratic Weighted Kappa (QWK) of 0.834 on the
+validation split and 0.682 on the separate test split (Sec.~\ref{sec:results}).
 QWK is the standard metric for ordinal grading because it penalises an error by
 the square of its distance: predicting Grade~0 for a Grade~4 image costs far more
 than predicting Grade~3. Pooling patient images from several hospitals, however,

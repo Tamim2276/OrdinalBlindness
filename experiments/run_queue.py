@@ -14,7 +14,7 @@ Order — so whatever has finished always forms complete tables:
 
     Tier 1 (must)  : FedAvg, FedProx, OrdinalFed × {α=0.1, real-site}
     Tier 2 (should): ablations + AccWt × {α=0.1, real-site}; IID seed 1
-    Tier 3 (nice)  : IID seeds 2–3; SCAFFOLD (once implemented)
+    Tier 3 (nice)  : IID seeds 2–3
 
 Each run is a separate `python experiments/run_fl.py ...` process, so a
 crash in one run cannot take the queue down with it.
@@ -44,7 +44,6 @@ MAIN_SEEDS          = (1, 2, 3)   # Tier 1
 ABLATION_SEEDS      = (1, 2, 3)   # Tier 2 ablations + AccWt
 ABLATION_PARTITIONS = ("dirichlet_0.1", "real_site")
 IID_SEEDS           = (1, 2, 3)   # seed 1 is Tier 2, the others Tier 3
-INCLUDE_SCAFFOLD    = False       # set True once SCAFFOLD is implemented (Day 2)
 
 MAIN_METHODS     = ("fedavg", "fedprox", "ordinalfed")
 MAIN_PARTITIONS  = ("dirichlet_0.1", "real_site")
@@ -80,10 +79,7 @@ def tier2(seed):
 
 
 def tier3():
-    jobs = [Job(3, m, "iid", s) for s in IID_SEEDS if s != 1 for m in MAIN_METHODS]
-    if INCLUDE_SCAFFOLD:
-        jobs += [Job(3, "scaffold", p, s) for s in MAIN_SEEDS for p in MAIN_PARTITIONS]
-    return jobs
+    return [Job(3, m, "iid", s) for s in IID_SEEDS if s != 1 for m in MAIN_METHODS]
 
 
 def build_queue(max_tier=3):

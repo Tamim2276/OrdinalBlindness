@@ -57,8 +57,7 @@ All federated experiments use an EfficientNet-B3 backbone, chosen for its balanc
 between parameter efficiency and feature extraction capability at
 $224 \times 224$ resolution. To simulate real-world deployment where pre-trained
 weights are adapted, all FL runs are warm-started from a centralised model trained
-for 30 epochs (validation QWK = 0.8494).
-% TODO(Day 4): new centralised validation QWK (results/centralised_done.json)
+for 30 epochs (best validation QWK = 0.834, reached at epoch~23).
 OrdinalFed is benchmarked against:
 (1)~\textbf{Centralised Baseline}; (2)~\textbf{FedAvg}~\cite{mcmahan2017fedavg};
 (3)~\textbf{FedProx}~\cite{li2020fedprox} with proximal coefficient $\mu = 0.01$; and
