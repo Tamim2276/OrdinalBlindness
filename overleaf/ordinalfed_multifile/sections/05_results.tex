@@ -161,6 +161,14 @@ Due to severe natural dataset scarcity in the DDR benchmark (Grade~1 represents
 only 5.0\% of the training set), Grade~1 sensitivity remains below 0.15
 across all tested methods.
 % TODO(Day 4): check "below 0.15" against results/tables/table_pergrade.tex.
+All models also score lower on the DDR test split than on the validation split;
+the centralised model, for example, drops from a QWK of 0.834 to 0.682. Most of
+this drop comes from Grade~2 images predicted as Grade~0 (about 45\% of test
+Grade~2 images, against about 12\% on the validation split), and the test split
+contains a different mix of camera resolutions. Validation QWK therefore
+overestimates performance on unseen images, which is why all main results are
+reported on the test split.
+% TODO(Day 4): confirm "All models" against table_main.tex (val vs test columns).
 Furthermore, the 50-image server set $\mathcal{V}$
 introduces minor QWK estimation noise in final rounds when $\beta(t) \to 0$.
 Setting a non-zero $\beta$ lower bound and expanding $\mathcal{V}$ via generative
