@@ -49,15 +49,22 @@ METHOD_LABELS = {
     "abl_ordloss" : "OrdinalLoss + sample-count weights",
     "abl_qwkagg"  : "CE + QWK weights",
     "abl_uniform" : "CE + uniform weights",
+    "ordinalfed_prox": r"OrdinalFed + Prox ($\mu=0.01$)",
+    "sens_lam01"  : r"OrdinalFed, $\lambda=0.1$",
+    "sens_beta00" : r"OrdinalFed, $\beta_0=0$",
+    "sens_tau05"  : r"OrdinalFed, $\tau=0.5$",
 }
 PARTITION_LABELS = {
     "iid"          : "IID",
     "dirichlet_0.1": r"Dirichlet ($\alpha=0.1$)",
     "real_site"    : "Real-Site",
 }
-MAIN_ROWS     = ["fedavg", "fedprox", "accwt", "ordinalfed"]
+# Rows only appear once their runs exist (ordinalfed_prox is the optional Tier 4)
+MAIN_ROWS     = ["fedavg", "fedprox", "accwt", "ordinalfed", "ordinalfed_prox"]
 ABLATION_ROWS = ["abl_ordloss", "abl_qwkagg", "abl_uniform", "ordinalfed"]
 PERGRADE_ROWS = ["fedavg", "fedprox", "ordinalfed"]
+# Tier 5 grid (fixed before the runs). The winner is chosen on mean VALIDATION QWK only.
+SENS_ROWS     = ["ordinalfed", "sens_lam01", "sens_beta00", "sens_tau05"]
 GRADES        = range(5)
 
 
@@ -260,6 +267,31 @@ def table_pergrade(groups):
     )
 
 
+def table_sensitivity(groups):
+    """OrdinalFed settings under α=0.1. Selection column = mean val QWK; test is reported, never used."""
+    methods = [m for m in SENS_ROWS if (m, "dirichlet_0.1") in groups]
+    if len(methods) < 2:
+        return None
+    runs    = lambda m: groups[(m, "dirichlet_0.1")]
+    columns = [
+        bold_best([cell([r["val_mean"]  for r in runs(m)]) for m in methods]),
+        [cell([r["test_qwk"]  for r in runs(m)])[1] for m in methods],
+        [cell([r["val_worst"] for r in runs(m)])[1] for m in methods],
+    ]
+    rows = [[METHOD_LABELS[m]] + [col[i] for col in columns] for i, m in enumerate(methods)]
+    note = seeds_note(groups, [(m, "dirichlet_0.1") for m in methods])
+    note = (note + " " if note else "") + ("Settings fixed before the runs; bold marks the "
+            "selection criterion (mean validation QWK over the 10 rounds).")
+    return latex_table(
+        caption = r"Sensitivity of OrdinalFed to $\lambda$, $\beta_0$ and $\tau$ ($\alpha=0.1$). "
+                  r"Default: $\lambda=0.5$, $\beta_0=0.5$, $\tau=3$.",
+        label   = "tab:sensitivity",
+        header  = ["Setting", "Mean val QWK", "Test QWK", "Worst val QWK"],
+        rows    = rows,
+        note    = note,
+    )
+
+
 def write_summary_csv(groups, path):
     fields = ["method", "partition", "n_seeds", "seeds", "finished_all"]
     keys   = ["test_qwk", "test_acc", "final_test_qwk", "val_peak", "val_worst",
@@ -320,8 +352,11 @@ def main():
         "table_stability.tex": table_stability(groups),
         "table_ablation.tex" : table_ablation(groups),
         "table_pergrade.tex" : table_pergrade(groups),
+        "table_sensitivity.tex": table_sensitivity(groups),
     }
     for name, text in outputs.items():
+        if text is None:
+            continue
         with open(os.path.join(TABLES_DIR, name), 'w', encoding='utf-8') as f:
             f.write(text)
     write_summary_csv(groups, os.path.join(TABLES_DIR, 'summary.csv'))
