@@ -114,7 +114,7 @@ def compute_beta(round_num, total_rounds, beta0=0.9):
 
 # ── QWK-Weighted Aggregation ───────────────────────────────────────────────────
 
-def ordinalfed_aggregate(all_weights, all_n_samples, qwk_scores, beta):
+def ordinalfed_aggregate(all_weights, all_n_samples, qwk_scores, beta, temperature=3.0):
     """
     Hybrid aggregation: blend FedAvg weights with QWK weights.
 
@@ -126,6 +126,7 @@ def ordinalfed_aggregate(all_weights, all_n_samples, qwk_scores, beta):
         all_n_samples: List of per-client sample counts
         qwk_scores   : List of per-client QWK scores on server val set V
         beta         : Current blend coefficient from compute_beta()
+        temperature  : Softmax temperature τ (Eq. 5). Default 3.0, as in the paper.
 
     Returns:
         new_global_weights : Aggregated weight list (same structure as input)
@@ -140,7 +141,7 @@ def ordinalfed_aggregate(all_weights, all_n_samples, qwk_scores, beta):
     # QWK can be negative (worse than random) — shift to [0, ∞) first
     # by taking max(0, κ_k). This means clients with negative QWK get
     # zero weight — they don't contribute to aggregation at all. 
-    TEMPERATURE = 3.0   # higher = more uniform, lower = more selective
+    TEMPERATURE = temperature   # higher = more uniform, lower = more selective
     qwk_shifted = [max(0.1, q) for q in qwk_scores]  # floor at 0.1
     exp_scores  = [np.exp(q / TEMPERATURE) for q in qwk_shifted]
     exp_total   = sum(exp_scores)

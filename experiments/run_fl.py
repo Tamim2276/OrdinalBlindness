@@ -59,6 +59,7 @@ from src.model               import get_model, get_device, load_checkpoint
 from src.partition           import load_partition
 from src.client              import DRClient, CLASS_WEIGHTS, LOCAL_EPOCHS, BATCH_SIZE
 from src.client_fedprox      import DRFedProxClient
+from src.losses              import get_ordinal_loss
 from src.strategy_ordinalfed import DROrdinalClient, compute_beta, ordinalfed_aggregate
 from src.strategy_accwt      import accwt_aggregate
 from src.server_val          import load_server_val_indices, score_on_server_val
@@ -74,6 +75,7 @@ from src.run_utils           import (
 NUM_CLIENTS    = 5
 DEFAULT_ROUNDS = 10     # T = 10 for every partition, as in the paper
 BETA0          = 0.5    # β₀ of the cosine schedule (Eq. 4)
+TAU            = 3.0    # softmax temperature τ of the quality weights (Eq. 5)
 LAM            = 0.5    # OrdinalLoss λ (Eq. 1)
 MU             = 0.01   # FedProx proximal coefficient
 
@@ -94,6 +96,14 @@ METHODS = {
     "abl_ordloss" : dict(client="avg",  lam=LAM, aggregation="samples"),     # OrdinalLoss only
     "abl_qwkagg"  : dict(client="avg",  lam=0.0, aggregation="server_qwk"),  # QWK weighting only
     "abl_uniform" : dict(client="avg",  lam=0.0, aggregation="uniform"),     # equal weights
+    # Optional extension (queue Tier 4): OrdinalFed plus FedProx's proximal term, same μ
+    "ordinalfed_prox": dict(client="prox", lam=LAM, aggregation="server_qwk"),
+    # Sensitivity (queue Tier 5), one setting changed at a time, α=0.1 only.
+    # Grid fixed on Day 2 BEFORE any of these ran; a variant may be reported as
+    # better only if it wins on mean VALIDATION QWK, and all three are reported.
+    "sens_lam01"  : dict(client="avg",  lam=0.1, aggregation="server_qwk"),             # weaker OrdinalLoss
+    "sens_beta00" : dict(client="avg",  lam=LAM, aggregation="server_qwk", beta0=0.0),  # quality weights from round 1
+    "sens_tau05"  : dict(client="avg",  lam=LAM, aggregation="server_qwk", tau=0.5),    # sharper quality weights
 }
 
 PARTITIONS = ["iid", "dirichlet_1.0", "dirichlet_0.5", "dirichlet_0.1", "real_site"]
@@ -148,7 +158,10 @@ def build_clients(spec, train_partition, data_dir, device):
             device        = device,
         )
         if spec["client"] == "prox":
-            clients.append(DRFedProxClient(mu=MU, **kwargs))
+            client = DRFedProxClient(mu=MU, **kwargs)
+            if spec["lam"] > 0:   # OrdinalFed + Prox: OrdinalLoss as the task loss
+                client.criterion = get_ordinal_loss(lam=spec["lam"], device=device)
+            clients.append(client)
         elif spec["lam"] > 0:
             clients.append(DROrdinalClient(lam=spec["lam"], **kwargs))
         else:
@@ -241,7 +254,8 @@ def main():
         "client"      : spec["client"],
         "lam"         : spec["lam"],
         "aggregation" : spec["aggregation"],
-        "beta0"       : BETA0,
+        "beta0"       : spec.get("beta0", BETA0),
+        "tau"         : spec.get("tau", TAU),
         "mu"          : MU,
         "num_clients" : NUM_CLIENTS,
         "local_epochs": LOCAL_EPOCHS,
@@ -351,9 +365,12 @@ def main():
             agg_weights    = [1.0 / NUM_CLIENTS] * NUM_CLIENTS
             global_weights = weighted_average(all_weights, agg_weights)
         else:
-            beta      = compute_beta(round_num, args.rounds, beta0=BETA0)
-            aggregate = ordinalfed_aggregate if spec["aggregation"] == "server_qwk" else accwt_aggregate
-            global_weights, agg_weights = aggregate(all_weights, all_n_samples, server_scores, beta)
+            beta = compute_beta(round_num, args.rounds, beta0=spec.get("beta0", BETA0))
+            if spec["aggregation"] == "server_qwk":
+                global_weights, agg_weights = ordinalfed_aggregate(
+                    all_weights, all_n_samples, server_scores, beta, temperature=spec.get("tau", TAU))
+            else:
+                global_weights, agg_weights = accwt_aggregate(all_weights, all_n_samples, server_scores, beta)
         log(f"  Aggregation weights: {[round(float(w), 4) for w in agg_weights]}"
             + (f"  (β={beta:.4f})" if beta is not None else ""))
         del all_weights
@@ -411,6 +428,13 @@ def main():
             + ("  ⭐ new best" if is_best else ""))
         log(f"  Test QWK {test_m['qwk']:.4f} | acc {test_m['acc']:.4f}")
         log(f"  Round time {(time.time() - round_start) / 60:.1f} min")
+
+        # Give cached GPU blocks back between rounds (does not change results). The Day 2
+        # evening crashes coincided with GPU memory pressure from other applications.
+        if device.type == "xpu":
+            log(f"  GPU memory peak {torch.xpu.max_memory_reserved() / 2**30:.1f} GB reserved")
+            torch.xpu.empty_cache()
+            torch.xpu.reset_peak_memory_stats()
 
     #Run complete
     last = history[-1]

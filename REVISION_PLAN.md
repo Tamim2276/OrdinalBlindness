@@ -226,15 +226,20 @@ The queue order is:
 |---|---|
 | 1 | Tiers 1 and 2, seeds 1–2 |
 | 2 | Seed 3 of Tiers 1 and 2 |
-| 3 | Tier 3 |
+| 3 | Tier 4 (optional; moved ahead of Tier 3 on Day 2) |
+| 4 | Tier 3 |
+| 5 | Tier 5 (optional, only if time is left) |
 
 | Tier | Contents |
 |---|---|
 | **Tier 1** | FedAvg, FedProx and OrdinalFed on α=0.1 and real-site |
 | **Tier 2** | 3 ablations + AccWt on α=0.1 and real-site; FedAvg, FedProx and OrdinalFed on IID with seed 1 |
 | **Tier 3** | IID seeds 2–3 |
+| **Tier 4** | OrdinalFed + Prox (OrdinalFed plus FedProx's proximal term, μ=0.01) on α=0.1 and real-site, seeds 1–3. Added on Day 1 as an optional extension. Report it whatever the result; if not all 6 finish, leave it out entirely. |
 
-That's 51 runs. Whatever finishes always forms complete tables.
+| **Tier 5** | OrdinalFed sensitivity on α=0.1, seeds 1–3, one setting changed at a time: λ=0.1, β₀=0, τ=0.5. The grid was fixed on Day 2 before any run. A variant counts as better only if it wins on **mean validation QWK** (never test); all three are reported in `table_sensitivity.tex`. Leave it out if not all 9 runs finish. |
+
+That's 51 runs, plus 15 optional. Whatever finishes always forms complete tables.
 
 ### Step 13: Back up [PC][NET] (5 min)
 

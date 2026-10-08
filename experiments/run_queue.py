@@ -10,11 +10,13 @@ follow in order.
     python experiments/run_queue.py --max-tier 1 # only Tier 1
 
 Order — so whatever has finished always forms complete tables:
-    Tier 1 + Tier 2 for seeds 1–2  →  seed 3 of Tiers 1–2  →  Tier 3
+    Tier 1 + Tier 2 for seeds 1–2  →  seed 3 of Tiers 1–2  →  Tier 4  →  Tier 3  →  Tier 5
 
     Tier 1 (must)  : FedAvg, FedProx, OrdinalFed × {α=0.1, real-site}
     Tier 2 (should): ablations + AccWt × {α=0.1, real-site}; IID seed 1
     Tier 3 (nice)  : IID seeds 2–3
+    Tier 4 (extra) : OrdinalFed + Prox × {α=0.1, real-site}; moved before Tier 3 on Day 2
+    Tier 5 (extra) : OrdinalFed sensitivity (λ=0.1 / β₀=0 / τ=0.5) × α=0.1, if time is left
 
 Each run is a separate `python experiments/run_fl.py ...` process, so a
 crash in one run cannot take the queue down with it.
@@ -23,6 +25,7 @@ crash in one run cannot take the queue down with it.
 import os
 import sys
 import json
+import time
 import argparse
 import subprocess
 from dataclasses import dataclass
@@ -48,7 +51,12 @@ IID_SEEDS           = (1, 2, 3)   # seed 1 is Tier 2, the others Tier 3
 MAIN_METHODS     = ("fedavg", "fedprox", "ordinalfed")
 MAIN_PARTITIONS  = ("dirichlet_0.1", "real_site")
 TIER2_METHODS    = ("abl_ordloss", "abl_qwkagg", "abl_uniform", "accwt")
-MAX_CONSECUTIVE_FAILURES = 3
+EXTRA_METHODS    = ("ordinalfed_prox",)
+EXTRA_SEEDS      = (1, 2, 3)      # Tier 4
+SENS_METHODS     = ("sens_lam01", "sens_beta00", "sens_tau05")
+SENS_SEEDS       = (1, 2, 3)      # Tier 5, α=0.1 only
+MAX_CONSECUTIVE_FAILURES = 5
+MAX_ATTEMPTS             = 4    # each retry resumes from the last finished round
 
 
 @dataclass(frozen=True)
@@ -82,14 +90,22 @@ def tier3():
     return [Job(3, m, "iid", s) for s in IID_SEEDS if s != 1 for m in MAIN_METHODS]
 
 
-def build_queue(max_tier=3):
+def tier4():
+    return [Job(4, m, p, s) for s in EXTRA_SEEDS for p in MAIN_PARTITIONS for m in EXTRA_METHODS]
+
+
+def tier5():
+    return [Job(5, m, "dirichlet_0.1", s) for s in SENS_SEEDS for m in SENS_METHODS]
+
+
+def build_queue(max_tier=5):
     seeds = sorted(set(MAIN_SEEDS) | set(ABLATION_SEEDS))
     jobs  = []
     for seed in seeds[:2]:
         jobs += tier1(seed) + tier2(seed)
     for seed in seeds[2:]:
         jobs += tier1(seed) + tier2(seed)
-    jobs += tier3()
+    jobs += tier4() + tier3() + tier5()
     return [job for job in jobs if job.tier <= max_tier]
 
 
@@ -162,7 +178,7 @@ def main():
     use_utf8_output()
     parser = argparse.ArgumentParser(description="Run all revision experiments in priority order")
     parser.add_argument("--status",   action="store_true", help="Show progress and exit")
-    parser.add_argument("--max-tier", type=int, default=3, choices=[1, 2, 3])
+    parser.add_argument("--max-tier", type=int, default=5, choices=[1, 2, 3, 4, 5])
     args = parser.parse_args()
 
     queue = build_queue(args.max_tier)
@@ -190,11 +206,14 @@ def main():
 
             cmd = [sys.executable, RUN_FL,
                    "--method", job.method, "--partition", job.partition, "--seed", str(job.seed)]
-            for attempt in (1, 2):
+            for attempt in range(1, MAX_ATTEMPTS + 1):
                 return_code = subprocess.call(cmd, cwd=BASE_DIR)
                 if return_code == 0:
                     break
-                print(f"\n[Queue] {job.name} failed (exit code {return_code}), attempt {attempt}/2")
+                print(f"\n[Queue] {job.name} failed (exit code {return_code}), "
+                      f"attempt {attempt}/{MAX_ATTEMPTS}")
+                if attempt < MAX_ATTEMPTS:
+                    time.sleep(60)   # let the GPU driver recover before retrying
 
             if return_code == 0:
                 consecutive_failures = 0
