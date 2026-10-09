@@ -59,13 +59,16 @@ Independent validation data &
 All main results now come from the DDR test split (3,709 images, excluding the
 50 server-set images). These images are never used for training, aggregation or
 choosing the reported round, which is selected on the validation split. All
-models score lower on the test split; this is now discussed in the Limitations. &
-Sec.~IV-D, Table~I \\
+models score lower on the test split; this is now discussed in the Limitations.
+In addition, every trained model was scored, without retraining, on the external
+APTOS 2019 dataset (3,662 images), where all models reach QWK 0.60--0.66, close to
+the centralised model (0.641). &
+Sec.~IV-A, IV-D, V-E, Tables~I, V \\
 Repeated experiments &
 Every configuration was run with three random seeds; results are reported as
 mean $\pm$ standard deviation. With three seeds, the late FedProx drop seen in the
 single run of the submitted version did not recur. &
-Tables~I--IV \\
+Tables~I--V \\
 Class-wise analysis &
 We now report per-grade recall and F1 on the test split for FedAvg, FedProx and
 OrdinalFed. No method detects Grade~1 reliably (recall $\leq 0.05$); OrdinalFed

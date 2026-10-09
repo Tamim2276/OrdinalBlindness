@@ -342,6 +342,36 @@ def write_summary_csv(groups, path):
         f.write(out.getvalue())
 
 
+def table_external():
+    """External validation: best-validation models scored on APTOS 2019 (eval_external.py)."""
+    path = os.path.join(BASE_DIR, 'results', 'external_aptos.json')
+    if not os.path.exists(path):
+        return None
+    with open(path, 'r') as f:
+        results = json.load(f)
+    scores = {}
+    for r in results.values():
+        scores.setdefault((r["method"], r["partition"]), []).append(r["qwk"])
+
+    partitions = ["iid", "dirichlet_0.1", "real_site"]
+    methods    = [m for m in MAIN_ROWS if any((m, p) in scores for p in partitions)]
+    columns    = [bold_best([cell(scores.get((m, p), [])) for m in methods]) for p in partitions]
+    rows = []
+    if ("centralised", "-") in scores:
+        c = scores[("centralised", "-")][0]
+        rows += [["Centralised (reference)"] + [f"{c:.{DECIMALS}f}"] * len(partitions), "midrule"]
+    rows += [[METHOD_LABELS[m]] + [col[i] for col in columns] for i, m in enumerate(methods)]
+    return latex_table(
+        caption = "External validation on APTOS 2019 (3,662 images, never used for training "
+                  "or selection): QWK of each run's best-validation model. Columns give the "
+                  "partition the model was trained on.",
+        label   = "tab:external",
+        header  = ["Method"] + [PARTITION_LABELS[p] for p in partitions],
+        rows    = rows,
+        note    = "Mean $\\pm$ std over 3 seeds.",
+    )
+
+
 def print_console_summary(groups):
     print(f"\n{'Method':<14} {'Partition':<15} {'Seeds':<6} {'Test QWK':<17} "
           f"{'Val worst':<17} {'Best rnd':<8}")
@@ -374,6 +404,7 @@ def main():
         "table_ablation.tex" : table_ablation(groups),
         "table_pergrade.tex" : table_pergrade(groups),
         "table_sensitivity.tex": table_sensitivity(groups),
+        "table_external.tex" : table_external(),
     }
     for name, text in outputs.items():
         if text is None:
