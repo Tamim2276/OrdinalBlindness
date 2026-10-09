@@ -1,16 +1,16 @@
 %% ── Section 6: Conclusion ───────────────────────────────────
 \section{Conclusion}
 
-OrdinalFed, a federated framework for multi-grade Diabetic Retinopathy screening
-that combines a distance-aware OrdinalLoss with QWK-weighted aggregation, has been
-evaluated on the DDR benchmark with three seeds and a held-out test split. Under
-extreme label skew, its server-side weighting prevents most of FedAvg's collapse
-(worst-round test QWK 0.514 versus 0.378) at no communication cost. The ablations
-show that this benefit comes from giving small hospitals more weight: equal client
-weights perform better, a 50-image server set is too small for the QWK scores to
-rank clients, and the OrdinalLoss does not help in the federated setting. FedProx
-remains the most stable method, and combining it with OrdinalFed comes close to,
-but does not exceed, FedProx alone. On realistic multi-site and IID partitions, all
-methods perform alike. Future work will test larger server sets, higher image
-resolution and cross-dataset validation on APTOS~2019, and will explore formal
-differential privacy guarantees.
+This paper evaluated OrdinalFed, a federated method for multi-grade Diabetic
+Retinopathy screening that combines a distance-aware OrdinalLoss with QWK-weighted
+aggregation. All experiments used the DDR dataset, three seeds and a held-out test
+split. Under extreme label skew, OrdinalFed's server-side weighting prevents most
+of FedAvg's collapse (worst-round test QWK 0.514 versus 0.378) without extra
+communication. The ablations show why: small hospitals get more weight. Equal
+client weights work even better, a 50-image server set is too small for the QWK
+scores to rank clients, and the OrdinalLoss does not help in the federated setting.
+FedProx remains the most stable method, and adding its proximal term to OrdinalFed
+comes close to FedProx but does not beat it. On realistic multi-site and IID
+partitions, all methods perform about the same. Future work will test larger
+server sets, higher image resolution and cross-dataset validation on APTOS~2019,
+and will look at formal differential privacy guarantees.
