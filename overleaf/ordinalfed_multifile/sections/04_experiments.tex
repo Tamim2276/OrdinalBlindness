@@ -86,7 +86,8 @@ quality weights from the first round ($\beta_0=0$), and sharper quality weights
 validation QWK only.
 
 Every configuration is repeated with three random seeds, which control data order
-and augmentation, and results are reported as mean $\pm$ standard deviation.
+and augmentation, and results are reported as mean $\pm$ standard deviation (GPU
+arithmetic is not bit-exact, so runs with the same seed can differ slightly).
 After each round, the global model is evaluated on the DDR validation split and on
 the DDR test split excluding the 50 images of $\mathcal{V}$ (3,709 images). For each
 run, the reported model is the one from the round with the highest validation QWK.
