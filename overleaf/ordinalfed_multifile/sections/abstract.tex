@@ -2,8 +2,8 @@
 Diabetic Retinopathy (DR) is a leading cause of preventable blindness. With
 federated learning (FL), hospitals can train one DR grading model together without
 sharing retinal images. When hospitals see very different patients, however,
-FedAvg can collapse. This paper studies \textbf{OrdinalFed},
-which has two parts. The first is an \emph{OrdinalLoss} that penalises a wrong
+FedAvg can collapse. In this paper, \textbf{OrdinalFed} is studied.
+It has two parts. The first is an \emph{OrdinalLoss} that penalises a wrong
 grade by its squared distance from the true grade. The second is a
 \emph{QWK-weighted aggregation}: the server scores each client model by its
 Quadratic Weighted Kappa (QWK) on 50 held-out images, and over the rounds it moves

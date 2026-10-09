@@ -22,7 +22,7 @@ image, and the model forgets what it knew about severe disease.
 
 \subsection{Distance-Aware OrdinalLoss}
 
-To reduce this problem, each client trains with a combined loss, OrdinalLoss:
+To reduce this problem, each client is trained with a combined loss, OrdinalLoss:
 \begin{equation}
 \mathcal{L}_{\text{ord}}(f(x), y) =
   (1 - \lambda)\,\mathcal{L}_{\text{CE}}(f(x), y)
@@ -44,11 +44,12 @@ client whose data are mostly one grade.
 
 \subsection{Server Validation Set $\mathcal{V}$ and QWK Estimation}
 
-The server cannot see the client data, so it keeps its own small validation set
-$\mathcal{V}$ of exactly 50 images: 10 per grade, drawn at random (seed~42) from the
-DDR test split, which shares no images with the clients. Because $\mathcal{V}$ is
-balanced, every grade counts equally in its score. In round $t$, after it receives
-the locally updated weights $\tilde{w}_k^t$, the server computes
+The client data cannot be seen by the server, so a small validation set
+$\mathcal{V}$ of exactly 50 images is kept on the server: 10 per grade, drawn at
+random (seed~42) from the DDR test split, which shares no images with the clients.
+Because $\mathcal{V}$ is balanced, every grade counts equally in its score. In
+round $t$, after the locally updated weights $\tilde{w}_k^t$ are received, the
+following score is computed for each client:
 \begin{equation}
 \kappa_k^t =
 \mathrm{QWK}\!\left(\{y_i\}_{x_i \in \mathcal{V}},\,
@@ -87,15 +88,15 @@ this quality weight with the client's share of the images:
 \label{eq:weights}
 \end{equation}
 and the global model is updated as $w^{t+1} = \sum_{k=1}^{K} \omega_k^t \tilde{w}_k^t$.
-As a safeguard, each client also gets a minimum weight of $\omega_{\min} = 0.03$,
-followed by renormalisation. With $\beta_0 = 0.5$ and $K = 5$ this never takes
-effect, because every client already gets at least
-$(1-\beta_0)\,q_{\min} \approx 0.08$. Algorithm~\ref{alg:ordinalfed} gives the full
-procedure.
+As a safeguard, a minimum weight of $\omega_{\min} = 0.03$ is also given to each
+client, followed by renormalisation. With $\beta_0 = 0.5$ and $K = 5$ this never
+takes effect, because every client is already given at least
+$(1-\beta_0)\,q_{\min} \approx 0.08$. The full procedure is given in
+Algorithm~\ref{alg:ordinalfed}.
 
 The scheme is deliberately cautious. No client is ever left out, because one
-50-image estimate of $\kappa_k^t$ is too noisy to justify throwing away a
-hospital's update. With $\tau = 3$ and $\kappa \in [0.1, 1]$, the quality weights
+50-image estimate of $\kappa_k^t$ is too noisy to justify discarding a hospital's
+update. With $\tau = 3$ and $\kappa \in [0.1, 1]$, the quality weights
 $q_k^t$ differ from each other by at most a factor of $e^{0.9/3} \approx 1.35$, so
 they are close to equal. As $\beta(t)$ falls, the aggregation therefore moves from
 image-count weights towards almost equal client weights, with a slight preference

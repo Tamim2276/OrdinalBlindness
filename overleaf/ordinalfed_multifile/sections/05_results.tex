@@ -213,10 +213,10 @@ OrdinalFed + Prox & --             & 0.628\sd{.048} & 0.597\sd{.013} \\
 
 \subsection{Communication and Computational Overhead}
 
-OrdinalFed sends the same model weights as FedAvg, so it adds no communication.
-Once per round, the server evaluates each of the $K$ client models on the 50 images
-of $\mathcal{V}$. This took a median of 1.2~s per round for $K=5$ on an Intel Arc
-B580 GPU, about 0.6\% of the 195~s a full round takes.
+The same model weights are sent in OrdinalFed as in FedAvg, so no communication
+is added. Once per round, each of the $K$ client models is evaluated on the 50
+images of $\mathcal{V}$ by the server. This took a median of 1.2~s per round for
+$K=5$ on an Intel Arc B580 GPU, about 0.6\% of the 195~s a full round takes.
 
 \subsection{Limitations}
 \label{sec:limitations}
