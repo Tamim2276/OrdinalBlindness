@@ -1,22 +1,22 @@
-% TODO(Day 4): replace every number below with the new multi-seed test-set
-% results, and mention the ablation, AccWt baseline and repeated runs.
 \begin{abstract}
-Diabetic Retinopathy (DR) remains a major cause of preventable blindness worldwide, 
-impacting roughly 35\% of diabetic patients. Federated learning (FL) enables multiple 
-hospitals to grade DR collaboratively without sharing sensitive retinal images. 
-However, baseline algorithms like FedAvg and FedProx degrade severely under non-IID 
-data distributions caused by varying patient demographics across hospital tiers. To
-address this, \textbf{OrdinalFed} is introduced, which incorporates two components:
-(1)~an \emph{OrdinalLoss} that penalizes grade-skipping errors based on their squared 
-clinical distance, and (2)~a \emph{QWK-weighted aggregation} scheme that uses a 
-cosine-annealing schedule to shift from sample counts to Quadratic Weighted Kappa 
-(QWK) validation scores on a 50-image server set. On the DDR benchmark across three 
-heterogeneity settings, OrdinalFed matches baseline peak QWK ($\approx$0.799) under 
-heavy non-IID skew ($\alpha=0.1$) while raising the worst-case floor to \textbf{0.6238} 
-(compared to 0.5963 for FedProx and 0.4064 for FedAvg), which narrows the best-to-worst 
-gap to 0.1751 rather than 0.2024 and 0.3929. In a realistic multi-tier hospital partition, 
-OrdinalFed achieves a higher peak QWK of \textbf{0.8325} (versus 0.8312 for FedProx 
-and 0.8223 for FedAvg) with no added communication overhead.
+Diabetic Retinopathy (DR) is a leading cause of preventable blindness. Federated
+learning (FL) allows hospitals to train a shared DR grading model without exchanging
+retinal images, but when hospitals see very different patients, standard FedAvg can
+collapse. \textbf{OrdinalFed} is studied as a remedy with two components:
+(1)~an \emph{OrdinalLoss} that penalises grading errors by their squared distance,
+and (2)~a \emph{QWK-weighted aggregation} in which the server scores each client
+model by its Quadratic Weighted Kappa (QWK) on a 50-image server set and moves the
+aggregation weights from image counts towards these scores over the rounds. On the
+DDR benchmark, every configuration was repeated with three seeds and scored on the
+held-out test split. Under extreme label skew (Dirichlet $\alpha=0.1$), FedAvg
+collapsed in every seed (worst-round test QWK 0.378), and OrdinalFed raised the
+worst round to 0.514 without any change at the hospitals and with about 1.2~s of
+extra server computation per round. Ablations showed that this gain comes from
+giving small hospitals more weight: equal client weights did better (0.630), while
+the QWK scores and the OrdinalLoss added no measurable benefit. FedProx was the most
+stable method (0.641), and adding its proximal term to OrdinalFed came close to it
+(0.627). On the IID and realistic multi-site partitions, all methods were within
+0.01 QWK of each other.
 \end{abstract}
 
 \begin{IEEEkeywords}

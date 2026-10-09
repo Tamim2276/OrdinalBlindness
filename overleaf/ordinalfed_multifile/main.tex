@@ -18,6 +18,7 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{balance}                          % last-page column balancing
+\usepackage{flafter}   % floats never appear before the text that introduces them (Reviewer #3)
 \usepackage[font=normalsize,labelfont=bf,
             skip=6pt]{caption}               % larger, bold captions
 \usepackage[colorlinks=true,
@@ -31,6 +32,9 @@
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Mean with a small "± std" in result tables, e.g. 0.677\sd{.008}
+\newcommand{\sd}[1]{\,{\scriptsize$\pm$#1}}
 
 %% ── Document ─────────────────────────────────────────────────
 \begin{document}

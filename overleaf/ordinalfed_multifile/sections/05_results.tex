@@ -2,174 +2,192 @@
 \section{Results and Discussion}
 \label{sec:results}
 
-% TODO(Day 4): every number in this section comes from the SUBMITTED version
-% (single run, validation split). Replace Tables I-II with
-% results/tables/table_main.tex and table_stability.tex, add
-% table_ablation.tex and table_pergrade.tex, and rewrite the text to match.
+\subsection{Overall Performance}
 
-\subsection{Peak Diagnostic Performance}
-
-Table~\ref{tab:results} reports the peak validation QWK achieved over 10
-communication rounds. Under the ideal \textbf{IID} setting, all federated algorithms
-reach comparable peak QWK values (0.8357--0.8386), remaining within 0.014 of the
-centralised ceiling (0.8494), confirming that algorithmic overhead is negligible
-when data is evenly distributed.
-
-On the clinically modeled \textbf{Real-Site} partition, OrdinalFed achieves the
-highest peak QWK of \textbf{0.8325}, outperforming FedProx (0.8312) and FedAvg
-(0.8223), closing the gap to the centralised ceiling to just 1.69~pp. Under extreme
-\textbf{Dirichlet ($\alpha=0.1$)} skew, all three methods achieve near-identical
-peak QWK ($\approx$0.799), owing to the strong warm-start initialisation. However,
-peak performance is misleading in Non-IID regimes; the fundamental advantage of
-OrdinalFed lies in its resilience against catastrophic forgetting.
+Table~\ref{tab:results} reports the test QWK of each method at its best validation
+round, averaged over three seeds. The federated methods reach between 0.640 and
+0.681, against 0.682 for the centralised model. On the IID and real-site partitions,
+the methods differ by at most 0.01, which is within the seed-to-seed variation.
+Under $\alpha=0.1$, FedProx scores highest (0.664) and OrdinalFed lowest (0.640).
+Because the reported round is chosen on the validation split, this table hides what
+happens in the other rounds: for FedAvg under $\alpha=0.1$, the best validation
+round is always the first one, before its collapse.
 
 \begin{table}[t]
-\caption{Peak Validation QWK Across 10 Communication Rounds.
-Bold: best FL method per column.}
+\caption{Test QWK at the Best Validation Round (Mean $\pm$ Std over Three Seeds).
+Bold: Best Federated Method per Column.}
 \label{tab:results}
 \centering
-\setlength{\tabcolsep}{5pt}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
-\textbf{Method} &
-\textbf{IID} &
-\textbf{Dirichlet ($\alpha=0.1$)} &
-\textbf{Real-Site} \\
+\textbf{Method} & \textbf{IID} & \textbf{Dirichlet ($\alpha=0.1$)} & \textbf{Real-Site} \\
 \midrule
-Centralised (Ceiling) & 0.8494 & 0.8494 & 0.8494 \\
+Centralised (reference) & 0.682 & 0.682 & 0.682 \\
 \midrule
-FedAvg~\cite{mcmahan2017fedavg}
-  & \textbf{0.8386} & \textbf{0.7993} & 0.8223 \\
-FedProx~\cite{li2020fedprox} ($\mu=0.01$)
-  & 0.8357 & 0.7987 & 0.8312 \\
-\textbf{OrdinalFed (Ours)}
-  & 0.8372 & 0.7988 & \textbf{0.8325} \\
+FedAvg~\cite{mcmahan2017fedavg}   & 0.677\sd{.008} & 0.647\sd{.010} & 0.673\sd{.004} \\
+FedProx~\cite{li2020fedprox}      & \textbf{0.681}\sd{.014} & \textbf{0.664}\sd{.015} & 0.671\sd{.005} \\
+AccWt                             & --             & 0.651\sd{.011} & \textbf{0.674}\sd{.009} \\
+OrdinalFed                        & 0.679\sd{.006} & 0.640\sd{.007} & 0.666\sd{.002} \\
+OrdinalFed + Prox                 & --             & 0.659\sd{.012} & 0.672\sd{.007} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Resilience to Catastrophic Forgetting}
+\subsection{Stability Under Extreme Skew}
 
-Fig.~\ref{fig:qwk_curves} plots the validation QWK of the global model after each
-communication round for the three partitions (one panel per partition). Lines show
-the mean over seeds, shaded bands $\pm$ one standard deviation, and the dashed line
-the validation QWK of the centralised model.
-% TODO(Day 3): regenerate Fig. 2 with "python experiments/generate_figures.py --fig 2"
-% once the runs finish, and upload fig4_qwk_combined.pdf to Overleaf.
-As visualised in the central panel, FedAvg suffers
-catastrophic collapse under extreme skew ($\alpha=0.1$), plunging from 0.7870 to
-0.4064 in round~9. This occurs because Client~0's monochromatic Grade~0 dataset
-forces its local gradients to predict all inputs as Grade~0. When aggregated via
-sample counts, this corrupted update shatters the global decision boundaries.
-% TODO(Day 4): the Client 0 explanation is not supported: Client 0 holds 32
-% images (0.5% of the FedAvg weight) and takes only 5 optimiser steps per round.
-% Rewrite from results/runs/*/history.csv (weight_k, server_score_k columns).
-FedProx dampens this instability partially by tethering local weights to the global
-model but still crashes to 0.5963 in round~10. In contrast, OrdinalFed maintains
-consistent diagnostic performance, never falling below a QWK floor of \textbf{0.6238}.
+Fig.~\ref{fig:qwk_curves} plots the test QWK of the global model after every round,
+with one panel per partition. Lines show the mean over three seeds, shaded bands
+$\pm$ one standard deviation, and the dashed line the test QWK of the centralised
+model. On the IID and real-site partitions, all three methods stay close to the
+centralised line. Under $\alpha=0.1$, FedAvg collapses from round~5 onwards, FedProx
+stays flat, and OrdinalFed avoids the collapse but oscillates from round to round.
 
-%% FULL-WIDTH FIGURE: QWK Trajectories
+%% FULL-WIDTH FIGURE: QWK trajectories
 %% (placed after its description — Reviewer #3, comments 3 and 6)
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{fig4_qwk_combined.pdf}
-  \caption{\normalsize Validation QWK trajectories across 10 communication rounds for
-  IID, Dirichlet ($\alpha=0.1$), and real-site partitions. While FedAvg
-  and FedProx suffer catastrophic collapse under extreme skew ($\alpha=0.1$),
-  OrdinalFed (green curve) maintains robust stability ($\mathrm{QWK} \geq 0.6238$)
-  while achieving the highest peak performance in the realistic real-site partition.}
-  % TODO(Day 4): rewrite caption to match the regenerated figure and new results.
+  \caption{\normalsize Test QWK of the global model after each of the 10 rounds for
+  the IID, Dirichlet ($\alpha=0.1$) and real-site partitions (mean $\pm$ std over
+  three seeds). Under $\alpha=0.1$, FedAvg collapses, OrdinalFed avoids the
+  collapse but oscillates, and FedProx remains stable.}
   \label{fig:qwk_curves}
 \end{figure*}
 
-As quantified in Table~\ref{tab:stability}, OrdinalFed achieves the narrowest
-peak-to-trough fluctuation range (\textbf{0.1751} vs.\ 0.2024 for FedProx and
-0.3929 for FedAvg), ensuring the round-to-round consistency required for reliable
-clinical deployment.
+Table~\ref{tab:stability} summarises the ten rounds under $\alpha=0.1$. Compared
+with FedAvg, OrdinalFed raises the worst round from 0.378 to 0.514 and the mean over
+rounds from 0.535 to 0.604, without any change at the hospitals. FedProx, which
+regularises local training instead, is the most stable method (worst round 0.641).
+Adding FedProx's proximal term to OrdinalFed brings it close to FedProx (worst round
+0.627) and gives the best final round (0.664), but it is not more stable than
+FedProx alone.
 
 \begin{table}[t]
-\caption{Stability Metrics Under Extreme Dirichlet Skew ($\alpha=0.1$).
-Bold: best value per column ($\uparrow$ Peak/Worst/Mean; $\downarrow$ Range).}
+\caption{Test QWK Across the 10 Rounds Under Dirichlet Skew ($\alpha=0.1$):
+Mean over Rounds, Worst Round and Final Round. Bold: Best per Column.}
 \label{tab:stability}
 \centering
+\footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}lccc@{}}
 \toprule
-\textbf{Method} &
-\textbf{Peak} &
-\textbf{Worst} &
-\textbf{Mean} &
-\textbf{Range} \\
+\textbf{Method} & \textbf{Mean} & \textbf{Worst} & \textbf{Final} \\
 \midrule
-FedAvg~\cite{mcmahan2017fedavg}
-  & \textbf{0.7993} & 0.4064 & 0.7286 & 0.3929 \\
-FedProx~\cite{li2020fedprox}
-  & 0.7987 & 0.5963 & \textbf{0.7524} & 0.2024 \\
-\textbf{OrdinalFed (Ours)}
-  & 0.7988 & \textbf{0.6238} & 0.7453 & \textbf{0.1751} \\
+FedAvg            & 0.535\sd{.004} & 0.378\sd{.035} & 0.475\sd{.026} \\
+FedProx           & \textbf{0.659}\sd{.003} & \textbf{0.641}\sd{.008} & 0.650\sd{.006} \\
+AccWt             & 0.627\sd{.011} & 0.571\sd{.017} & 0.657\sd{.018} \\
+OrdinalFed        & 0.604\sd{.005} & 0.514\sd{.027} & 0.652\sd{.016} \\
+OrdinalFed + Prox & 0.651\sd{.003} & 0.627\sd{.005} & \textbf{0.664}\sd{.013} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Mechanistic Analysis of Stability}
+\subsection{What Makes the Aggregation Stable?}
 
-% TODO(Day 4): rewrite this subsection. With the aggregation of Eqs. (5)-(6),
-% no client weight can be pushed "to near zero" (the quality term changes a
-% client's weight by at most 1.35x, and every client keeps >= 0.08).
-% Base the explanation on the logged server scores and weights, and on the
-% ablation table (which component actually provides the stability).
+Table~\ref{tab:ablation} separates the two components. OrdinalLoss alone does not
+prevent the collapse: with image-count weights, its worst round (0.380) matches
+FedAvg's. QWK-weighted aggregation with cross-entropy raises the worst round to
+0.586, but giving every client the same weight raises it further, to 0.630. Scoring
+clients by accuracy instead of QWK (AccWt, Table~\ref{tab:stability}) gives nearly
+the same result as scoring them by QWK (worst round 0.571 versus 0.586).
 
-OrdinalFed's stability is driven by two explicit mechanisms acting jointly.
-First, by penalising squared grade distance, \textbf{OrdinalLoss} prevents local
-representations from collapsing into single-class degenerate states. The severe
-penalty for Grade~4 $\to$ Grade~0 misclassifications ensures the network retains
-its ordinal hierarchy even when trained exclusively on Grade~0 images. Second,
-under $\alpha=0.1$, Client~0 produces severe validation degradation on $\mathcal{V}$
-($\kappa_0^t \to 0$). As $\beta(t) \to 0$ in later rounds,
-\textbf{QWK-Weighted Aggregation} automatically suppresses Client~0's weight
-$\omega_0^t$ to near zero, dynamically quarantining the corrupted update before it
-can poison the global model --- the mechanism that prevents the collapse seen in
-FedAvg and FedProx.
+The logged aggregation weights explain this. Under $\alpha=0.1$, the two smallest
+clients hold 5.9\% of the images and therefore 5.9\% of FedAvg's weight. Because the
+quality weights of Eq.~\eqref{eq:quality} are close to equal, OrdinalFed raises
+their combined weight from 23.5\% in round~1 to 40.8\% in round~10. The QWK scores
+themselves carry little information at this scale: a client's score on the
+50-image set $\mathcal{V}$ changes by 0.13 on average from one round to the next,
+and in round~10 the largest quality weight is only 1.19 times the smallest. The
+stability therefore comes from rebalancing weight towards small clients, not from
+the QWK scores, while OrdinalLoss slightly lowers performance in both comparisons.
 
-\subsection{Clinical Relevance in Real-Site Deployments}
+The lower block of Table~\ref{tab:ablation} tests three settings of OrdinalFed,
+each fixed before the runs and compared on mean validation QWK. All three improve
+on the default. Sharper quality weights ($\tau=0.5$) score best (0.795 versus
+0.761), followed closely by starting from quality weights ($\beta_0=0$, 0.793), but
+both remain below equal weighting (0.810) and FedProx (0.808).
 
-% TODO(Day 4): "1.02 pp" does not match the means quoted below (0.8261 - 0.8176
-% = 0.85 pp); recompute from the new results.
-In the real-site setting (Fig.~\ref{fig:qwk_curves}, right panel), OrdinalFed
-delivers a sustained 1.02~pp gain over FedAvg, yielding a 10-round mean QWK of
-0.8261 versus 0.8176 for FedAvg and 0.8241 for FedProx. The specialist referral
-centre (Client~2, G3/G4-heavy, 643 images) receives moderated aggregation weight
-due to sub-optimal balanced validation performance ($\kappa_2^t \in [0.57, 0.74]$),
-whereas the balanced urban hospital (Client~4) is up-weighted despite its smaller
-sample size (9\%). This demonstrates clinically rational aggregation that aligns
-model influence with diagnostic quality rather than raw data volume.
+\begin{table}[t]
+\caption{Contribution of Each Component and Setting Under $\alpha=0.1$. Mean: QWK
+Averaged over the 10 Rounds; Worst: Lowest Round. CE: Class-Weighted Cross-Entropy.
+Default: $\lambda=0.5$, $\beta_0=0.5$, $\tau=3$.}
+\label{tab:ablation}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Configuration} & \textbf{Mean val} & \textbf{Mean test} & \textbf{Worst test} \\
+\midrule
+CE + image-count weights (FedAvg) & 0.670\sd{.011} & 0.535\sd{.004} & 0.378\sd{.035} \\
+OrdinalLoss + image-count weights & 0.659\sd{.015} & 0.522\sd{.011} & 0.380\sd{.018} \\
+CE + QWK weights                  & 0.786\sd{.006} & 0.633\sd{.010} & 0.586\sd{.006} \\
+CE + equal weights                & \textbf{0.810}\sd{.007} & \textbf{0.658}\sd{.006} & \textbf{0.630}\sd{.021} \\
+\midrule
+OrdinalFed (default)      & 0.761\sd{.003} & 0.604\sd{.005} & 0.514\sd{.027} \\
+\quad with $\lambda=0.1$  & 0.776\sd{.007} & 0.622\sd{.006} & 0.571\sd{.019} \\
+\quad with $\beta_0=0$    & 0.793\sd{.005} & 0.631\sd{.009} & 0.571\sd{.011} \\
+\quad with $\tau=0.5$     & 0.795\sd{.006} & 0.637\sd{.005} & 0.592\sd{.009} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Class-Wise Performance}
+
+Table~\ref{tab:pergrade} gives the per-grade recall and F1 on the test split. All
+methods detect Grade~0 reliably (recall $\geq 0.95$) but almost never Grade~1
+(recall $\leq 0.05$), which makes up only 5\% of the training set. Grade~2 recall
+stays near 0.4 because many test Grade~2 images are predicted as Grade~0
+(Sec.~\ref{sec:limitations}). OrdinalFed has the highest Grade~3 recall in both
+partitions (0.36 versus 0.27--0.31 under $\alpha=0.1$, and 0.40 versus 0.35--0.38
+on the real-site partition), a modest gain on the rarest severe grade. For Grade~4,
+the three methods are within 0.05 of each other.
+
+\begin{table}[t]
+\caption{Per-Grade Recall / F1 on the Test Split at the Best Validation Round
+(Mean over Three Seeds).}
+\label{tab:pergrade}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Method} & \textbf{G0} & \textbf{G1} & \textbf{G2} & \textbf{G3} & \textbf{G4} \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Dirichlet ($\alpha=0.1$)}} \\
+FedAvg     & .96/.80 & .05/.07 & .41/.52 & .27/.32 & .66/.73 \\
+FedProx    & .95/.81 & .05/.06 & .43/.54 & .31/.34 & .69/.74 \\
+OrdinalFed & .97/.80 & .04/.07 & .39/.50 & .36/.38 & .64/.73 \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Real-site}} \\
+FedAvg     & .98/.81 & .04/.06 & .44/.55 & .35/.37 & .66/.73 \\
+FedProx    & .98/.81 & .04/.06 & .43/.54 & .38/.38 & .65/.73 \\
+OrdinalFed & .97/.81 & .04/.06 & .43/.54 & .40/.38 & .64/.73 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Communication and Computational Overhead}
 
-Because OrdinalFed evaluates QWK scores strictly on the server using proxy set
-$\mathcal{V}$, it requires zero additional communication overhead compared to
-standard FedAvg. The computational burden is limited to exactly $K \times 50$
-forward passes on the server per round, executing in under 200~ms on standard
-hardware, making OrdinalFed highly scalable to larger federations.
-% TODO(Day 4): replace "under 200 ms" with the measured median of the
-% server_score_time_s column in results/runs/ordinalfed_*/history.csv
-% (about 1 s per round for K = 5 on an Intel Arc B580 in testing).
+OrdinalFed exchanges the same model weights as FedAvg, so it adds no communication.
+The server evaluates each of the $K$ client models on the 50 images of
+$\mathcal{V}$ once per round. This took a median of 1.2~s per round for $K=5$ on an
+Intel Arc B580 GPU, about 0.6\% of the 195~s needed for a full round.
 
 \subsection{Limitations}
+\label{sec:limitations}
 
-Due to severe natural dataset scarcity in the DDR benchmark (Grade~1 represents
-only 5.0\% of the training set), Grade~1 sensitivity remains below 0.15
-across all tested methods.
-% TODO(Day 4): check "below 0.15" against results/tables/table_pergrade.tex.
-All models also score lower on the DDR test split than on the validation split;
-the centralised model, for example, drops from a QWK of 0.834 to 0.682. Most of
-this drop comes from Grade~2 images predicted as Grade~0 (about 45\% of test
-Grade~2 images, against about 12\% on the validation split), and the test split
-contains a different mix of camera resolutions. Validation QWK therefore
-overestimates performance on unseen images, which is why all main results are
-reported on the test split.
-% TODO(Day 4): confirm "All models" against table_main.tex (val vs test columns).
-Furthermore, the 50-image server set $\mathcal{V}$
-introduces minor QWK estimation noise in final rounds when $\beta(t) \to 0$.
-Setting a non-zero $\beta$ lower bound and expanding $\mathcal{V}$ via generative
-augmentation are promising directions for future work.
+Grade~1 recall stays at or below 0.05 for every method (Table~\ref{tab:pergrade}).
+All models also score lower on the DDR test split than on the validation split: the
+centralised model drops from a QWK of 0.834 to 0.682, and the federated models drop
+by a similar amount. Most of this drop comes from Grade~2 images predicted as
+Grade~0 (about 45\% of test Grade~2 images, against about 12\% on the validation
+split), and the test split contains a different mix of camera resolutions.
+Validation QWK therefore overestimates performance on unseen images, which is why
+all main results are reported on the test split. The 50-image server set
+$\mathcal{V}$ is too small to rank clients reliably, which limits the value of
+QWK-based weighting. Finally, all results come from a single dataset at
+$224 \times 224$ resolution with five clients; larger server sets, higher
+resolution and more clients are left for future work.
