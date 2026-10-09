@@ -50,8 +50,8 @@ grading. It has two parts, and a repeated evaluation tests what each part adds.
   Over the rounds, it moves the aggregation weights from image counts towards
   these QWK scores. Nothing changes at the hospitals.
   \item \textbf{A multi-seed evaluation on held-out test data:} every
-  configuration is run with three seeds and scored on the DDR test split, with
-  ablations and a sensitivity analysis. The results show that OrdinalFed prevents
+  configuration is run with three seeds and scored on the DDR test split and on
+  the external APTOS 2019 dataset, with ablations and a sensitivity analysis. The results show that OrdinalFed prevents
   most of FedAvg's collapse. They also show that the gain comes from giving small
   hospitals more weight, not from the QWK scores or the ordinal loss, and that
   FedProx is still the most stable method.

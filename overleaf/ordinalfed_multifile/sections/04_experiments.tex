@@ -11,7 +11,10 @@ remain. All images are resized to $224 \times 224$ pixels. During local training
 random horizontal flips, rotations of up to $\pm 15^{\circ}$, and mild colour
 jitter are applied to reduce overfitting. The training set is strongly imbalanced:
 Grade~0 (50.0\%), Grade~1 (5.0\%), Grade~2 (35.8\%), Grade~3 (1.9\%), and Grade~4
-(7.3\%).
+(7.3\%). For external validation, the APTOS 2019 dataset~\cite{aptos2019} is used:
+3,662 labelled fundus photographs collected in India and graded on the same 0--4
+scale. A public copy resized to $224 \times 224$ pixels is used, and these images
+are never used for training or model selection.
 
 \subsection{Modeling Clinical Heterogeneity}
 
@@ -88,5 +91,6 @@ each round, the global model is evaluated on the DDR validation split and on the
 DDR test split without the 50 images of $\mathcal{V}$ (3,709 images). For each run,
 the reported model is the one from the round with the highest validation QWK. The
 test split is never used for training, aggregation or model selection, so it gives
-an independent estimate of performance. Stability is summarised by the mean, worst
-and final test QWK over the 10 rounds.
+an independent estimate of performance. The same models are also scored on APTOS
+2019 without retraining. Stability is summarised by the mean, worst and final test
+QWK over the 10 rounds.

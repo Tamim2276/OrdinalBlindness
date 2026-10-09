@@ -1,8 +1,8 @@
 \begin{abstract}
 Diabetic Retinopathy (DR) is a leading cause of preventable blindness. With
 federated learning (FL), hospitals can train one DR grading model together without
-sharing retinal images. When the hospitals see very different patients, however,
-the standard FedAvg method can collapse. This paper studies \textbf{OrdinalFed},
+sharing retinal images. When hospitals see very different patients, however,
+FedAvg can collapse. This paper studies \textbf{OrdinalFed},
 which has two parts. The first is an \emph{OrdinalLoss} that penalises a wrong
 grade by its squared distance from the true grade. The second is a
 \emph{QWK-weighted aggregation}: the server scores each client model by its
@@ -17,7 +17,8 @@ weight. Equal client weights did even better (0.630), while the QWK scores and t
 OrdinalLoss added no measurable benefit. FedProx was the most stable method
 (0.641), and OrdinalFed with FedProx's proximal term came close to it (0.627). On
 the IID and realistic multi-site partitions, all methods were within 0.01 QWK of
-each other.
+each other. On the external APTOS 2019 dataset, all models scored 0.597--0.658 QWK,
+close to the centralised model (0.641).
 \end{abstract}
 
 \begin{IEEEkeywords}

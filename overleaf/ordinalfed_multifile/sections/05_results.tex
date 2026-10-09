@@ -93,7 +93,10 @@ the collapse: with image-count weights, its worst round (0.380) is the same as
 FedAvg's. QWK-weighted aggregation with cross-entropy raises the worst round to
 0.586, but giving every client the same weight raises it further, to 0.630. Scoring
 clients by accuracy instead of QWK (AccWt, Table~\ref{tab:stability}) gives almost
-the same result as scoring them by QWK (worst round 0.571 versus 0.586).
+the same result as scoring them by QWK (worst round 0.571 versus 0.586). On the
+real-site partition, where no method collapses, the four ablation configurations
+stay within 0.02 of each other (test QWK at the best validation round between 0.663
+and 0.683).
 
 The logged aggregation weights explain this. Under $\alpha=0.1$, the two smallest
 clients hold 5.9\% of the images, so FedAvg gives them 5.9\% of the weight. The
@@ -172,6 +175,42 @@ OrdinalFed & .97/.81 & .04/.06 & .43/.54 & .40/.38 & .64/.73 \\
 \end{tabular}
 \end{table}
 
+\subsection{External Validation}
+
+To test the models on data from a different source, the best-validation model of
+every run is also scored on APTOS 2019~\cite{aptos2019}, without retraining
+(Table~\ref{tab:external}). The centralised model reaches a QWK of 0.641 there,
+against 0.682 on the DDR test split. The federated models score between 0.597 and
+0.658, so they transfer about as well as the centralised model. Under $\alpha=0.1$,
+OrdinalFed has the highest mean (0.651) and the smallest spread across seeds of the
+methods trained on that partition. The differences between methods, however, are
+within the seed-to-seed variation (standard deviations of up to 0.057). Because each
+run is scored at its best validation round, these numbers do not show FedAvg's
+later collapse.
+
+\begin{table}[t]
+\caption{External Validation on APTOS 2019 (3,662 Images, Never Used for Training or
+Selection): QWK of Each Run's Best-Validation Model. Columns Give the Training
+Partition. Bold: Best Federated Method per Column.}
+\label{tab:external}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Method} & \textbf{IID} & \textbf{Dirichlet ($\alpha=0.1$)} & \textbf{Real-Site} \\
+\midrule
+Centralised (reference) & 0.641 & 0.641 & 0.641 \\
+\midrule
+FedAvg            & \textbf{0.615}\sd{.030} & 0.623\sd{.057} & 0.656\sd{.013} \\
+FedProx           & 0.600\sd{.006} & 0.607\sd{.043} & \textbf{0.658}\sd{.018} \\
+AccWt             & --             & 0.645\sd{.038} & 0.637\sd{.014} \\
+OrdinalFed        & 0.599\sd{.022} & \textbf{0.651}\sd{.018} & 0.641\sd{.056} \\
+OrdinalFed + Prox & --             & 0.628\sd{.048} & 0.597\sd{.013} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Communication and Computational Overhead}
 
 OrdinalFed sends the same model weights as FedAvg, so it adds no communication.
@@ -191,6 +230,7 @@ split), and the test split has a different mix of camera resolutions. Validation
 QWK therefore overestimates performance on new images, which is why all main
 results are reported on the test split. The 50-image server set $\mathcal{V}$ is too
 small to rank clients reliably, which limits the value of QWK-based weighting, and
-it needs labelled images on the server. Finally, all results come from one dataset
-at $224 \times 224$ resolution with five clients. Larger server sets, higher
-resolution and more clients are left for future work.
+it needs labelled images on the server. Finally, all models were trained on one
+dataset at $224 \times 224$ resolution with five clients, and APTOS 2019 is the only
+external test set. Larger server sets, higher resolution, more clients and more
+external datasets are left for future work.
