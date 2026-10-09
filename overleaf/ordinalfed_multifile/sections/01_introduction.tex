@@ -39,8 +39,9 @@ cross-entropy, mistaking Grade~4 for Grade~0 is no worse than mistaking it for
 Grade~3. Ordinal losses~\cite{toledocortes2022dqor}--[\citen{polat2024cdwce}] fix
 this in centralised training, but little is known about how they behave in FL.
 
-This paper studies \textbf{OrdinalFed}, a federated method for ordinal medical
-grading. It has two parts, and a repeated evaluation tests what each part adds.
+In this paper, \textbf{OrdinalFed}, a federated method for ordinal medical grading,
+is studied. It has two parts, and a repeated evaluation is used to test what each
+part adds.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Distance-aware OrdinalLoss:} each hospital adds a squared
   expected-grade penalty to class-weighted cross-entropy, so predictions far from
