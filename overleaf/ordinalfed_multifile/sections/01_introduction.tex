@@ -29,15 +29,13 @@ The main difficulty in clinical FL is that hospitals see different patients, so
 their data are not identically distributed (non-IID). Screening clinics see
 mostly healthy (Grade~0) eyes, referral centres see many severe cases
 (Grades~3--4), and rural clinics see cases in between. Under extreme Dirichlet
-skew ($\alpha=0.1$), standard FedAvg is observed to undergo catastrophic
-forgetting, crashing from a peak QWK of 0.7993 down to 0.4064 in a single
-communication round. FedProx~\cite{li2020fedprox}, which limits how far each local
-model can move away from the global model, reduces but does not prevent this
-drop (down to 0.5963).
-% TODO(Day 4): replace 0.7993 / 0.4064 / 0.5963 with the new multi-seed results,
-% and soften "in a single communication round" if the new runs do not show it.
-Both methods weight each hospital by its number of images, so a large clinic that
-sees mostly one grade can dominate the global model.
+skew ($\alpha=0.1$), standard FedAvg is observed to collapse: averaged over three
+seeds, its test QWK falls from 0.647 in its best round to 0.378 in its worst.
+FedAvg weights each hospital by its number of images, so a few large clinics that
+each see mostly one grade can dominate the global model.
+FedProx~\cite{li2020fedprox} avoids the collapse by limiting how far each local
+model can move away from the global model, but it changes the training at every
+hospital.
 
 In addition, the standard cross-entropy loss ignores the order of the grades:
 mistaking Grade~4 for Grade~0 costs the same as mistaking it for Grade~3. Ordinal
@@ -46,7 +44,8 @@ centralised training, but their effect on client drift in FL has received little
 attention.
 
 To address both problems, \textbf{OrdinalFed} is proposed: a federated framework
-for ordinal medical grading with two components.
+for ordinal medical grading with two components, together with a repeated
+evaluation that tests what each component contributes.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Distance-aware OrdinalLoss:} a local training loss that adds a
   squared expected-grade penalty to class-weighted cross-entropy, so that
@@ -54,6 +53,11 @@ for ordinal medical grading with two components.
   \item \textbf{QWK-weighted aggregation with an adaptive $\beta$:} the server
   scores each client model on a small balanced set $\mathcal{V}$ of 50 images and
   gradually shifts the aggregation weights from image counts towards these QWK
-  scores, which limits the influence of clients whose updates degrade on
-  $\mathcal{V}$.
+  scores, without any change at the hospitals.
+  \item \textbf{A multi-seed evaluation on held-out test data:} every configuration
+  is run with three seeds and scored on the DDR test split, with ablations and a
+  sensitivity analysis. It shows that OrdinalFed prevents most of FedAvg's
+  collapse, that the gain comes from giving small hospitals more weight rather
+  than from the QWK scores or the ordinal loss, and that FedProx remains the most
+  stable method.
 \end{enumerate}

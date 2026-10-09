@@ -42,15 +42,19 @@ repeated experiments, and detailed class-wise performance analysis\ldots''}
 Ablation studies &
 We removed one component at a time, under $\alpha=0.1$ and the real-site
 partition: OrdinalLoss with image-count weights, cross-entropy with QWK weights,
-cross-entropy with equal weights, and the full method.
-\TBD{one-sentence finding from the ablation table} &
-Sec.~IV-D, Table~\TBD{n} \\
+cross-entropy with equal weights, and the full method. We also tested three
+settings of OrdinalFed ($\lambda$, $\beta_0$, $\tau$), fixed before the runs and
+compared on validation data only. The ablation shows that the aggregation, not
+OrdinalLoss, prevents FedAvg's collapse, and that equal client weights work at
+least as well as QWK weights. &
+Sec.~IV-D, V-C, Table~III \\
 Additional baselines &
 We added AccWt, a quality-weighted baseline based on server-side validation
 scoring [9]. It is identical to our aggregation except that clients are scored by
-accuracy instead of QWK, so it shows whether the ordinal score itself matters.
-\TBD{one-sentence comparison} &
-Sec.~IV-C, Table~I \\
+accuracy instead of QWK, so it shows whether the ordinal score itself matters. It
+performs almost the same as QWK weighting. We also added OrdinalFed + Prox, which
+combines our aggregation with FedProx's proximal term. &
+Sec.~IV-C, Tables~I--II \\
 Independent validation data &
 All main results now come from the DDR test split (3,709 images, excluding the
 50 server-set images). These images are never used for training, aggregation or
@@ -58,21 +62,31 @@ choosing the reported round, which is selected on the validation split. All
 models score lower on the test split; this is now discussed in the Limitations. &
 Sec.~IV-D, Table~I \\
 Repeated experiments &
-Every configuration was run with \TBD{3} random seeds; results are reported as
-mean $\pm$ standard deviation. &
-Tables~I--\TBD{n} \\
+Every configuration was run with three random seeds; results are reported as
+mean $\pm$ standard deviation. With three seeds, the late FedProx drop seen in the
+single run of the submitted version did not recur. &
+Tables~I--IV \\
 Class-wise analysis &
 We now report per-grade recall and F1 on the test split for FedAvg, FedProx and
-OrdinalFed. \TBD{one sentence on Grades 1 and 3} &
-Sec.~V-\TBD{x}, Table~\TBD{n} \\
+OrdinalFed. No method detects Grade~1 reliably (recall $\leq 0.05$); OrdinalFed
+has the highest Grade~3 recall in both partitions. &
+Sec.~V-D, Table~IV \\
 \bottomrule
 \end{tabular}
 }
 
+\textit{How the conclusions changed:} the repeated test-split experiments requested
+by Reviewer~\#2 changed our conclusions, and the abstract, introduction, results and
+conclusion now state them as measured. OrdinalFed still prevents most of FedAvg's
+collapse under extreme skew (worst-round test QWK 0.514 versus 0.378), but the gain
+comes from giving small hospitals more weight rather than from the QWK scores or
+OrdinalLoss, and FedProx is the most stable method. We believe this is a more useful
+result for the community than the single-run comparison in the submitted version.
+
 \textit{Other corrections:} Eqs.~(4)--(6) now describe exactly the aggregation used
-in the experiments. The analysis of why OrdinalFed is stable (Sec.~V-C) was
+in the experiments. The analysis of why the aggregation is stable (Sec.~V-C) was
 rewritten from the per-round server scores and aggregation weights logged during
-training. The server-side overhead is now the measured value (\TBD{x}\,s per round),
+training. The server-side overhead is now the measured value (1.2\,s per round),
 and the dataset statistics in Sec.~IV-A were corrected.
 
 \textbf{Reviewer \#3}
@@ -103,7 +117,8 @@ The text was revised to use the passive voice. &
 Throughout \\
 6.~Description before all figures and tables &
 Every figure and table is now mentioned and described in the text before it
-appears; Figs.~1--2 were moved for this. &
+appears; Figs.~1--2 were moved, and floats are no longer placed above the text
+that introduces them. &
 Throughout \\
 \bottomrule
 \end{tabular}

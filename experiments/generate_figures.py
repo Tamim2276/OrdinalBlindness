@@ -183,9 +183,9 @@ def plot_distributions(filename='fig5_distributions.pdf'):
     save(fig, filename)
 
 
-# ── Fig. 2: validation QWK per round ──────────────────────────────────────────
+# ── Fig. 2: test QWK per round ────────────────────────────────────────────────
 
-def load_val_curves(include_partial):
+def load_val_curves(include_partial, metric='test_qwk'):
     """Return {(method, partition): array (n_seeds, rounds)} from results/runs/."""
     curves = {}
     if not os.path.isdir(RUNS_DIR):
@@ -203,7 +203,7 @@ def load_val_curves(include_partial):
         if name != f"{cfg['method']}_{cfg['partition']}_s{cfg['seed']}":
             continue   # tagged test run (e.g. _smoke)
         with open(hist_path, 'r') as f:
-            qwk = [r['val_qwk'] for r in json.load(f)]
+            qwk = [r[metric] for r in json.load(f)]
         if qwk:
             curves.setdefault((cfg['method'], cfg['partition']), []).append(qwk)
 
@@ -215,11 +215,12 @@ def load_val_curves(include_partial):
 
 
 def centralised_val_qwk():
-    path = os.path.join(BASE_DIR, 'results', 'centralised_done.json')
+    """Centralised reference line: its test QWK, to match the test-QWK curves."""
+    path = os.path.join(BASE_DIR, 'results', 'centralised_test.json')
     if not os.path.exists(path):
         return None
     with open(path, 'r') as f:
-        return json.load(f)['best_val_qwk']
+        return json.load(f)['test_qwk']
 
 
 def plot_qwk_curves(include_partial, filename='fig4_qwk_combined.pdf'):
@@ -266,7 +267,7 @@ def plot_qwk_curves(include_partial, filename='fig4_qwk_combined.pdf'):
         ax.set_xlim(0.6, 10.4)
         ax.set_xlabel('FL round')
 
-    axes[0].set_ylabel('Validation QWK')
+    axes[0].set_ylabel('Test QWK')
 
     handles = [Line2D([], [], color=METHOD_STYLE[m]['color'], marker=METHOD_STYLE[m]['marker'],
                       markersize=4, linewidth=1.4, label=METHOD_STYLE[m]['label'])

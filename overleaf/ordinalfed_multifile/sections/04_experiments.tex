@@ -65,7 +65,10 @@ OrdinalFed is benchmarked against:
 server-side validation scoring~\cite{bejenar2023aggregation}. AccWt uses the same
 schedule and softmax weighting as OrdinalFed (Eqs.~\ref{eq:beta}--\ref{eq:weights})
 but scores each client by plain accuracy on $\mathcal{V}$ instead of QWK, and its
-clients train with class-weighted cross-entropy.
+clients train with class-weighted cross-entropy. A fifth configuration,
+\textbf{OrdinalFed + Prox}, adds FedProx's proximal term ($\mu = 0.01$) to the
+OrdinalFed clients, to test whether the server-side and client-side remedies are
+complementary.
 All methods execute $T = 10$ communication rounds with $E = 5$ local epochs,
 batch size 64, Adam optimiser ($\eta = 10^{-4}$), and the same class-imbalance
 weights $\mathbf{c}$.
@@ -75,13 +78,18 @@ weights $\mathbf{c}$.
 To isolate the contribution of each component, three ablations of OrdinalFed are
 evaluated: (i)~OrdinalLoss with sample-count aggregation; (ii)~class-weighted
 cross-entropy with QWK-weighted aggregation; and (iii)~class-weighted cross-entropy
-with uniform aggregation ($\omega_k^t = 1/K$).
+with uniform aggregation ($\omega_k^t = 1/K$). In addition, three settings of
+OrdinalFed are tested under $\alpha=0.1$, each changing one value of the default
+($\lambda=0.5$, $\beta_0=0.5$, $\tau=3$): a weaker ordinal term ($\lambda=0.1$),
+quality weights from the first round ($\beta_0=0$), and sharper quality weights
+($\tau=0.5$). These settings were fixed before the runs and are compared on mean
+validation QWK only.
 
 Every configuration is repeated with three random seeds, which control data order
 and augmentation, and results are reported as mean $\pm$ standard deviation.
-% TODO(Day 4): confirm seed counts match what finished (run_queue.py --status).
 After each round, the global model is evaluated on the DDR validation split and on
 the DDR test split excluding the 50 images of $\mathcal{V}$ (3,709 images). For each
 run, the reported model is the one from the round with the highest validation QWK.
 The test split is never used for training, aggregation, or model selection, and
-therefore provides an independent estimate of performance.
+therefore provides an independent estimate of performance. Stability is summarised
+by the mean, worst and final test QWK over the 10 rounds.

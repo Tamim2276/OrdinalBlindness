@@ -65,6 +65,16 @@ ABLATION_ROWS = ["abl_ordloss", "abl_qwkagg", "abl_uniform", "ordinalfed"]
 PERGRADE_ROWS = ["fedavg", "fedprox", "ordinalfed"]
 # Tier 5 grid (fixed before the runs). The winner is chosen on mean VALIDATION QWK only.
 SENS_ROWS     = ["ordinalfed", "sens_lam01", "sens_beta00", "sens_tau05"]
+# Ablation + sensitivity in one table (α=0.1): what each component and setting contributes
+COMPONENT_ROWS = [("fedavg", "CE + image-count weights (FedAvg)"),
+                  ("abl_ordloss", "OrdinalLoss + image-count weights"),
+                  ("abl_qwkagg", "CE + QWK weights"),
+                  ("abl_uniform", "CE + equal weights"),
+                  "midrule",
+                  ("ordinalfed", r"OrdinalFed ($\lambda=0.5$, $\beta_0=0.5$, $\tau=3$)"),
+                  ("sens_lam01", r"\quad with $\lambda=0.1$"),
+                  ("sens_beta00", r"\quad with $\beta_0=0$"),
+                  ("sens_tau05", r"\quad with $\tau=0.5$")]
 GRADES        = range(5)
 
 
@@ -100,6 +110,7 @@ def load_runs(include_partial):
 def run_metrics(history):
     """Per-run numbers. The reported round is chosen by validation QWK only."""
     val    = np.array([r["val_qwk"] for r in history])
+    test   = np.array([r["test_qwk"] for r in history])
     best   = history[int(np.argmax(val))]
     grades = per_grade_from_cm(best["test_cm"])
     return {
@@ -108,6 +119,8 @@ def run_metrics(history):
         "test_qwk"      : best["test_qwk"],
         "test_acc"      : best["test_acc"],
         "final_test_qwk": history[-1]["test_qwk"],
+        "test_mean"     : float(test.mean()),
+        "test_worst"    : float(test.min()),
         "val_peak"      : float(val.max()),
         "val_worst"     : float(val.min()),
         "val_mean"      : float(val.mean()),
@@ -207,38 +220,46 @@ def table_main(groups):
 
 def table_stability(groups, partition="dirichlet_0.1"):
     methods = [m for m in MAIN_ROWS if (m, partition) in groups]
-    specs   = [("val_peak", True), ("val_worst", True), ("val_mean", True), ("val_range", False)]
+    specs   = [("test_mean", True), ("test_worst", True), ("final_test_qwk", True)]
     columns = [bold_best([cell([r[key] for r in groups[(m, partition)]]) for m in methods], higher)
                for key, higher in specs]
     rows    = [[METHOD_LABELS[m]] + [col[i] for col in columns] for i, m in enumerate(methods)]
     return latex_table(
-        caption = "Stability of validation QWK across rounds under extreme Dirichlet skew "
-                  "($\\alpha=0.1$). Bold: best per column ($\\uparrow$ Peak/Worst/Mean; "
-                  "$\\downarrow$ Range).",
+        caption = "Stability of test QWK across the 10 rounds under extreme Dirichlet skew "
+                  "($\\alpha=0.1$): mean over rounds, worst round and final round. "
+                  "Bold: best per column.",
         label   = "tab:stability",
-        header  = ["Method", "Peak", "Worst", "Mean", "Range"],
+        header  = ["Method", "Mean", "Worst", "Final"],
         rows    = rows,
         note    = seeds_note(groups, [(m, partition) for m in methods]),
     )
 
 
-def table_ablation(groups):
-    methods = [m for m in ABLATION_ROWS
-               if (m, "dirichlet_0.1") in groups or (m, "real_site") in groups]
+def table_ablation(groups, partition="dirichlet_0.1"):
+    """Ablation (top block) and the pre-registered OrdinalFed sensitivity grid (bottom block)."""
+    entries = [e for e in COMPONENT_ROWS if e == "midrule" or (e[0], partition) in groups]
+    methods = [e[0] for e in entries if e != "midrule"]
     columns = [
-        bold_best([cell([r["test_qwk"]  for r in groups.get((m, "dirichlet_0.1"), [])]) for m in methods]),
-        bold_best([cell([r["val_worst"] for r in groups.get((m, "dirichlet_0.1"), [])]) for m in methods]),
-        bold_best([cell([r["test_qwk"]  for r in groups.get((m, "real_site"), [])])     for m in methods]),
+        [cell([r[key] for r in groups[(m, partition)]])[1] for m in methods]
+        for key in ("val_mean", "test_mean", "test_worst")
     ]
-    rows = [[METHOD_LABELS[m]] + [col[i] for col in columns] for i, m in enumerate(methods)]
-    keys = [(m, p) for m in methods for p in ("dirichlet_0.1", "real_site")]
+    rows, i = [], 0
+    for e in entries:
+        if e == "midrule":
+            rows.append("midrule")
+            continue
+        rows.append([e[1]] + [col[i] for col in columns])
+        i += 1
     return latex_table(
-        caption = "Ablation of OrdinalFed's two components. CE: class-weighted cross-entropy.",
+        caption = "Contribution of each component and setting under $\\alpha=0.1$. CE: "
+                  "class-weighted cross-entropy. Mean val / mean test: QWK averaged over the "
+                  "10 rounds; worst test: lowest round.",
         label   = "tab:ablation",
-        header  = ["Configuration", r"Test QWK ($\alpha=0.1$)",
-                   r"Worst val QWK ($\alpha=0.1$)", "Test QWK (Real-Site)"],
+        header  = ["Configuration", "Mean val", "Mean test", "Worst test"],
         rows    = rows,
-        note    = seeds_note(groups, keys),
+        note    = (seeds_note(groups, [(m, partition) for m in methods]) or "")
+                  + " The three settings in the lower block were fixed before the runs and "
+                    "are compared on mean validation QWK only.",
     )
 
 
