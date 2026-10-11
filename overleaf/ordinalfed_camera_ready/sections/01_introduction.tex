@@ -1,0 +1,59 @@
+%% ── Section 1: Introduction ─────────────────────────────────
+\section{Introduction}
+
+Diabetic Retinopathy (DR) is a common complication of diabetes and one of the main
+causes of preventable blindness in working-age adults. It damages the small blood
+vessels of the retina. In fundus photographs, this damage shows up as
+microaneurysms, haemorrhages and hard exudates, and in advanced cases as the growth
+of new vessels. Bangladesh alone has more than 13.1~million people with
+diabetes~\cite{idf2021}, and outside the big cities there are few retinal
+specialists. DR is graded on a five-level scale: Grade~0 (no DR), Grade~1 (mild
+non-proliferative DR, NPDR), Grade~2 (moderate NPDR), Grade~3 (severe NPDR), and
+Grade~4 (proliferative DR). Referable disease (Grade~$\geq$~2) must be found early
+to prevent vision loss, so automated screening is very useful.
+
+Deep convolutional networks grade DR well when all images can be collected in one
+place. On the imbalanced DDR dataset~\cite{li2019ddr}, an EfficientNet-B3 model
+trained this way reaches a Quadratic Weighted Kappa (QWK) of 0.834 on the
+validation split and 0.682 on the separate test split (Sec.~\ref{sec:results}).
+QWK is the usual metric for ordered grades. It penalises an error by the square of
+its distance, so calling a Grade~4 image Grade~0 costs much more than calling it
+Grade~3. In practice, privacy rules such as HIPAA and GDPR make it hard to pool
+images from several hospitals. Federated Learning (FL)~\cite{mcmahan2017fedavg}
+avoids this: the hospitals train a shared model by exchanging model weights, and
+the images never leave each site.
+
+The main problem in clinical FL is that hospitals see different patients, so their
+data are not identically distributed (non-IID). Screening clinics see mostly
+healthy (Grade~0) eyes, referral centres see many severe cases (Grades~3--4), and
+rural clinics see something in between. Under extreme Dirichlet skew
+($\alpha=0.1$), standard FedAvg collapses: averaged over three seeds, its test QWK
+drops from 0.647 in its best round to 0.378 in its worst. FedAvg weights each
+hospital by its number of images, so a few large clinics that each see mostly one
+grade can take over the global model. FedProx~\cite{li2020fedprox} avoids the
+collapse by limiting how far each local model can move from the global model, but
+it changes local training.
+
+Cross-entropy, the usual training loss, also ignores the order of the grades. For
+cross-entropy, mistaking Grade~4 for Grade~0 is no worse than mistaking it for
+Grade~3. Ordinal losses~\cite{toledocortes2022dqor}--[\citen{polat2024cdwce}] fix
+this in centralised training, but little is known about how they behave in FL.
+
+In this paper, \textbf{OrdinalFed}, a federated method for ordinal medical grading,
+is studied. It has two parts, and a repeated evaluation is used to test what each
+part adds.
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Distance-aware OrdinalLoss:} each hospital adds a squared
+  expected-grade penalty to class-weighted cross-entropy, so predictions far from
+  the true grade cost more.
+  \item \textbf{QWK-weighted aggregation with an adaptive $\beta$:} the server
+  scores each client model on a small balanced set $\mathcal{V}$ of 50 images.
+  Over the rounds, it moves the aggregation weights from image counts towards
+  these QWK scores. Nothing changes at the hospitals.
+  \item \textbf{A multi-seed evaluation on held-out test data:} every
+  configuration is run with three seeds and scored on the DDR test split and on
+  the external APTOS 2019 dataset, with ablations and a sensitivity analysis. The results show that OrdinalFed prevents
+  most of FedAvg's collapse. They also show that the gain comes from giving small
+  hospitals more weight, not from the QWK scores or the ordinal loss, and that
+  FedProx is still the most stable method.
+\end{enumerate}
