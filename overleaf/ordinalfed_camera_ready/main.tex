@@ -1,0 +1,81 @@
+%% ============================================================
+%%  main.tex  —  OrdinalFed (IEEE WIECON-ECE 2026), CAMERA-READY
+%%  Compile with:  pdflatex main  (twice for cross-refs)
+%%  Then certify the PDF with IEEE PDF eXpress (Conference ID 72700X).
+%% ============================================================
+\documentclass[conference,a4paper]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+%% ── Packages ────────────────────────────────────────────────
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{balance}                          % last-page column balancing
+\usepackage{flafter}   % floats never appear before the text that introduces them (Reviewer #3)
+\usepackage[hidelinks,
+            pdftitle={OrdinalFed: Federated Learning with
+              Ordinal-Aware Aggregation for Diabetic
+              Retinopathy Grading},
+            bookmarks=true]{hyperref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Mean with a small "± std" in result tables, e.g. 0.677\sd{.008}
+\newcommand{\sd}[1]{\,{\scriptsize$\pm$#1}}
+
+%% ── First-page header (two lines, top left, first page only) ─
+%% Text from the WIECON-ECE 2026 camera-ready guidelines.
+\makeatletter
+\let\ps@IEEEtitlepagestyleorig\ps@IEEEtitlepagestyle
+\def\ps@IEEEtitlepagestyle{\ps@IEEEtitlepagestyleorig
+  \def\@oddhead{\parbox[b]{\textwidth}{\raggedright\normalsize
+    2026 IEEE International Women in Engineering (WIE) Conference on Electrical and Computer Engineering (WIECON-ECE)\\
+    30-31 October 2026, Southeast University, Dhaka, Bangladesh}\hfil}%
+  \let\@evenhead\@oddhead}
+\makeatother
+
+%% ── Document ─────────────────────────────────────────────────
+\begin{document}
+
+\title{OrdinalFed: Federated Learning with Ordinal-Aware
+Aggregation for Diabetic Retinopathy Grading}
+
+%% Author block in the WIECON-ECE 2026 template style: names on one line, then
+%% the affiliation (written once, since it is the same for all authors), then
+%% the emails. Names, order and organization match the CMT author list.
+\author{\IEEEauthorblockN{Md Tamim Hossain, Najifa Raksanda, M. M. Tamim Sharif,
+and Aria Nawshin Ashka}
+\IEEEauthorblockA{\textit{Department of Computer Science and Engineering}\\
+\textit{Military Institute of Science and Technology (MIST),
+Mirpur Cantonment, Dhaka-1216, Bangladesh}\\
+Email: tamim0072276@gmail.com, najifa.raksandaa@gmail.com, tamimsharif2181@gmail.com,
+thearianawshin@gmail.com}}
+
+%% ── Copyright notice (bottom left, first page only) ─────────
+\IEEEpubid{\makebox[\columnwidth]{\normalsize 979-8-3195-1444-8/26/\$31.00~\copyright2026 IEEE\hfill}
+\hspace{\columnsep}\makebox[\columnwidth]{ }}
+
+% The WIECON-ECE template labels the keywords "Keywords"
+\renewcommand{\IEEEkeywordsname}{Keywords}
+
+\maketitle
+
+\input{sections/abstract}
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_methodology}
+\input{sections/04_experiments}
+\input{sections/05_results}
+\input{sections/06_conclusion}
+\input{sections/references}
+
+\end{document}

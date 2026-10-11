@@ -1,0 +1,28 @@
+\begin{abstract}
+Diabetic Retinopathy (DR) is a leading cause of preventable blindness. With
+federated learning (FL), hospitals can train one DR grading model together without
+sharing retinal images. When hospitals see very different patients, however,
+FedAvg can collapse. In this paper, OrdinalFed is studied.
+It has two parts. The first is an \emph{OrdinalLoss} that penalises a wrong
+grade by its squared distance from the true grade. The second is a
+\emph{QWK-weighted aggregation}: the server scores each client model by its
+Quadratic Weighted Kappa (QWK) on 50 held-out images, and over the rounds it moves
+the aggregation weights from image counts towards these scores. All experiments on
+the DDR dataset were repeated with three seeds and scored on the held-out test
+split. Under extreme label skew (Dirichlet parameter 0.1), FedAvg collapsed in every
+seed, with a worst-round test QWK of 0.378. OrdinalFed raised the worst round to
+0.514, with no change at the hospitals and about 1.2~s of extra server time per
+round. The ablations show where this gain comes from: small hospitals get more
+weight. Equal client weights did even better (0.630), while the QWK scores and the
+OrdinalLoss added no measurable benefit. FedProx was the most stable method
+(0.641), and OrdinalFed with FedProx's proximal term came close to it (0.627). On
+the IID and realistic multi-site partitions, all methods were within 0.01 QWK of
+each other. On the external APTOS 2019 dataset, all models scored 0.597--0.658 QWK,
+close to the centralised model (0.641).
+\end{abstract}
+
+\begin{IEEEkeywords}
+Diabetic Retinopathy, Federated Learning, Non-IID,
+Ordinal Loss, QWK-Weighted Aggregation, EfficientNet-B3,
+Medical Imaging
+\end{IEEEkeywords}
