@@ -1,0 +1,203 @@
+%% Presentation speech for the OrdinalFed talk (IEEE WIECON-ECE 2026, Paper 518) -- simple version
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks,pdftitle={OrdinalFed - Presentation Speech}]{hyperref}
+\definecolor{navy}{HTML}{14213D}
+\definecolor{accent}{HTML}{2F6FB3}
+\definecolor{muted}{HTML}{5B6575}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\linespread{1.3}
+\pagestyle{plain}
+
+% \slide{number}{title}{time}
+\newcommand{\slide}[3]{%
+  \par\bigskip\noindent{\color{accent}\large\bfseries Slide #1 \textperiodcentered\ #2}%
+  \hfill{\color{muted}\small #3}\par\smallskip}
+% stage direction
+\newcommand{\act}[1]{{\color{muted}\itshape (#1)}}
+
+\begin{document}
+
+{\color{navy}\LARGE\bfseries OrdinalFed: Presentation Speech}\par\smallskip
+{\color{muted}IEEE WIECON-ECE 2026 \textperiodcentered\ Paper ID 518 \textperiodcentered\ Presenter: Md Tamim Hossain}
+
+\medskip
+\fcolorbox{accent}{accent!6}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+\textbf{Total time:} about 9--10 minutes for 17 slides.\\
+\textbf{How to speak:} slowly, in short sentences. Look at the audience. Pause after each number.
+The grey text in brackets tells you what to do, not what to say.}}
+
+\slide{1}{Title}{0:20}
+Good morning, everyone. My name is Md Tamim Hossain, from the CSE department of MIST.
+Today I will present our paper, OrdinalFed. It is about training an eye-disease model across
+many hospitals. This is joint work with Najifa Raksanda, M.\,M. Tamim Sharif and Aria
+Nawshin Ashka.
+
+\slide{2}{Diabetic retinopathy}{0:40}
+Diabetes can damage the blood vessels in the eye. This is called diabetic retinopathy, or DR.
+It is a major cause of blindness that we can prevent. Bangladesh has more than 13 million
+people with diabetes. But there are very few eye doctors outside the big cities.
+
+Doctors grade DR from 0, which is healthy, to 4, which is very severe. If we find Grade 2 or
+higher early, we can save a patient's sight. So a computer that grades DR automatically would
+help a lot.
+
+\slide{3}{Why federated learning?}{0:40}
+To train a good model, we need images from many hospitals. But hospitals cannot share patient
+images, because of privacy. Federated learning solves this.
+
+Each hospital trains the model on its own images. Then it sends only the model, not the images,
+to a central server. The server combines all the models into one and sends it back. This repeats
+for several rounds. The usual way to combine them is called FedAvg. In FedAvg, a hospital with
+more images gets a bigger vote.
+
+\slide{4}{Two problems}{0:45}
+But there are two problems. First, hospitals see very different patients. Some see mostly
+healthy eyes. Others see mostly serious cases. When the data are this uneven, FedAvg can break
+down. In our tests, its score fell from 0.647 to 0.378.
+
+\act{Point to the small note at the bottom.} We use a score called QWK. It checks how close the
+predicted grade is to the true grade. One means perfect.
+
+Second, the usual training method treats every mistake the same. Calling a Grade 4 eye
+``Grade 3'' is a small mistake. Calling it ``Grade 0'' is a big one. But the usual method sees
+no difference.
+
+\slide{5}{Example: three very different hospitals}{0:50}
+Here is a simple example. Think of three hospitals. A big city hospital has many patients, but
+most have healthy eyes. An eye hospital has many serious cases. A village clinic has only a few
+patients.
+
+FedAvg gives votes by the number of images. So the city hospital gets almost all the votes. The
+model learns that most eyes are healthy. Then it starts missing the serious cases and the early
+cases.
+
+These bars are just a picture of the idea. But we measured the same thing: the two smallest
+hospitals got only 5.9 percent of the vote.
+
+\slide{6}{OrdinalFed has two parts}{0:45}
+Our method, OrdinalFed, has two parts.
+
+Part one is at each hospital. We add an extra penalty when the predicted grade is far from the
+true grade. So a far-off mistake costs much more than a near one.
+
+Part two is at the server. The server keeps 50 test images, 10 of each grade. After each round,
+it tests every hospital's model on these images. Better models get a bigger vote. The hospitals
+do not need to change anything.
+
+\slide{7}{How the server sets the weights}{0:35}
+This is how the server sets the votes. First, it gives each model a score on its 50 images.
+Second, it turns the scores into votes. Third, it mixes these votes with the image counts.
+
+At the start, both count equally. Over the rounds, the image counts matter less and less. At the
+end, only the scores matter. No hospital is ever left out.
+
+\slide{8}{Same exam for every hospital}{0:40}
+So, back to our three hospitals. You can think of it like a school exam. Every hospital takes
+the same exam. The vote depends on how well you did, not just on how big you are. And every
+hospital keeps a small minimum vote.
+
+In our tests, the vote of the two smallest hospitals went up from 5.9 percent to 40.8 percent.
+And the worst score went up from 0.378 to 0.514. The hospitals did not change anything.
+
+\slide{9}{Experimental setup}{0:30}
+Now, our experiments. We used the DDR dataset, with more than 12,000 eye images. We had five
+hospitals and used the EfficientNet-B3 model. We trained for 10 rounds and repeated every test
+three times. We compared our method with FedAvg, FedProx and two other versions. We also tested
+all models on a second dataset, APTOS 2019.
+
+\slide{10}{Three ways to split the data}{0:35}
+We split the images among the five hospitals in three ways. Each bar is one hospital. The
+colours show which grades it has.
+
+\act{Point left.} On the left, every hospital gets a similar mix. That is the easy case.
+\act{Point to the middle.} In the middle, each hospital gets mostly one grade. That is the hard
+case. One hospital has only 32 images, all healthy. \act{Point right.} On the right, the split
+copies five real kinds of clinics.
+
+\slide{11}{Test QWK after every round}{0:35}
+This chart shows the score after each round. Orange is FedAvg. Green is FedProx. Blue is our
+method.
+
+\act{Point to the middle panel.} Look at the middle, the hard case. FedAvg crashes after round 5.
+Our method does not crash, but it goes up and down. FedProx stays steady. On the left and right,
+all methods do about the same.
+
+\slide{12}{Worst round under extreme skew}{0:30}
+Here is the worst score of each method in the hard case. Higher is better. FedAvg falls to
+0.378. Our method keeps it at 0.514. FedProx is the most steady, at 0.641. Our method plus
+FedProx gets close, at 0.627.
+
+\slide{13}{Why does it work?}{0:45}
+Why does our method help? We tested each part on its own.
+
+The new penalty alone did not help. Its score, 0.380, was the same as FedAvg. Votes based on
+scores helped: 0.586. But giving every hospital an equal vote helped even more: 0.630.
+
+So the real reason is simple. Small hospitals get a bigger voice. With only 50 test images, the
+scores are too noisy to rank the hospitals well.
+
+\slide{14}{OrdinalFed or FedProx?}{0:50}
+So why use our method instead of FedProx? The difference is where the change happens. FedProx
+changes the training at every hospital. Each hospital must change its code and tune a setting.
+Our method changes only the server. The hospitals do nothing new.
+
+To be honest, FedProx was more steady in our tests. But our method is useful in three cases.
+One: when you can only change the server. Two: when hospital sizes are very different. Three:
+when finding rare, serious cases matters. Our method found more Grade 3 cases: 0.36 against
+0.31. And you can use both together. That reached 0.627.
+
+\slide{15}{More results}{0:30}
+A few more results. When the data are not very uneven, all methods score about the same. Our
+method found the most Grade 3 cases. On the second dataset, APTOS, all models still worked well,
+close to a model trained on all the data. And our method adds only about one second per round at
+the server.
+
+\slide{16}{Takeaways}{0:40}
+To sum up. One: our method stops most of FedAvg's crash, and the hospitals change nothing. Two:
+it works because small hospitals get a bigger voice. Three: FedProx is still the most steady
+method.
+
+Our work has limits. The 50 test images are few. Grade 1 is still hard to detect. And we used one
+dataset with small images. Next, we want to try more test images, bigger images and more
+datasets.
+
+\slide{17}{Thank you}{0:05}
+Thank you for listening. I am happy to answer your questions.
+
+\bigskip
+\noindent{\color{navy}\large\bfseries If you are short of time}\par
+Make Slides 9, 10 and 15 very short (one or two sentences each). Never skip Slides 5, 8 and
+11--14: they tell the main story.
+
+\bigskip
+\noindent{\color{navy}\large\bfseries Likely questions and simple answers}
+\begin{enumerate}[leftmargin=*,itemsep=6pt]
+  \item \textbf{Why not just use FedProx?}\\
+  FedProx was more steady in our tests. But our method changes only the server, so it helps when
+  you cannot change every hospital's software. And the two can be used together: that reached
+  0.627. (Slide 14.)
+  \item \textbf{Is keeping 50 labelled images on the server a privacy problem?}\\
+  In our tests, these images came from a public dataset, not from the hospitals. In real use,
+  the server needs a few labelled images. This is one of our limits.
+  \item \textbf{Why do equal votes beat score-based votes?}\\
+  In the hard case, FedAvg lets a few big hospitals take over. Any rule that gives small
+  hospitals more say helps. With only 50 images, the scores are too noisy.
+  \item \textbf{Why is the test score (0.682) lower than the validation score (0.834)?}\\
+  The test images came from different cameras, and many Grade 2 eyes were called Grade 0. This
+  affected all methods in the same way.
+  \item \textbf{Why is Grade 1 so hard?}\\
+  Grade 1 is only 5\% of our training images, and its signs are very small at 224 $\times$ 224
+  pixels. Bigger images may help.
+  \item \textbf{So what does the extra penalty add?}\\
+  In normal (non-federated) training it helps. In our federated tests, it did not add much. We
+  report this honestly.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,477 @@
+%% OrdinalFed talk -- technical speech + study guide (learn the terms behind the simple speech)
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.1cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{longtable,booktabs,array}
+\usepackage{needspace}
+\usepackage[hidelinks,pdftitle={OrdinalFed - Technical Speech and Study Guide}]{hyperref}
+\definecolor{navy}{HTML}{14213D}
+\definecolor{accent}{HTML}{2F6FB3}
+\definecolor{muted}{HTML}{5B6575}
+\definecolor{termbg}{HTML}{EEF3F9}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\linespread{1.2}
+\pagestyle{plain}
+
+\newcommand{\slide}[3]{%
+  \par\needspace{7\baselineskip}\bigskip\noindent{\color{accent}\large\bfseries Slide #1 \textperiodcentered\ #2}%
+  \hfill{\color{muted}\small #3}\par\smallskip}
+\newcommand{\act}[1]{{\color{muted}\itshape (#1)}}
+% "Terms on this slide" list
+\newenvironment{terms}{%
+  \par\smallskip\noindent{\color{accent}\small\bfseries TERMS ON THIS SLIDE}\par
+  \begin{itemize}[leftmargin=1.2em,itemsep=2pt,topsep=2pt,label={\color{accent}\textbullet}]\small}%
+  {\end{itemize}}
+\newcommand{\term}[1]{\textbf{#1:}}
+
+\begin{document}
+
+{\color{navy}\LARGE\bfseries OrdinalFed: Technical Speech \& Study Guide}\par\smallskip
+{\color{muted}IEEE WIECON-ECE 2026 \textperiodcentered\ Paper ID 518 \textperiodcentered\ Md Tamim Hossain}
+
+\medskip
+\fcolorbox{accent}{termbg}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+\textbf{How to use this guide.} This is the \emph{technical} version of the talk, with the proper
+terms. After each slide, the blue \textbf{Terms on this slide} list explains every technical word in
+easy language. Use it to learn, so you can answer questions. On stage, read the \emph{simple}
+speech (\texttt{OrdinalFed\_speech.pdf}). At the end: a quick A--Z glossary and harder questions
+with answers.}}
+
+%% ------------------------------------------------------------------
+\slide{1}{Title}{0:20}
+Good morning, everyone. I am Md Tamim Hossain from the Department of Computer Science and
+Engineering, MIST. Today I will present our paper, ``OrdinalFed: Federated Learning with
+Ordinal-Aware Aggregation for Diabetic Retinopathy Grading.'' This is joint work with Najifa
+Raksanda, M.\,M. Tamim Sharif and Aria Nawshin Ashka.
+\begin{terms}
+\item \term{Federated learning (FL)} many hospitals train \emph{one} AI model together, but each
+hospital keeps its patient images at home. Only the model travels, never the images.
+\item \term{Ordinal} things that have a natural order, like small $<$ medium $<$ large. DR grades
+0--4 are ordinal: Grade 3 is between Grade 2 and Grade 4.
+\item \term{Aggregation} the step where the server combines the hospitals' models into one model.
+``Ordinal-aware aggregation'' means the combining step pays attention to the order of the grades.
+\item \term{Grading} giving each eye image a severity level (a grade), not just ``sick or healthy''.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{2}{Diabetic retinopathy}{0:45}
+Diabetic retinopathy, or DR, is damage to the small blood vessels of the retina caused by
+diabetes. It is one of the main causes of preventable blindness. In Bangladesh alone, more than
+13 million people have diabetes, and outside the big cities there are very few eye specialists.
+Doctors grade DR on five levels, from Grade 0, no disease, to Grade 4, the most severe. Finding
+Grade 2 and above early can prevent vision loss. So an automatic grading model would be very
+useful.
+\begin{terms}
+\item \term{Retina} the thin layer at the back of the eye that senses light, like the sensor in a
+camera.
+\item \term{Fundus photograph} a photo of the back of the eye (the retina) taken with a special
+camera. Our datasets are made of these photos.
+\item \term{The five grades} 0 = no DR; 1 = mild; 2 = moderate; 3 = severe; 4 = proliferative.
+Grades 1--3 are called \emph{NPDR} (non-proliferative DR). Grade 4 is \emph{PDR}: new, weak blood
+vessels start to grow, and they can bleed and cause blindness.
+\item \term{Signs in the photo} \emph{microaneurysms} (tiny bulges in vessels), \emph{haemorrhages}
+(small bleeds), \emph{hard exudates} (yellow fat/protein spots), and new vessels in Grade 4.
+\item \term{Referable DR} Grade 2 or higher. These patients should be sent (``referred'') to an eye
+specialist.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{3}{Why federated learning?}{0:45}
+Deep learning models grade DR well when all images are collected in one place. But privacy rules
+make it hard for hospitals to share patient images. Federated learning solves this. Each hospital
+trains the model on its own images. Then it sends only the model weights to a server, never the
+images. The server combines them into one global model and sends it back. This repeats for several
+rounds. The standard way to combine the models is called FedAvg. It weights each hospital by how
+many images it has.
+\begin{terms}
+\item \term{Deep learning} AI that uses large neural networks, which learn patterns from many
+examples (here, eye photos with known grades).
+\item \term{Model weights (parameters)} the millions of numbers inside a neural network. Training
+means adjusting these numbers. In FL, hospitals share these numbers, not images.
+\item \term{Client} one participant in FL, here one hospital. \term{Server} the central computer
+that combines the clients' models.
+\item \term{Global model} the combined model made by the server, shared with every hospital.
+\item \term{Communication round} one full cycle: server sends the global model $\rightarrow$
+hospitals train $\rightarrow$ hospitals send models back $\rightarrow$ server combines. We use 10
+rounds.
+\item \term{FedAvg (Federated Averaging)} the standard FL method (McMahan et al., 2017). The server
+takes a \emph{weighted average} of the hospitals' models; a hospital's weight is its share of all
+images. Example: a hospital with 60\% of the images gets 60\% of the say.
+\item \term{Privacy rules (HIPAA, GDPR)} laws in the USA and Europe that protect patient data.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{4}{Two problems}{0:50}
+There are two problems. First, hospitals see very different patients. A screening clinic sees
+mostly healthy eyes, while a referral hospital sees many severe cases. When the data are this
+uneven, FedAvg can collapse. In our experiments under extreme skew, its test QWK dropped from
+0.647 in its best round to 0.378 in its worst. QWK is the standard score for ordered grades: 1
+means perfect, and far-off mistakes cost more.
+
+Second, the usual loss, cross-entropy, ignores the order of the grades. For cross-entropy, calling
+a Grade 4 image Grade 0 is no worse than calling it Grade 3. But clinically, the first mistake is
+much worse.
+\begin{terms}
+\item \term{Non-IID data} ``IID'' means every hospital's data looks like the overall data.
+\emph{Non-IID} means each hospital's data is different. Here the difference is in the grades, which
+is called \emph{label skew}: one hospital has mostly Grade 0, another mostly Grade 2.
+\item \term{Extreme skew} our hardest test, where each hospital sees mostly one grade (made with a
+Dirichlet split, $\alpha = 0.1$; see Slide 10).
+\item \term{Collapse} the global model suddenly gets much worse in later rounds. Cause:
+\emph{client drift}. Each hospital's model moves towards its own kind of data, so the models pull
+in different directions, and averaging them gives a poor model.
+\item \term{QWK (Quadratic Weighted Kappa)} a score from $-1$ to 1 for how well predicted grades
+agree with the true grades. 1 = perfect, 0 = no better than guessing. ``Quadratic'' means the
+penalty grows with the \emph{square} of the distance: a mistake of 2 grades costs 4 times a mistake
+of 1 grade; a mistake of 4 grades costs 16 times. ``Kappa'' means it is corrected for lucky
+guessing. It is the standard score for DR grading (used in Kaggle competitions).
+\item \term{Test QWK} QWK measured on the \emph{test} images, which are never used for training or
+for choosing models, so it is an honest score.
+\item \term{Loss function} the number the model tries to make small during training; it measures
+how wrong the predictions are.
+\item \term{Cross-entropy (CE)} the usual loss for classification. It only looks at the probability
+the model gives to the \emph{true} grade, so every wrong grade is treated the same.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{5}{Example: three very different hospitals}{0:50}
+Let me make this concrete with an example. Imagine three hospitals. A big city hospital sees many
+patients, but most of their eyes are healthy. An eye specialist hospital sees many severe cases.
+And a village clinic has only a few patients, often with early disease. FedAvg gives each hospital
+a vote based on how many images it has. So the big city hospital decides almost everything, and the
+global model learns that most eyes are healthy. It starts missing the severe cases from the eye
+hospital and the early cases from the village. These bars are only an illustration, but we measured
+the same effect: in our extreme-skew test, the two smallest clients got only 5.9 percent of FedAvg's
+vote.
+\begin{terms}
+\item \term{Vote = aggregation weight} how much one hospital's model counts when the server
+combines the models. All weights add up to 100\%.
+\item \term{Illustration vs.\ measurement} the bars on the slide are a picture of the idea. The
+5.9\% is a real number from our logged weights.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{6}{OrdinalFed has two parts}{0:50}
+Our method, OrdinalFed, has two parts. The first part works at each hospital. We add a distance
+penalty to cross-entropy. The model predicts an expected grade, and we penalise the squared distance
+from the true grade. So predicting Grade 0 for a Grade 4 image costs 16 times more than predicting
+Grade 3.
+
+The second part works at the server. The server keeps a small, balanced set of 50 images, 10 from
+each grade. After each round, it scores every hospital's model on these images using QWK, and gives
+better models more weight. The hospitals do not need to change anything, and no extra data is sent.
+\begin{terms}
+\item \term{OrdinalLoss} our training loss at each hospital:
+$\mathcal{L} = (1-\lambda)\,\text{CE} + \lambda\,(\hat{y}-y)^2$. It mixes cross-entropy with a
+``distance'' penalty.
+\item \term{$\lambda$ (lambda) = 0.5} how much of each part we use. 0.5 means half CE, half
+distance penalty.
+\item \term{Softmax probabilities} the model gives a probability for each grade, adding up to 100\%.
+Example: 10\% Grade 0, 20\% Grade 1, 70\% Grade 2.
+\item \term{Expected grade $\hat{y}$} the average grade, weighted by those probabilities:
+$\hat{y} = \sum_c c \cdot p_c$. In the example above: $0(0.1)+1(0.2)+2(0.7) = 1.6$.
+\item \term{Squared distance $(\hat{y}-y)^2$} if the true grade is 4: predicting 0 costs
+$(0-4)^2 = 16$; predicting 3 costs $(3-4)^2 = 1$. So the far mistake costs 16 times more.
+\item \term{Class weights $\mathbf{c} = [1, 5, 1.5, 10, 4]$} rare grades count more in CE (Grade 3
+is the rarest, so it gets weight 10), so the model does not ignore them.
+\item \term{Server validation set $\mathcal{V}$} the 50 images (10 per grade) the server keeps, the
+``exam''. Balanced, so every grade counts equally. Taken from the public DDR test split, not from
+the hospitals.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{7}{How the server sets the weights}{0:40}
+Here is how the server sets the weights. First, it scores each model on its 50 images. Second, a
+softmax turns these scores into quality weights. Third, it mixes two things: each hospital's share
+of the images, and its quality weight. A factor called beta controls the mix. In round 1, beta is
+0.5, so image counts and quality count equally. Beta then falls smoothly to zero, so in the last
+round only quality is used. We never drop a hospital, because a score from only 50 images is noisy.
+\begin{terms}
+\item \term{$\kappa_k^t$ (kappa)} the QWK of hospital $k$'s model in round $t$, measured on the 50
+server images.
+\item \term{Floor $\kappa_{\min} = 0.1$} any score below 0.1 is raised to 0.1, so one bad round
+cannot give a hospital almost zero weight.
+\item \term{Softmax with temperature $\tau = 3$} a formula that turns scores into weights that add up
+to 1: $q_k = e^{\kappa_k/\tau} / \sum_j e^{\kappa_j/\tau}$. The \emph{temperature} controls how
+``sharp'' it is: a high $\tau$ gives almost equal weights; a low $\tau$ gives the best model most of
+the weight. With $\tau = 3$, the biggest weight is at most about 1.35 times the smallest.
+\item \term{$\beta(t)$ (beta) and the cosine schedule} the mixing factor:
+weight $= \beta \cdot \text{image share} + (1-\beta) \cdot \text{quality}$.
+$\beta(t) = 0.5\cos\!\big(\tfrac{\pi(t-1)}{2(T-1)}\big)$: it starts at 0.5 (round 1) and falls
+smoothly, like a quarter of a cosine wave, to 0 (round 10). Why: early scores are unreliable, so we
+trust image counts first and quality scores later.
+\item \term{Minimum weight $\omega_{\min} = 0.03$} a safety rule: every hospital gets at least 3\%.
+In our setting it never triggers, because every hospital already gets about 8\% or more.
+\item \term{Noisy} a score from only 50 images changes a lot by chance, so it is not fully reliable.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{8}{Same exam for every hospital}{0:45}
+So, back to our three hospitals. OrdinalFed fixes the problem in a simple way. Think of it as giving
+every hospital the same exam. The server keeps 50 images, 10 from each grade, and tests every
+hospital's model on them. Then the votes slowly move from ``how many images do you have'' to ``how
+well did you do on the exam''. And every hospital keeps a minimum vote, so even a tiny village
+clinic is never ignored. In our extreme-skew test, the vote of the two smallest hospitals went up
+from 5.9 percent to 40.8 percent, and the worst-round QWK went up from 0.378 to 0.514. The hospitals
+did not have to change anything.
+\begin{terms}
+\item \term{Worst-round QWK} the lowest test QWK over the 10 rounds. It shows how badly a method can
+fail. Higher worst round = more stable.
+\item \term{Logged weights} during training we saved every hospital's weight in every round. The
+5.9\% $\rightarrow$ 40.8\% comes from these records (round 10, extreme skew).
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{9}{Experimental setup}{0:35}
+We tested on the DDR dataset, which has 12,522 gradable fundus images, split into training,
+validation and test sets. We used five hospital clients and an EfficientNet-B3 model at 224 by 224
+pixels. Each method ran for 10 rounds with 5 local epochs, and every experiment was repeated with
+three random seeds. We compared OrdinalFed with FedAvg, FedProx, an accuracy-weighted baseline
+called AccWt, and OrdinalFed combined with FedProx. We also tested every trained model, without
+retraining, on a second dataset, APTOS 2019.
+\begin{terms}
+\item \term{DDR dataset} a public DR dataset collected in China (13,673 photos; 12,522 are good
+enough to grade). Split: 6,260 training, 2,503 validation, 3,759 test images.
+\item \term{Gradable} the photo is clear enough for a doctor to give a grade.
+\item \term{Training / validation / test split} training = to learn; validation = to choose the
+best round; test = final, honest score (never used for learning or choosing).
+\item \term{EfficientNet-B3} a well-known image network (CNN) that is accurate but not too big
+(about 12 million weights). ``B3'' is a medium size in the EfficientNet family.
+\item \term{CNN (convolutional neural network)} a neural network made for images; it learns small
+patterns (edges, spots) and then bigger ones.
+\item \term{224 $\times$ 224 pixels} the size every image is shrunk to. Small images train fast but
+can hide tiny lesions.
+\item \term{Warm start} all FL runs start from a centralised model trained for 30 epochs (best
+validation QWK 0.834 at epoch 23), like a hospital adapting a pre-trained model.
+\item \term{Local epoch} one pass through all of a hospital's own images. Each round has 5.
+\item \term{Seed} a number that fixes the randomness (shuffling, augmentation). Three seeds = we ran
+everything three times with different randomness and report \emph{mean $\pm$ standard deviation}
+(average and spread).
+\item \term{Training settings} batch size 64 (images per update), Adam optimiser (the update rule),
+learning rate $10^{-4}$ (step size). \emph{Augmentation}: random flips, small rotations and colour
+changes, so the model does not memorise the images (\emph{overfitting}).
+\item \term{FedProx} FedAvg plus a ``rubber band'' at each hospital: the \emph{proximal term}
+$\tfrac{\mu}{2}\lVert w - w^t\rVert^2$ pulls each local model back towards the global model, so it
+does not drift too far. We used $\mu = 0.01$.
+\item \term{AccWt} the same server weighting as ours, but it scores hospitals by plain
+\emph{accuracy} instead of QWK, and hospitals use normal cross-entropy. It tests whether QWK itself
+matters.
+\item \term{OrdinalFed + Prox} our method plus FedProx's rubber band at the hospitals.
+\item \term{APTOS 2019 (external validation)} a different public dataset (3,662 photos from India,
+from a Kaggle competition). Testing on it, without retraining, checks whether the models work on
+new hospitals and cameras.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{10}{Three ways to split the data}{0:40}
+We split the data across the five clients in three ways. Each bar is one client, and the colours
+show its mix of grades. In the IID split, on the left, every client gets a random, similar mix.
+\act{Point to the middle.} The middle panel is the hard case, a Dirichlet split with alpha 0.1. Here
+each client sees mostly one grade. Client 0 has only 32 images, all Grade 0, and Client 4 has 2,087
+images, almost all Grade 2. \act{Point right.} The right panel models five real types of clinic, from
+screening clinics to specialist hospitals.
+\begin{terms}
+\item \term{Partition / split} how the training images are divided among the five hospitals.
+\item \term{IID split} random and equal: every hospital gets 1,252 images with the same grade mix.
+The easy case.
+\item \term{Dirichlet split, $\alpha$ (alpha) $= 0.1$} a standard way to make uneven splits for FL
+research. $\alpha$ controls how uneven: small $\alpha$ (like 0.1) = each hospital gets mostly one
+grade; large $\alpha$ = close to IID. Sizes vary too: 32 to 2,087 images.
+\item \term{Real-site split} we designed five clinic types by hand (general screening, rural
+primary care, specialist referral, DR clinic, urban hospital) to look like real life.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{11}{Test QWK after every round}{0:40}
+This figure shows the test QWK after each round. Orange is FedAvg, green is FedProx, blue is
+OrdinalFed, and the dashed line is the centralised model trained on all the data. On the IID and
+real-site splits, on the left and right, all methods stay close to the centralised model.
+\act{Point to the middle panel.} The middle panel is the extreme skew. FedAvg collapses from round 5
+onwards. OrdinalFed avoids the collapse, but it goes up and down. FedProx stays flat.
+\begin{terms}
+\item \term{Centralised model} one model trained with all the images in one place (no FL). It is
+the reference: test QWK 0.682.
+\item \term{Shaded band} $\pm$ one standard deviation over the three seeds: a wide band means the
+result changes a lot from run to run.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{12}{Worst round under extreme skew}{0:35}
+Here are the numbers for the worst round under extreme skew, averaged over three seeds. FedAvg drops
+to 0.378. OrdinalFed raises the worst round to 0.514, and the mean over all rounds from 0.535 to
+0.604. But FedProx, which changes local training, is the most stable method, at 0.641. Adding
+FedProx's term to OrdinalFed brings it close, at 0.627, but it does not beat FedProx.
+\begin{terms}
+\item \term{Stability} how steady a method's score stays across rounds. We measure it with the
+\emph{mean}, \emph{worst} and \emph{final} test QWK over the 10 rounds.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{13}{Why does it work?}{0:50}
+Why does OrdinalFed help? We removed one part at a time. The OrdinalLoss alone does not stop the
+collapse: 0.380, the same as FedAvg. QWK weighting raises the worst round to 0.586. But simply giving
+every hospital the same weight does even better, at 0.630. The logged weights explain this. The two
+smallest clients hold 5.9 percent of the images, so FedAvg gives them 5.9 percent of the weight.
+OrdinalFed raises their weight to 40.8 percent by round 10. So the real gain comes from giving small
+hospitals a bigger voice. With only 50 server images, the QWK scores themselves are too noisy to rank
+the hospitals.
+\begin{terms}
+\item \term{Ablation study} test the method with one part removed or swapped at a time, to see
+which part really causes the improvement (like removing one ingredient from a recipe).
+\item \term{Image-count weights} FedAvg's weighting (share of images).
+\item \term{Equal (uniform) weights $\omega = 1/K$} every hospital gets the same weight: with
+$K = 5$ hospitals, 20\% each.
+\item \term{Sensitivity analysis} (in the paper, Table III) we also changed one setting at a time
+($\lambda = 0.1$, $\beta_0 = 0$, $\tau = 0.5$). All three did a bit better than the default, but
+still below equal weights. The settings were fixed before the runs and compared only on validation
+data, to stay fair.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{14}{OrdinalFed or FedProx?}{1:00}
+A natural question is: why use OrdinalFed instead of FedProx? The difference is where the fix
+happens. FedProx changes the training at every hospital: each one must add an extra term to its
+training code and tune a setting. OrdinalFed changes only the server, and the hospitals keep their
+normal training. To be honest, FedProx was more stable in our tests: its worst round was 0.641,
+against 0.514 for OrdinalFed. But OrdinalFed is useful in three situations. First, when you can
+change only the server, for example when small clinics run simple, fixed software. Second, when
+hospital sizes are very different and small clinics would be drowned out. Third, when catching rare
+severe cases matters: OrdinalFed had the best Grade 3 recall, 0.36 against 0.31. And you do not have
+to choose: OrdinalFed plus FedProx's term reached 0.627, so the two work together.
+\begin{terms}
+\item \term{Client-side vs.\ server-side} client-side methods (FedProx) change how each hospital
+trains; server-side methods (OrdinalFed's weighting) change only how the server combines.
+\item \term{Tune a setting ($\mu$)} FedProx's strength $\mu$ must be chosen; too small does
+nothing, too big stops hospitals from learning.
+\item \term{Recall} of all the images that truly are Grade 3, the share the model found. Recall 0.36
+= it found 36 out of every 100 Grade 3 images. (\emph{Precision}: of the images the model called
+Grade 3, the share that really were. \emph{F1}: one number that balances both.)
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{15}{More results}{0:40}
+A few more results. On the IID and realistic multi-site splits, all methods were within 0.01 QWK of
+each other, so they perform about the same when the skew is mild. OrdinalFed had the best recall on
+Grade 3, the rarest severe grade: 0.36, against 0.27 to 0.31 for the others. On the external APTOS
+dataset, all models scored between about 0.60 and 0.66, close to the centralised model's 0.641, so
+they transfer well. And the server cost is small: 1.2 seconds per round, with no extra
+communication.
+\begin{terms}
+\item \term{Transfer / generalise} a model trained on one dataset still works on another dataset
+from different hospitals and cameras.
+\item \term{Overhead} the extra cost of our method: 1.2 s of server time per round (about 0.6\% of a
+195-second round on an Intel Arc B580 GPU). \emph{No extra communication}: hospitals send the same
+model as in FedAvg.
+\end{terms}
+
+%% ------------------------------------------------------------------
+\slide{16}{Takeaways}{0:45}
+To conclude, there are three takeaways. First, OrdinalFed's server-side weighting prevents most of
+FedAvg's collapse under extreme skew, with no change at the hospitals and no extra communication.
+Second, the gain comes from giving small hospitals more weight; equal weights work even better.
+Third, FedProx is still the most stable method. Our study also has limits: the 50-image server set is
+small, no method detects Grade 1 well, and we trained on one dataset at low resolution. In future
+work, we will test larger server sets, higher resolution, more datasets, and formal privacy
+guarantees.
+\begin{terms}
+\item \term{Limitation} an honest weak point of the study that future work should fix.
+\item \term{Resolution} image size in pixels; higher resolution shows tiny lesions better.
+\item \term{Formal privacy guarantees (differential privacy)} a mathematical promise that the shared
+model does not reveal any single patient's data. FL alone keeps images at home, but does not give
+this promise.
+\end{terms}
+
+\slide{17}{Thank you}{0:05}
+Thank you for listening. I am happy to take your questions.
+
+%% ------------------------------------------------------------------
+\newpage
+{\color{navy}\Large\bfseries Quick glossary (A--Z)}\par\smallskip
+{\small
+\begin{longtable}{@{}>{\bfseries}p{3.6cm}p{11.1cm}>{\leavevmode\color{muted}}p{0.9cm}@{}}
+\toprule
+Term & Easy meaning & Slide\\ \midrule\endhead
+Ablation & Remove one part at a time to see what really helps. & 13\\
+AccWt & Our weighting, but scored by accuracy instead of QWK. & 9\\
+Aggregation & Combining hospital models into one. & 1, 3\\
+APTOS 2019 & Second dataset (India), used only for testing. & 9\\
+$\beta$ (beta) & Mix of image share and quality; 0.5 $\rightarrow$ 0 over the rounds. & 7\\
+Centralised model & One model trained on all images in one place; the reference. & 11\\
+Client & One hospital in FL. & 3\\
+Client drift & Local models move towards their own data and apart from each other. & 4\\
+Collapse & The global model suddenly gets much worse. & 4\\
+Cross-entropy (CE) & Usual loss; treats every wrong grade the same. & 4\\
+DDR & Main dataset (China), 12,522 gradable images. & 9\\
+Dirichlet split ($\alpha$) & Uneven split; small $\alpha$ = each hospital mostly one grade. & 10\\
+EfficientNet-B3 & Medium-size image network (CNN). & 9\\
+Epoch (local) & One pass through a hospital's own images. & 9\\
+Expected grade $\hat{y}$ & Probability-weighted average grade. & 6\\
+FedAvg & Standard FL; weights hospitals by number of images. & 3\\
+FedProx & FedAvg + ``rubber band'' (proximal term) at each hospital. & 9, 14\\
+IID / non-IID & Hospitals' data alike / different. & 4, 10\\
+$\kappa$ (kappa) & A hospital's QWK on the 50 server images. & 7\\
+$\lambda$ (lambda) & Balance between CE and the distance penalty (0.5). & 6\\
+Label skew & Hospitals have different mixes of grades. & 4\\
+OrdinalLoss & CE + squared-distance penalty. & 6\\
+Proximal term ($\mu$) & FedProx's pull towards the global model; $\mu = 0.01$. & 9\\
+QWK & Agreement score for ordered grades; 1 = perfect. & 4\\
+Recall & Share of true cases the model finds. & 14\\
+Round & One send--train--return--combine cycle. & 3\\
+Seed & Number fixing randomness; we used 3. & 9\\
+Server set $\mathcal{V}$ & The 50 ``exam'' images, 10 per grade. & 6\\
+Softmax & Turns numbers into probabilities/weights that add up to 1. & 6, 7\\
+Temperature $\tau$ & How sharp the softmax is; $\tau = 3$ = gentle. & 7\\
+Test split & Images used only for the final, honest score. & 9\\
+Validation split & Images used to choose the best round. & 9\\
+\bottomrule
+\end{longtable}}
+
+%% ------------------------------------------------------------------
+{\color{navy}\Large\bfseries Harder questions and easy answers}
+\begin{enumerate}[leftmargin=*,itemsep=6pt]
+  \item \textbf{Why QWK and not accuracy?}\\
+  Accuracy only counts right or wrong. QWK also counts \emph{how} wrong: calling Grade 4 ``Grade 0''
+  is punished much more than ``Grade 3''. For ordered grades, that matters, and QWK is the standard DR
+  score.
+  \item \textbf{Why does QWK weighting not beat equal weighting?}\\
+  The scores come from only 50 images, so they are noisy, and with $\tau = 3$ the weights end up
+  almost equal anyway. The real benefit is that small hospitals get more weight, which equal weights
+  give directly.
+  \item \textbf{Why $\tau = 3$ and $\beta_0 = 0.5$?}\\
+  They are the settings our method was designed with. We also tested other values, fixed before the
+  runs: a sharper $\tau = 0.5$ and $\beta_0 = 0$ did a bit better on validation (0.795 and 0.793 vs.\
+  0.761), but still below equal weights (0.810).
+  \item \textbf{Why a cosine schedule for $\beta$?}\\
+  Early in training the scores are unreliable, so we trust image counts first and move smoothly to
+  quality scores. A cosine curve gives a smooth, gentle change.
+  \item \textbf{Table I shows OrdinalFed lowest under $\alpha = 0.1$ (0.640). Why?}\\
+  Table I uses the round with the best \emph{validation} score. For FedAvg that is always round 1,
+  before it collapses, so Table I hides the collapse. That is why we also report mean, worst and
+  final rounds (Table II).
+  \item \textbf{Is keeping 50 labelled images on the server a privacy problem?}\\
+  In our tests they come from the public DDR test split, not from the hospitals. In real use, the
+  server needs a small labelled set; this is a limitation.
+  \item \textbf{Why is test QWK (0.682) lower than validation QWK (0.834)?}\\
+  The test split has a different mix of cameras, and many test Grade 2 images are predicted as
+  Grade 0 (about 45\%, against 12\% in validation). This affects all methods the same way, so we
+  report test results.
+  \item \textbf{Why is Grade 1 so hard?}\\
+  Grade 1 is only 5\% of the training images, and its signs (tiny microaneurysms) are hard to see at
+  224 $\times$ 224 pixels. Higher resolution is future work.
+  \item \textbf{What does the OrdinalLoss add, then?}\\
+  Ordinal losses help in centralised training. In our federated tests it gave no measurable benefit
+  (and slightly lowered results). We report that honestly.
+  \item \textbf{Did you tune FedProx's $\mu$?}\\
+  No. We used $\mu = 0.01$, a common value, the same for all FedProx runs.
+  \item \textbf{Why only five hospitals and ten rounds?}\\
+  To keep all experiments (three seeds, three splits, ablations) affordable on one GPU. More clients
+  and longer training are future work.
+\end{enumerate}
+
+\end{document}
