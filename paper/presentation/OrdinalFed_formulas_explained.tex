@@ -1,0 +1,358 @@
+%% OrdinalFed -- every formula explained as simply as possible, with worked examples
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.1cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{booktabs,array}
+\usepackage{needspace}
+\usepackage[hidelinks,pdftitle={OrdinalFed - Formulas Explained}]{hyperref}
+\definecolor{navy}{HTML}{14213D}
+\definecolor{accent}{HTML}{2F6FB3}
+\definecolor{muted}{HTML}{5B6575}
+\definecolor{exbg}{HTML}{EEF3F9}
+\definecolor{warm}{HTML}{B4501F}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\linespread{1.2}
+\pagestyle{plain}
+
+% \formula{number}{name}{where in paper}
+\newcommand{\formula}[3]{%
+  \par\needspace{10\baselineskip}\bigskip\noindent
+  {\color{accent}\Large\bfseries #1.\ #2}\hfill{\color{muted}\small #3}\par\smallskip}
+\newcommand{\what}[1]{\noindent{\color{navy}\bfseries What it does:} #1\par}
+\newcommand{\oneline}[1]{\par\noindent{\color{warm}\bfseries In one sentence:} #1\par}
+\newsavebox{\exbox}
+\newenvironment{example}{\par\smallskip\noindent\begin{lrbox}{\exbox}\begin{minipage}{\dimexpr\linewidth-2\fboxsep}\small\textbf{Example.}\ }{\end{minipage}\end{lrbox}\colorbox{exbg}{\usebox{\exbox}}\par\smallskip}
+\newenvironment{symbols}{\par\noindent{\color{navy}\bfseries The symbols:}\begin{itemize}[leftmargin=1.2em,itemsep=0pt,topsep=2pt]\small}{\end{itemize}}
+
+\begin{document}
+
+{\color{navy}\LARGE\bfseries OrdinalFed: The Formulas, Explained Simply}\par\smallskip
+{\color{muted}IEEE WIECON-ECE 2026 \textperiodcentered\ Paper ID 518 \textperiodcentered\ Md Tamim Hossain}
+
+\medskip
+\fcolorbox{accent}{exbg}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+\textbf{How to read this.} Each formula has: \textbf{what it does} (one line), the formula, what each
+\textbf{symbol} means, a small \textbf{example} with real numbers, and the idea \textbf{in one
+sentence}. You do not need to remember the formulas. If someone asks, explain the ``one sentence''
+and give the example. A one-page cheat sheet is at the end.}}
+
+%% ------------------------------------------------------------------
+\formula{0}{Symbols you will see everywhere}{}
+\begin{center}\small
+\begin{tabular}{@{}>{\bfseries}l p{12.5cm}@{}}
+\toprule
+$k$ & one hospital (``client''). We have $K = 5$ hospitals.\\
+$t$ & the round number: $t = 1, 2, \dots, T$, with $T = 10$ rounds.\\
+$n_k$ & the number of training images at hospital $k$.\\
+$w$ & the model weights: all the numbers inside the neural network.\\
+$\tilde{w}_k^t$ & hospital $k$'s model after it trained in round $t$ (the ``tilde'' $\sim$ means ``after local training'').\\
+$y$ & the true grade of an image (0, 1, 2, 3 or 4).\\
+$p_c$ & the probability the model gives to grade $c$. All five add up to 1.\\
+$\sum$ & ``add them all up''. Example: $\sum_{c=0}^{4} p_c = p_0 + p_1 + p_2 + p_3 + p_4 = 1$.\\
+$e^{x}$ or $\exp(x)$ & the number $e \approx 2.718$ raised to the power $x$. It is always positive and grows with $x$.\\
+$\log$ & the natural logarithm, the opposite of $e^x$. Note: $-\log$ of a small number is big.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ------------------------------------------------------------------
+\formula{1}{FedAvg: the usual way to combine models}{background (Sec.~II)}
+\what{the server averages the hospitals' models, and bigger hospitals count more.}
+\[
+w^{t+1} \;=\; \sum_{k=1}^{K} \frac{n_k}{\sum_{j} n_j}\,\tilde{w}_k^{t}
+\]
+\begin{symbols}
+\item $\frac{n_k}{\sum_j n_j}$ = hospital $k$'s \textbf{share of all images} = its vote.
+\item $w^{t+1}$ = the new global model for the next round.
+\end{symbols}
+\begin{example}
+A city hospital has 600 images, an eye hospital 300, a village clinic 100 (1,000 in total).
+Votes: $600/1000 = 60\%$, $30\%$, $10\%$. If one weight inside their models is 2.0, 4.0 and 6.0,
+the new weight is $0.6(2.0) + 0.3(4.0) + 0.1(6.0) = 1.2 + 1.2 + 0.6 = \mathbf{3.0}$.
+The city hospital pulls the answer towards its own value.
+\end{example}
+\oneline{FedAvg is a weighted average where your vote is your share of the images.}
+
+%% ------------------------------------------------------------------
+\formula{2}{Cross-entropy: the usual training loss}{Sec.~III-B}
+\what{measures how wrong the model is, using only the probability it gave to the true grade.}
+\[
+\mathrm{CE} \;=\; -\log p_{y}
+\]
+\begin{symbols}
+\item $p_y$ = the probability the model gave to the \textbf{true} grade $y$.
+\item In our paper each grade also has a class weight $\mathbf{c} = [1, 5, 1.5, 10, 4]$, so rare grades
+count more. We leave it out in these examples to keep the numbers simple.
+\end{symbols}
+\begin{example}
+True grade 4. If the model gives Grade 4 a probability of 0.7: $\mathrm{CE} = -\log 0.7 = 0.36$ (small,
+good). If 0.2: $-\log 0.2 = 1.61$. If 0.05: $-\log 0.05 = 3.00$ (big, bad).
+\textbf{But:} CE does not care where the rest of the probability went, to Grade 3 (close) or
+Grade 0 (far).
+\end{example}
+\oneline{cross-entropy only asks ``how sure were you about the right answer?'', not ``how far off
+were you?''.}
+
+%% ------------------------------------------------------------------
+\formula{3}{Expected grade}{Paper Eq.~(2)}
+\what{turns the five probabilities into one ``average'' grade.}
+\[
+\hat{y} \;=\; \sum_{c=0}^{4} c \cdot p_c \;=\; 0\cdot p_0 + 1\cdot p_1 + 2\cdot p_2 + 3\cdot p_3 + 4\cdot p_4
+\]
+\begin{example}
+The model says: 10\% Grade 0, 20\% Grade 1, 70\% Grade 2. Then
+$\hat{y} = 0(0.1) + 1(0.2) + 2(0.7) = 0 + 0.2 + 1.4 = \mathbf{1.6}$.
+So the model's ``average guess'' is about Grade 1.6.
+\end{example}
+\oneline{the expected grade is the model's average guess, using its probabilities as weights.}
+
+%% ------------------------------------------------------------------
+\formula{4}{OrdinalLoss: our loss at each hospital}{Paper Eq.~(1)}
+\what{cross-entropy plus a penalty that grows when the guess is far from the true grade.}
+\[
+\mathcal{L}_{\text{ord}} \;=\; (1-\lambda)\,\mathrm{CE} \;+\; \lambda\,(\hat{y} - y)^2
+\qquad\text{with } \lambda = 0.5
+\]
+\begin{symbols}
+\item $(\hat{y} - y)^2$ = the \textbf{distance penalty}: the gap between the average guess and the
+true grade, squared (so far misses cost much more).
+\item $\lambda$ (lambda) = how much of each part. $\lambda = 0.5$ means half CE, half distance penalty.
+\end{symbols}
+\begin{example}
+True grade 4. Two models both give Grade 4 a probability of 0.2, so \textbf{both have the same CE
+= 1.61}.\\[2pt]
+Model A puts the rest near Grade 4: $p = [0, 0, 0.1, 0.7, 0.2]$, so $\hat{y} = 0.2 + 2.1 + 0.8 = 3.1$
+and the penalty is $(3.1-4)^2 = 0.81$. Loss $= 0.5(1.61) + 0.5(0.81) = \mathbf{1.21}$.\\[2pt]
+Model B puts the rest on Grade 0: $p = [0.7, 0.1, 0, 0, 0.2]$, so $\hat{y} = 0.1 + 0.8 = 0.9$
+and the penalty is $(0.9-4)^2 = 9.61$. Loss $= 0.5(1.61) + 0.5(9.61) = \mathbf{5.61}$.\\[2pt]
+CE could not tell them apart. OrdinalLoss punishes Model B more than 4 times as much.
+(The slide's ``16'' is the extreme case: a sure guess of 0 gives $(0-4)^2 = 16$, a sure guess of 3
+gives $(3-4)^2 = 1$.)
+\end{example}
+\oneline{OrdinalLoss = cross-entropy + ``how far off was your average guess, squared''.}
+
+%% ------------------------------------------------------------------
+\formula{5}{QWK: our score}{Sec.~I, used everywhere}
+\what{gives one number for how well predicted grades agree with true grades, punishing far
+mistakes more and correcting for lucky guessing.}
+\[
+\kappa \;=\; 1 \;-\; \frac{\sum_{i,j} W_{ij}\,O_{ij}}{\sum_{i,j} W_{ij}\,E_{ij}}
+\qquad\text{with}\qquad W_{ij} = \frac{(i-j)^2}{(5-1)^2}
+\]
+\begin{symbols}
+\item $O_{ij}$ = how many images with true grade $i$ were \textbf{predicted} as grade $j$ (what really
+happened).
+\item $E_{ij}$ = how many we would \textbf{expect} if the model guessed at random (with the same
+totals).
+\item $W_{ij}$ = the penalty for that mistake. It grows with the \textbf{square} of the distance:
+\end{symbols}
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+Distance between true and predicted grade & 0 & 1 & 2 & 3 & 4\\
+Penalty $W$ & 0 & 0.06 & 0.25 & 0.56 & 1\\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{example}
+So $\kappa = 1 - \dfrac{\text{our weighted mistakes}}{\text{a random guesser's weighted mistakes}}$.
+No mistakes $\Rightarrow \kappa = 1$ (perfect). As bad as random guessing $\Rightarrow \kappa = 0$.
+If our weighted mistakes are 30\% of a random guesser's, $\kappa = 1 - 0.3 = \mathbf{0.7}$.
+A miss by 4 grades costs 16 times a miss by 1 grade ($1$ vs.\ $0.06$).
+\end{example}
+\oneline{QWK compares your mistakes with a random guesser's, and far mistakes cost much more.}
+
+%% ------------------------------------------------------------------
+\formula{6}{The server's exam score for each hospital}{Paper Eq.~(3)}
+\what{the server tests each hospital's model on its 50 images and computes its QWK.}
+\[
+\kappa_k^t \;=\; \mathrm{QWK}\big(\text{true grades of the 50 images},\ \text{hospital $k$'s predictions on them}\big)
+\]
+\begin{example}
+In round 3, the eye hospital's model gets QWK 0.80 on the 50 images, the city hospital's 0.50, and
+the village clinic's 0.05. These three numbers are $\kappa_{\text{eye}}^3,\ \kappa_{\text{city}}^3,\
+\kappa_{\text{village}}^3$. (Made-up numbers, to show the idea.)
+\end{example}
+\oneline{$\kappa_k^t$ is hospital $k$'s mark on the server's exam in round $t$.}
+
+%% ------------------------------------------------------------------
+\formula{7}{$\beta$ (beta): how fast we switch from size to score}{Paper Eq.~(4)}
+\what{a number that starts at 0.5 and slowly falls to 0 over the 10 rounds.}
+\[
+\beta(t) \;=\; \beta_0 \cos\!\left(\frac{\pi\,(t-1)}{2\,(T-1)}\right)
+\qquad\text{with } \beta_0 = 0.5,\; T = 10
+\]
+\begin{symbols}
+\item The part inside $\cos(\cdot)$ goes from $0^\circ$ (round 1) to $90^\circ$ (round 10) in steps of
+$10^\circ$. Cosine goes from 1 to 0, smoothly.
+\end{symbols}
+\begin{center}\small
+\begin{tabular}{lcccccccccc}
+\toprule
+Round $t$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+$\beta(t)$ & 0.50 & 0.49 & 0.47 & 0.43 & 0.38 & 0.32 & 0.25 & 0.17 & 0.09 & 0.00\\
+\bottomrule
+\end{tabular}
+\end{center}
+\oneline{$\beta$ is the share of the vote still decided by size; it shrinks smoothly from half to
+nothing.}
+
+%% ------------------------------------------------------------------
+\formula{8}{Quality weights: turning exam scores into votes}{Paper Eq.~(5)}
+\what{turns the hospitals' exam scores into votes that add up to 1 (100\%).}
+\[
+q_k^t \;=\; \frac{\exp\!\big(\max(\kappa_k^t,\ \kappa_{\min}) / \tau\big)}
+{\sum_{j=1}^{K} \exp\!\big(\max(\kappa_j^t,\ \kappa_{\min}) / \tau\big)}
+\qquad\text{with } \kappa_{\min} = 0.1,\; \tau = 3
+\]
+\begin{symbols}
+\item $\max(\kappa, 0.1)$ = the \textbf{floor}: any score below 0.1 counts as 0.1, so one bad round
+cannot wipe a hospital out.
+\item $\tau$ (tau) = the \textbf{temperature}. A big $\tau$ makes the votes almost equal; a small $\tau$
+gives the best hospital most of the vote.
+\item Dividing by the sum makes all votes add up to 1. (This whole formula is called a
+\emph{softmax}.)
+\end{symbols}
+\begin{example}
+Scores: eye 0.80, city 0.50, village 0.05 $\rightarrow$ after the floor: 0.80, 0.50, \textbf{0.10}.\\[2pt]
+With $\tau = 3$: divide by 3 $\rightarrow$ 0.267, 0.167, 0.033; take $e^{x}$ $\rightarrow$ 1.306,
+1.181, 1.034; sum = 3.521.\\
+Votes: eye $1.306/3.521 = \mathbf{37\%}$, city $\mathbf{34\%}$, village $\mathbf{29\%}$: close to equal.\\[2pt]
+With $\tau = 0.5$ (sharper): the votes would be 56\%, 31\% and 14\%: the best hospital wins much more.\\[2pt]
+With $\tau = 3$, the best possible score (1.0) against the floor (0.1) gives at most
+$e^{(1.0-0.1)/3} = e^{0.3} \approx \mathbf{1.35}$ times the vote. That is why our votes stay close to
+equal.
+\end{example}
+\oneline{a softmax turns exam marks into votes; with $\tau = 3$ it is gentle, so votes stay
+close to equal.}
+
+%% ------------------------------------------------------------------
+\formula{9}{The final vote: mixing size and score}{Paper Eq.~(6)}
+\what{each hospital's final vote is part ``share of images'' and part ``exam vote''; $\beta$ decides
+the mix.}
+\[
+\omega_k^t \;=\; \beta(t)\,\frac{n_k}{\sum_j n_j} \;+\; \big(1 - \beta(t)\big)\,q_k^t
+\]
+\begin{symbols}
+\item $\omega_k^t$ (omega) = hospital $k$'s final vote in round $t$.
+\item First part = FedAvg's vote (size). Second part = the exam vote from Formula 8.
+\end{symbols}
+\begin{example}
+Same three hospitals: image shares 60\% (city), 30\% (eye), 10\% (village); exam votes 34\%, 37\%,
+29\%.
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& City & Eye hospital & Village clinic\\ \midrule
+FedAvg (size only) & 60\% & 30\% & \textbf{10\%}\\
+OrdinalFed, round 1 ($\beta = 0.5$) & 47\% & 34\% & \textbf{20\%}\\
+OrdinalFed, round 5 ($\beta = 0.38$) & 44\% & 34\% & \textbf{22\%}\\
+OrdinalFed, round 10 ($\beta = 0$) & 34\% & 37\% & \textbf{29\%}\\
+\bottomrule
+\end{tabular}
+\end{center}
+Round 1 for the village: $0.5 \times 10\% + 0.5 \times 29\% = 5\% + 14.7\% \approx 20\%$.
+The village's vote grows from 10\% to 29\%. (In our real experiment, the two smallest hospitals grew
+from 5.9\% to 40.8\%.)
+\end{example}
+\oneline{the final vote starts as half size, half exam score, and slowly becomes all exam score.}
+
+%% ------------------------------------------------------------------
+\formula{10}{The safety rule: a minimum vote}{Sec.~III-F}
+\what{every hospital gets at least 3\% of the vote, then all votes are rescaled to add up to 1.}
+\[
+\omega_k^t \leftarrow \max(\omega_k^t,\ 0.03), \qquad \text{then divide every vote by their sum}
+\]
+\begin{example}
+In our setting it never activates: the smallest exam vote with 5 hospitals is at least about 16\%,
+and in round 1 it still counts half, so every hospital already has at least about
+$0.5 \times 16\% = 8\% > 3\%$.
+\end{example}
+\oneline{a seat-belt rule: nobody's vote can drop below 3\%.}
+
+%% ------------------------------------------------------------------
+\formula{11}{The new global model}{Sec.~III-F, Algorithm 1}
+\what{the same weighted average as FedAvg, but with OrdinalFed's votes.}
+\[
+w^{t+1} \;=\; \sum_{k=1}^{K} \omega_k^t\,\tilde{w}_k^{t}
+\]
+\begin{example}
+One weight inside the models is 2.0 (city), 4.0 (eye), 6.0 (village).\\
+FedAvg: $0.60(2) + 0.30(4) + 0.10(6) = \mathbf{3.0}$.\\
+OrdinalFed round 1: $0.47(2) + 0.34(4) + 0.20(6) \approx \mathbf{3.46}$.
+Round 10: $0.34(2) + 0.37(4) + 0.29(6) \approx \mathbf{3.92}$.\\
+The smaller hospitals now pull the global model too.
+\end{example}
+\oneline{same averaging as FedAvg, but with fairer votes.}
+
+%% ------------------------------------------------------------------
+\formula{12}{FedProx's ``rubber band''}{baseline, Sec.~IV-C}
+\what{each hospital adds a penalty for moving its model too far from the global model.}
+\[
+\mathcal{L}_{\text{FedProx}} \;=\; \mathcal{L} \;+\; \frac{\mu}{2}\,\big\lVert w - w^{t} \big\rVert^2
+\qquad\text{with } \mu = 0.01
+\]
+\begin{symbols}
+\item $\lVert w - w^t\rVert^2$ = for every weight, take (local value $-$ global value)$^2$, and add them
+all up.
+\item $\mu$ (mu) = how strong the rubber band is.
+\end{symbols}
+\begin{example}
+The global value of one weight is 1.0. A hospital moves it to 3.0. That weight's penalty is
+$\tfrac{0.01}{2}(3.0-1.0)^2 = 0.005 \times 4 = 0.02$. It is small for one weight, but the model has
+millions of weights, so together the penalty keeps the hospital close to the global model.
+\end{example}
+\oneline{FedProx ties each hospital's model to the global one with a rubber band; this needs a
+change in every hospital's training.}
+
+%% ------------------------------------------------------------------
+\formula{13}{Recall (per grade)}{Table IV}
+\what{of all the images that truly are a grade, the share the model found.}
+\[
+\text{Recall} \;=\; \frac{\text{Grade 3 images the model called Grade 3}}{\text{all true Grade 3 images}}
+\]
+\begin{example}
+There are 100 true Grade 3 images. OrdinalFed finds 36 of them: recall $= 36/100 = \mathbf{0.36}$.
+FedProx finds 31: recall $= 0.31$.
+\end{example}
+\oneline{recall answers ``out of all the real cases, how many did we catch?''.}
+
+%% ------------------------------------------------------------------
+\newpage
+{\color{navy}\Large\bfseries One-page cheat sheet}\par\smallskip
+\begin{center}\small
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}p{5.2cm}p{4.6cm}p{6.6cm}@{}}
+\toprule
+\textbf{Formula} & \textbf{Name} & \textbf{In plain words}\\ \midrule
+$\displaystyle w^{t+1} = \sum_k \tfrac{n_k}{\sum_j n_j}\tilde{w}_k^t$ & FedAvg & Average the models; vote = share of images.\\
+$\mathrm{CE} = -\log p_y$ & Cross-entropy & ``How sure were you about the right answer?''\\
+$\hat{y} = \sum_c c\,p_c$ & Expected grade (Eq.~2) & The model's average guess.\\
+$(1-\lambda)\mathrm{CE} + \lambda(\hat{y}-y)^2$ & OrdinalLoss (Eq.~1) & CE + ``how far off, squared''. $\lambda = 0.5$.\\
+$1 - \dfrac{\sum W O}{\sum W E}$, $W = \dfrac{(i-j)^2}{16}$ & QWK & Your mistakes vs.\ a random guesser's; far misses cost more.\\
+$\kappa_k^t = \mathrm{QWK}(\ldots)$ & Exam score (Eq.~3) & Each hospital's mark on the 50 server images.\\
+$\beta_0\cos\!\big(\tfrac{\pi(t-1)}{2(T-1)}\big)$ & $\beta$ schedule (Eq.~4) & Size counts less each round: 0.5 $\rightarrow$ 0.\\
+$\displaystyle\frac{e^{\max(\kappa_k,\,0.1)/\tau}}{\sum_j e^{\max(\kappa_j,\,0.1)/\tau}}$ & Quality vote (Eq.~5) & Marks $\rightarrow$ votes; $\tau = 3$ keeps them gentle (max 1.35$\times$).\\
+$\beta\dfrac{n_k}{\sum n} + (1-\beta)q_k$ & Final vote (Eq.~6) & Half size, half score at first; all score at the end.\\
+$\max(\omega_k, 0.03)$ & Minimum vote & Seat belt: nobody below 3\%.\\
+$\sum_k \omega_k \tilde{w}_k^t$ & New global model & Same averaging, fairer votes.\\
+$\mathcal{L} + \frac{\mu}{2}\lVert w - w^t\rVert^2$ & FedProx & Rubber band to the global model; $\mu = 0.01$.\\
+$\dfrac{\text{found}}{\text{all true}}$ & Recall & How many real cases we caught.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\fcolorbox{accent}{exbg}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+\textbf{If someone asks about a formula, say it in three steps:}\\
+1.~What it is for (``this sets each hospital's vote'').\quad
+2.~The one sentence (``half size, half exam score at first, all exam score at the end'').\quad
+3.~One number from the example (``the village goes from 10\% to 29\%'').}}
+
+\end{document}
