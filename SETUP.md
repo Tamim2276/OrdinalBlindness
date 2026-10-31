@@ -19,8 +19,10 @@ which is what we used, but every step has a Linux/macOS equivalent.
 - **What's NOT in git:** the dataset images (`data/DDR`, `data/APTOS`, about 14 GB) and the model
   checkpoints (`*.pth`, about 5.4 GB in total). They are still on the original PC under `results/`.
   The most important one, `best_centralised.pth`, is also in the private archive (section 9).
-- **Git history:** commit `4857ef5` is the full state just before the October 2026 clean-up, if you
-  ever need an old draft or file.
+- **Git history:** commit `8313e35` ("all done") is the full state just before the October 2026
+  clean-up, if you ever need an old draft or file. Personal documents were removed from the entire
+  history; the private archive has a backup of the original history
+  (`backups/OrdinalBlindness_full_history_before_purge.bundle`).
 
 ---
 
