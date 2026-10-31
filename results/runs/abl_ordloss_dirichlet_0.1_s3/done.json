@@ -1,0 +1,23 @@
+{
+  "run_name": "abl_ordloss_dirichlet_0.1_s3",
+  "config": {
+    "method": "abl_ordloss",
+    "partition": "dirichlet_0.1",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.5,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8158942613697833,
+  "test_qwk_at_best": 0.6479798838609081,
+  "final_val_qwk": 0.5966388457984652,
+  "final_test_qwk": 0.4973271488164792,
+  "total_round_time_min": 32.19149883190791
+}

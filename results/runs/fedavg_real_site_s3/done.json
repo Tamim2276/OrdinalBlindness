@@ -1,0 +1,23 @@
+{
+  "run_name": "fedavg_real_site_s3",
+  "config": {
+    "method": "fedavg",
+    "partition": "real_site",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 2,
+  "best_val_qwk": 0.8378438623425266,
+  "test_qwk_at_best": 0.673046410471446,
+  "final_val_qwk": 0.821669488373926,
+  "final_test_qwk": 0.6454440573331217,
+  "total_round_time_min": 33.97432548205058
+}

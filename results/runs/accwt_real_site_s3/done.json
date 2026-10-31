@@ -1,0 +1,24 @@
+{
+  "run_name": "accwt_real_site_s3",
+  "config": {
+    "method": "accwt",
+    "partition": "real_site",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "server_accuracy",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 10,
+  "best_val_qwk": 0.8294296654607681,
+  "test_qwk_at_best": 0.6634091678712242,
+  "final_val_qwk": 0.8294296654607681,
+  "final_test_qwk": 0.6634091678712242,
+  "total_round_time_min": 33.64772195021312
+}

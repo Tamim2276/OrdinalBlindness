@@ -1,0 +1,254 @@
+============================================================
+  fedprox_iid_s3  (new run)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (new run)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (new run)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0131
+  Client 1 done | n=1252 | train_loss=0.0143
+  Client 2 done | n=1252 | train_loss=0.0099
+  Client 3 done | n=1252 | train_loss=0.0159
+  Client 4 done | n=1252 | train_loss=0.0122
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8441 | acc 0.8070 | loss 1.2846  ⭐ new best
+  Test QWK 0.6804 | acc 0.7094
+  Round time 3.8 min
+  GPU memory peak 6.3 GB reserved
+
+── Round 2/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0103
+  Client 1 done | n=1252 | train_loss=0.0172
+  Client 2 done | n=1252 | train_loss=0.0100
+  Client 3 done | n=1252 | train_loss=0.0077
+  Client 4 done | n=1252 | train_loss=0.0145
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8422 | acc 0.8062 | loss 1.3304
+  Test QWK 0.6677 | acc 0.6991
+  Round time 3.3 min
+  GPU memory peak 6.7 GB reserved
+
+── Round 3/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0144
+  Client 1 done | n=1252 | train_loss=0.0052
+  Client 2 done | n=1252 | train_loss=0.0041
+  Client 3 done | n=1252 | train_loss=0.0083
+  Client 4 done | n=1252 | train_loss=0.0062
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8417 | acc 0.8118 | loss 1.3348
+  Test QWK 0.6679 | acc 0.6991
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 4/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0050
+  Client 1 done | n=1252 | train_loss=0.0026
+  Client 2 done | n=1252 | train_loss=0.0102
+  Client 3 done | n=1252 | train_loss=0.0124
+  Client 4 done | n=1252 | train_loss=0.0240
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8453 | acc 0.8146 | loss 1.3652  ⭐ new best
+  Test QWK 0.6670 | acc 0.7005
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0082
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0082
+  Client 1 done | n=1252 | train_loss=0.0032
+  Client 2 done | n=1252 | train_loss=0.0060
+  Client 3 done | n=1252 | train_loss=0.0035
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+============================================================
+  fedprox_iid_s3  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 5 (loaded state.pt)
+
+── Round 5/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0083
+  Client 1 done | n=1252 | train_loss=0.0033
+  Client 2 done | n=1252 | train_loss=0.0053
+  Client 3 done | n=1252 | train_loss=0.0036
+  Client 4 done | n=1252 | train_loss=0.0047
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8476 | acc 0.8098 | loss 1.3409  ⭐ new best
+  Test QWK 0.6824 | acc 0.7075
+  Round time 3.7 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 6/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0118
+  Client 1 done | n=1252 | train_loss=0.0193
+  Client 2 done | n=1252 | train_loss=0.0025
+  Client 3 done | n=1252 | train_loss=0.0034
+  Client 4 done | n=1252 | train_loss=0.0020
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8492 | acc 0.8130 | loss 1.3519  ⭐ new best
+  Test QWK 0.6958 | acc 0.7139
+  Round time 3.1 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 7/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0049
+  Client 1 done | n=1252 | train_loss=0.0076
+  Client 2 done | n=1252 | train_loss=0.0022
+  Client 3 done | n=1252 | train_loss=0.0049
+  Client 4 done | n=1252 | train_loss=0.0021
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8378 | acc 0.8110 | loss 1.3869
+  Test QWK 0.6865 | acc 0.7112
+  Round time 3.1 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 8/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0025
+  Client 1 done | n=1252 | train_loss=0.0044
+  Client 2 done | n=1252 | train_loss=0.0043
+  Client 3 done | n=1252 | train_loss=0.0059
+  Client 4 done | n=1252 | train_loss=0.0022
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8405 | acc 0.8146 | loss 1.3608
+  Test QWK 0.6832 | acc 0.7134
+  Round time 3.1 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 9/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0219
+  Client 1 done | n=1252 | train_loss=0.0226
+  Client 2 done | n=1252 | train_loss=0.0388
+  Client 3 done | n=1252 | train_loss=0.0021
+  Client 4 done | n=1252 | train_loss=0.0027
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8384 | acc 0.7986 | loss 1.3874
+  Test QWK 0.6904 | acc 0.7115
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 10/10  [fedprox_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0039
+  Client 1 done | n=1252 | train_loss=0.0027
+  Client 2 done | n=1252 | train_loss=0.0058
+  Client 3 done | n=1252 | train_loss=0.0037
+  Client 4 done | n=1252 | train_loss=0.0089
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8410 | acc 0.8118 | loss 1.4360
+  Test QWK 0.6791 | acc 0.7094
+  Round time 3.1 min
+  GPU memory peak 6.6 GB reserved
+
+[Done] fedprox_iid_s3
+  Best val QWK 0.8492 at round 6 → test QWK 0.6958
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_iid_s3

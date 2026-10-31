@@ -1,0 +1,24 @@
+{
+  "run_name": "abl_uniform_real_site_s3",
+  "config": {
+    "method": "abl_uniform",
+    "partition": "real_site",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "uniform",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 2,
+  "best_val_qwk": 0.8385542082527506,
+  "test_qwk_at_best": 0.6809603921806923,
+  "final_val_qwk": 0.8344376412650031,
+  "final_test_qwk": 0.6685927029039463,
+  "total_round_time_min": 35.72575242122014
+}

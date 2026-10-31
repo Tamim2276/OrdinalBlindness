@@ -1,0 +1,24 @@
+{
+  "run_name": "abl_qwkagg_real_site_s3",
+  "config": {
+    "method": "abl_qwkagg",
+    "partition": "real_site",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 9,
+  "best_val_qwk": 0.830935260004497,
+  "test_qwk_at_best": 0.6605378604829228,
+  "final_val_qwk": 0.829010482268632,
+  "final_test_qwk": 0.6650856280375967,
+  "total_round_time_min": 34.66340038379033
+}

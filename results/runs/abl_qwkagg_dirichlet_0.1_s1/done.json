@@ -1,0 +1,23 @@
+{
+  "run_name": "abl_qwkagg_dirichlet_0.1_s1",
+  "config": {
+    "method": "abl_qwkagg",
+    "partition": "dirichlet_0.1",
+    "seed": 1,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8232379360458171,
+  "test_qwk_at_best": 0.6455222918498911,
+  "final_val_qwk": 0.8042668746213599,
+  "final_test_qwk": 0.6753461208675926,
+  "total_round_time_min": 34.200740949312845
+}

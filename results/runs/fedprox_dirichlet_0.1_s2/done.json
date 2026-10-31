@@ -1,0 +1,23 @@
+{
+  "run_name": "fedprox_dirichlet_0.1_s2",
+  "config": {
+    "method": "fedprox",
+    "partition": "dirichlet_0.1",
+    "seed": 2,
+    "rounds": 10,
+    "client": "prox",
+    "lam": 0.0,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 5,
+  "best_val_qwk": 0.8245199404683823,
+  "test_qwk_at_best": 0.6780676769995446,
+  "final_val_qwk": 0.8061427992245438,
+  "final_test_qwk": 0.6461454520779504,
+  "total_round_time_min": 33.63500701189041
+}

@@ -1,0 +1,19 @@
+\begin{table}[!t]
+\centering
+\caption{External validation on APTOS 2019 (3,662 images, never used for training or selection): QWK of each run's best-validation model. Columns give the partition the model was trained on.}
+\label{tab:external}
+\begin{tabular}{lccc}
+\toprule
+Method & IID & Dirichlet ($\alpha=0.1$) & Real-Site \\
+\midrule
+Centralised (reference) & 0.641 & 0.641 & 0.641 \\
+\midrule
+FedAvg & \textbf{0.615 $\pm$ 0.030} & 0.623 $\pm$ 0.057 & 0.656 $\pm$ 0.013 \\
+FedProx ($\mu=0.01$) & 0.600 $\pm$ 0.006 & 0.607 $\pm$ 0.043 & \textbf{0.658 $\pm$ 0.018} \\
+AccWt & -- & 0.645 $\pm$ 0.038 & 0.637 $\pm$ 0.014 \\
+\textbf{OrdinalFed (Ours)} & 0.599 $\pm$ 0.022 & \textbf{0.651 $\pm$ 0.018} & 0.641 $\pm$ 0.056 \\
+OrdinalFed + Prox ($\mu=0.01$) & -- & 0.628 $\pm$ 0.048 & 0.597 $\pm$ 0.013 \\
+\bottomrule
+\end{tabular}
+\\[2pt]{\footnotesize Mean $\pm$ std over 3 seeds.}
+\end{table}

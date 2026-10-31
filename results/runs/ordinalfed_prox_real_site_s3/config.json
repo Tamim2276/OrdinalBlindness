@@ -1,0 +1,19 @@
+{
+  "method": "ordinalfed_prox",
+  "partition": "real_site",
+  "seed": 3,
+  "rounds": 10,
+  "client": "prox",
+  "lam": 0.5,
+  "aggregation": "server_qwk",
+  "beta0": 0.5,
+  "tau": 3.0,
+  "mu": 0.01,
+  "num_clients": 5,
+  "local_epochs": 5,
+  "batch_size": 64,
+  "warm_start": {
+    "epoch": 23,
+    "best_qwk": 0.834168
+  }
+}

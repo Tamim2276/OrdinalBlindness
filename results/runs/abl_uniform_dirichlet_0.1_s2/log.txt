@@ -1,0 +1,124 @@
+============================================================
+  abl_uniform_dirichlet_0.1_s2  (new run)
+  client=avg | λ=0.0 | aggregation=uniform | T=10 | seed=2
+============================================================
+  Client 0: 32 train samples
+  Client 1: 337 train samples
+  Client 2: 1965 train samples
+  Client 3: 1839 train samples
+  Client 4: 2087 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1060
+  Client 1 done | n=337 | train_loss=0.0347
+  Client 2 done | n=1965 | train_loss=0.0159
+  Client 3 done | n=1839 | train_loss=0.0071
+  Client 4 done | n=2087 | train_loss=0.0143
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8194 | acc 0.7723 | loss 1.2071  ⭐ new best
+  Test QWK 0.6582 | acc 0.6840
+  Round time 4.5 min
+
+── Round 2/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0396
+  Client 1 done | n=337 | train_loss=0.0767
+  Client 2 done | n=1965 | train_loss=0.0059
+  Client 3 done | n=1839 | train_loss=0.0116
+  Client 4 done | n=2087 | train_loss=0.0240
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8054 | acc 0.7703 | loss 1.1748
+  Test QWK 0.6542 | acc 0.6848
+  Round time 3.2 min
+
+── Round 3/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0795
+  Client 1 done | n=337 | train_loss=0.0279
+  Client 2 done | n=1965 | train_loss=0.0107
+  Client 3 done | n=1839 | train_loss=0.0044
+  Client 4 done | n=2087 | train_loss=0.0086
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8047 | acc 0.7559 | loss 1.2247
+  Test QWK 0.6305 | acc 0.6740
+  Round time 3.2 min
+
+── Round 4/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0119
+  Client 1 done | n=337 | train_loss=0.0302
+  Client 2 done | n=1965 | train_loss=0.0035
+  Client 3 done | n=1839 | train_loss=0.0049
+  Client 4 done | n=2087 | train_loss=0.0232
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8160 | acc 0.7679 | loss 1.1712
+  Test QWK 0.6600 | acc 0.6894
+  Round time 3.2 min
+
+── Round 5/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0467
+  Client 1 done | n=337 | train_loss=0.0412
+  Client 2 done | n=1965 | train_loss=0.0252
+  Client 3 done | n=1839 | train_loss=0.0031
+  Client 4 done | n=2087 | train_loss=0.0061
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8073 | acc 0.7563 | loss 1.2010
+  Test QWK 0.6438 | acc 0.6748
+  Round time 3.2 min
+
+── Round 6/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0208
+  Client 1 done | n=337 | train_loss=0.0131
+  Client 2 done | n=1965 | train_loss=0.0033
+  Client 3 done | n=1839 | train_loss=0.0028
+  Client 4 done | n=2087 | train_loss=0.0100
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8070 | acc 0.7643 | loss 1.1799
+  Test QWK 0.6641 | acc 0.6945
+  Round time 3.2 min
+
+── Round 7/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0361
+  Client 1 done | n=337 | train_loss=0.0092
+  Client 2 done | n=1965 | train_loss=0.0040
+  Client 3 done | n=1839 | train_loss=0.0054
+  Client 4 done | n=2087 | train_loss=0.0083
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8121 | acc 0.7683 | loss 1.2296
+  Test QWK 0.6553 | acc 0.6864
+  Round time 3.2 min
+
+── Round 8/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0104
+  Client 1 done | n=337 | train_loss=0.0111
+  Client 2 done | n=1965 | train_loss=0.0064
+  Client 3 done | n=1839 | train_loss=0.0014
+  Client 4 done | n=2087 | train_loss=0.0089
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8053 | acc 0.7683 | loss 1.1473
+  Test QWK 0.6754 | acc 0.7002
+  Round time 3.2 min
+
+── Round 9/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0671
+  Client 1 done | n=337 | train_loss=0.0132
+  Client 2 done | n=1965 | train_loss=0.0104
+  Client 3 done | n=1839 | train_loss=0.0033
+  Client 4 done | n=2087 | train_loss=0.0036
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.7678 | acc 0.7391 | loss 1.3683
+  Test QWK 0.6061 | acc 0.6527
+  Round time 3.2 min
+
+── Round 10/10  [abl_uniform_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0028
+  Client 1 done | n=337 | train_loss=0.0186
+  Client 2 done | n=1965 | train_loss=0.0015
+  Client 3 done | n=1839 | train_loss=0.0009
+  Client 4 done | n=2087 | train_loss=0.0161
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.7840 | acc 0.7451 | loss 1.1705
+  Test QWK 0.6556 | acc 0.6819
+  Round time 3.2 min
+
+[Done] abl_uniform_dirichlet_0.1_s2
+  Best val QWK 0.8194 at round 1 → test QWK 0.6582
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_dirichlet_0.1_s2

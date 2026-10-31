@@ -1,0 +1,201 @@
+============================================================
+  fedavg_iid_s3  (new run)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedavg_iid_s3] ──────────
+============================================================
+  fedavg_iid_s3  (new run)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0143
+============================================================
+  fedavg_iid_s3  (new run)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0143
+  Client 1 done | n=1252 | train_loss=0.0156
+  Client 2 done | n=1252 | train_loss=0.0106
+  Client 3 done | n=1252 | train_loss=0.0169
+  Client 4 done | n=1252 | train_loss=0.0133
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8497 | acc 0.8174 | loss 1.2989  ⭐ new best
+  Test QWK 0.6756 | acc 0.7099
+  Round time 3.7 min
+  GPU memory peak 6.2 GB reserved
+
+── Round 2/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0092
+  Client 1 done | n=1252 | train_loss=0.0145
+  Client 2 done | n=1252 | train_loss=0.0107
+============================================================
+  fedavg_iid_s3  (resuming)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 2 (loaded state.pt)
+
+── Round 2/10  [fedavg_iid_s3] ──────────
+============================================================
+  fedavg_iid_s3  (resuming)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 2 (loaded state.pt)
+
+── Round 2/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0093
+  Client 1 done | n=1252 | train_loss=0.0144
+  Client 2 done | n=1252 | train_loss=0.0105
+  Client 3 done | n=1252 | train_loss=0.0079
+  Client 4 done | n=1252 | train_loss=0.0145
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8453 | acc 0.8066 | loss 1.3423
+  Test QWK 0.6719 | acc 0.6996
+  Round time 3.6 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 3/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0115
+  Client 1 done | n=1252 | train_loss=0.0048
+  Client 2 done | n=1252 | train_loss=0.0041
+  Client 3 done | n=1252 | train_loss=0.0052
+  Client 4 done | n=1252 | train_loss=0.0072
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8431 | acc 0.8118 | loss 1.3529
+  Test QWK 0.6799 | acc 0.7053
+  Round time 3.0 min
+  GPU memory peak 6.5 GB reserved
+
+── Round 4/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0071
+  Client 1 done | n=1252 | train_loss=0.0037
+  Client 2 done | n=1252 | train_loss=0.0075
+  Client 3 done | n=1252 | train_loss=0.0282
+  Client 4 done | n=1252 | train_loss=0.0096
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8446 | acc 0.8098 | loss 1.3412
+  Test QWK 0.6797 | acc 0.7023
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 5/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0055
+  Client 1 done | n=1252 | train_loss=0.0070
+  Client 2 done | n=1252 | train_loss=0.0136
+  Client 3 done | n=1252 | train_loss=0.0025
+  Client 4 done | n=1252 | train_loss=0.0090
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8479 | acc 0.8218 | loss 1.3699
+  Test QWK 0.6824 | acc 0.7145
+  Round time 3.1 min
+  GPU memory peak 6.5 GB reserved
+
+── Round 6/10  [fedavg_iid_s3] ──────────
+============================================================
+  fedavg_iid_s3  (resuming)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=3
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 6 (loaded state.pt)
+
+── Round 6/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0266
+  Client 1 done | n=1252 | train_loss=0.0106
+  Client 2 done | n=1252 | train_loss=0.0193
+  Client 3 done | n=1252 | train_loss=0.0063
+  Client 4 done | n=1252 | train_loss=0.0023
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8447 | acc 0.8030 | loss 1.4187
+  Test QWK 0.6901 | acc 0.7059
+  Round time 3.6 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 7/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0037
+  Client 1 done | n=1252 | train_loss=0.0059
+  Client 2 done | n=1252 | train_loss=0.0039
+  Client 3 done | n=1252 | train_loss=0.0055
+  Client 4 done | n=1252 | train_loss=0.0050
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8438 | acc 0.8150 | loss 1.4478
+  Test QWK 0.6825 | acc 0.7099
+  Round time 3.1 min
+  GPU memory peak 6.5 GB reserved
+
+── Round 8/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0022
+  Client 1 done | n=1252 | train_loss=0.0050
+  Client 2 done | n=1252 | train_loss=0.0023
+  Client 3 done | n=1252 | train_loss=0.0028
+  Client 4 done | n=1252 | train_loss=0.0051
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8484 | acc 0.8118 | loss 1.4229
+  Test QWK 0.6839 | acc 0.7096
+  Round time 3.1 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 9/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0165
+  Client 1 done | n=1252 | train_loss=0.0059
+  Client 2 done | n=1252 | train_loss=0.0012
+  Client 3 done | n=1252 | train_loss=0.0037
+  Client 4 done | n=1252 | train_loss=0.0024
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8396 | acc 0.8130 | loss 1.4652
+  Test QWK 0.6768 | acc 0.7059
+  Round time 3.1 min
+  GPU memory peak 6.5 GB reserved
+
+── Round 10/10  [fedavg_iid_s3] ──────────
+  Client 0 done | n=1252 | train_loss=0.0296
+  Client 1 done | n=1252 | train_loss=0.0049
+  Client 2 done | n=1252 | train_loss=0.0026
+  Client 3 done | n=1252 | train_loss=0.0039
+  Client 4 done | n=1252 | train_loss=0.0513
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8458 | acc 0.8074 | loss 1.4569
+  Test QWK 0.6846 | acc 0.7053
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+[Done] fedavg_iid_s3
+  Best val QWK 0.8497 at round 1 → test QWK 0.6756
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_iid_s3

@@ -1,0 +1,124 @@
+============================================================
+  fedavg_dirichlet_0.1_s2  (new run)
+  client=avg | λ=0.0 | aggregation=samples | T=10 | seed=2
+============================================================
+  Client 0: 32 train samples
+  Client 1: 337 train samples
+  Client 2: 1965 train samples
+  Client 3: 1839 train samples
+  Client 4: 2087 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1060
+  Client 1 done | n=337 | train_loss=0.0345
+  Client 2 done | n=1965 | train_loss=0.0155
+  Client 3 done | n=1839 | train_loss=0.0073
+  Client 4 done | n=2087 | train_loss=0.0145
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.8192 | acc 0.7807 | loss 1.1444  ⭐ new best
+  Test QWK 0.6593 | acc 0.6881
+  Round time 4.5 min
+
+── Round 2/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1120
+  Client 1 done | n=337 | train_loss=0.0967
+  Client 2 done | n=1965 | train_loss=0.0078
+  Client 3 done | n=1839 | train_loss=0.0077
+  Client 4 done | n=2087 | train_loss=0.0177
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.7663 | acc 0.7459 | loss 1.2678
+  Test QWK 0.5991 | acc 0.6444
+  Round time 3.1 min
+
+── Round 3/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1824
+  Client 1 done | n=337 | train_loss=0.0817
+  Client 2 done | n=1965 | train_loss=0.0150
+  Client 3 done | n=1839 | train_loss=0.0059
+  Client 4 done | n=2087 | train_loss=0.0074
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.7941 | acc 0.7503 | loss 1.2798
+  Test QWK 0.6317 | acc 0.6705
+  Round time 3.1 min
+
+── Round 4/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0963
+  Client 1 done | n=337 | train_loss=0.0611
+  Client 2 done | n=1965 | train_loss=0.0040
+  Client 3 done | n=1839 | train_loss=0.0120
+  Client 4 done | n=2087 | train_loss=0.0093
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.7440 | acc 0.7195 | loss 1.3428
+  Test QWK 0.6098 | acc 0.6546
+  Round time 3.2 min
+
+── Round 5/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.2887
+  Client 1 done | n=337 | train_loss=0.0777
+  Client 2 done | n=1965 | train_loss=0.0158
+  Client 3 done | n=1839 | train_loss=0.0066
+  Client 4 done | n=2087 | train_loss=0.0033
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.7505 | acc 0.7147 | loss 1.4898
+  Test QWK 0.5906 | acc 0.6374
+  Round time 3.2 min
+
+── Round 6/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0497
+  Client 1 done | n=337 | train_loss=0.0501
+  Client 2 done | n=1965 | train_loss=0.0017
+  Client 3 done | n=1839 | train_loss=0.0017
+  Client 4 done | n=2087 | train_loss=0.0348
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.4913 | acc 0.5294 | loss 2.0817
+  Test QWK 0.4047 | acc 0.5069
+  Round time 3.2 min
+
+── Round 7/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=1.0816
+  Client 1 done | n=337 | train_loss=0.0756
+  Client 2 done | n=1965 | train_loss=0.0450
+  Client 3 done | n=1839 | train_loss=0.0183
+  Client 4 done | n=2087 | train_loss=0.0028
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.6577 | acc 0.6688 | loss 1.8305
+  Test QWK 0.5020 | acc 0.5996
+  Round time 3.2 min
+
+── Round 8/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0035
+  Client 1 done | n=337 | train_loss=0.0779
+  Client 2 done | n=1965 | train_loss=0.0018
+  Client 3 done | n=1839 | train_loss=0.0016
+  Client 4 done | n=2087 | train_loss=0.0588
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.4484 | acc 0.5118 | loss 2.2166
+  Test QWK 0.4467 | acc 0.5419
+  Round time 3.2 min
+
+── Round 9/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=3.0096
+  Client 1 done | n=337 | train_loss=0.0951
+  Client 2 done | n=1965 | train_loss=0.0619
+  Client 3 done | n=1839 | train_loss=0.0252
+  Client 4 done | n=2087 | train_loss=0.0020
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.6367 | acc 0.6452 | loss 2.0849
+  Test QWK 0.4864 | acc 0.5891
+  Round time 3.2 min
+
+── Round 10/10  [fedavg_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0411
+  Client 1 done | n=337 | train_loss=0.0954
+  Client 2 done | n=1965 | train_loss=0.0010
+  Client 3 done | n=1839 | train_loss=0.0014
+  Client 4 done | n=2087 | train_loss=0.0864
+  Aggregation weights: [0.0051, 0.0538, 0.3139, 0.2938, 0.3334]
+  Val  QWK 0.5032 | acc 0.5453 | loss 1.8582
+  Test QWK 0.4457 | acc 0.5408
+  Round time 3.2 min
+
+[Done] fedavg_dirichlet_0.1_s2
+  Best val QWK 0.8192 at round 1 → test QWK 0.6593
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_dirichlet_0.1_s2

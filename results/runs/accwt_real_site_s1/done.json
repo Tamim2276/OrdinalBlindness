@@ -1,0 +1,23 @@
+{
+  "run_name": "accwt_real_site_s1",
+  "config": {
+    "method": "accwt",
+    "partition": "real_site",
+    "seed": 1,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "server_accuracy",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 6,
+  "best_val_qwk": 0.843764784392036,
+  "test_qwk_at_best": 0.6789056891638695,
+  "final_val_qwk": 0.8330938313751386,
+  "final_test_qwk": 0.6587767921750587,
+  "total_round_time_min": 33.98830739657084
+}

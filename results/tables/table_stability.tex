@@ -1,0 +1,17 @@
+\begin{table}[!t]
+\centering
+\caption{Stability of test QWK across the 10 rounds under extreme Dirichlet skew ($\alpha=0.1$): mean over rounds, worst round and final round. Bold: best per column.}
+\label{tab:stability}
+\begin{tabular}{lccc}
+\toprule
+Method & Mean & Worst & Final \\
+\midrule
+FedAvg & 0.535 $\pm$ 0.004 & 0.378 $\pm$ 0.035 & 0.475 $\pm$ 0.026 \\
+FedProx ($\mu=0.01$) & \textbf{0.659 $\pm$ 0.003} & \textbf{0.641 $\pm$ 0.008} & 0.650 $\pm$ 0.006 \\
+AccWt & 0.627 $\pm$ 0.011 & 0.571 $\pm$ 0.017 & 0.657 $\pm$ 0.018 \\
+\textbf{OrdinalFed (Ours)} & 0.604 $\pm$ 0.005 & 0.514 $\pm$ 0.027 & 0.652 $\pm$ 0.016 \\
+OrdinalFed + Prox ($\mu=0.01$) & 0.651 $\pm$ 0.003 & 0.627 $\pm$ 0.005 & \textbf{0.664 $\pm$ 0.013} \\
+\bottomrule
+\end{tabular}
+\\[2pt]{\footnotesize Mean $\pm$ std over 3 seeds.}
+\end{table}

@@ -1,0 +1,23 @@
+{
+  "run_name": "ordinalfed_dirichlet_0.1_s3",
+  "config": {
+    "method": "ordinalfed",
+    "partition": "dirichlet_0.1",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.5,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8178003455243971,
+  "test_qwk_at_best": 0.6427395472548229,
+  "final_val_qwk": 0.8023338320323506,
+  "final_test_qwk": 0.6507506891054373,
+  "total_round_time_min": 34.88139698108037
+}

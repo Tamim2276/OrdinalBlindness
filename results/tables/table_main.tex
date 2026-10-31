@@ -1,0 +1,19 @@
+\begin{table}[!t]
+\centering
+\caption{Test QWK (DDR test split, excluding server set $\mathcal{V}$) at the round with the best validation QWK. Bold: best FL method per column.}
+\label{tab:main}
+\begin{tabular}{lccc}
+\toprule
+Method & IID & Dirichlet ($\alpha=0.1$) & Real-Site \\
+\midrule
+Centralised (ceiling) & 0.682 & 0.682 & 0.682 \\
+\midrule
+FedAvg & 0.677 $\pm$ 0.008 & 0.647 $\pm$ 0.010 & 0.673 $\pm$ 0.004 \\
+FedProx ($\mu=0.01$) & \textbf{0.681 $\pm$ 0.014} & \textbf{0.664 $\pm$ 0.015} & 0.671 $\pm$ 0.005 \\
+AccWt & -- & 0.651 $\pm$ 0.011 & \textbf{0.674 $\pm$ 0.009} \\
+\textbf{OrdinalFed (Ours)} & 0.679 $\pm$ 0.006 & 0.640 $\pm$ 0.007 & 0.666 $\pm$ 0.002 \\
+OrdinalFed + Prox ($\mu=0.01$) & -- & 0.659 $\pm$ 0.012 & 0.672 $\pm$ 0.007 \\
+\bottomrule
+\end{tabular}
+\\[2pt]{\footnotesize Mean $\pm$ std over 3 seeds.}
+\end{table}

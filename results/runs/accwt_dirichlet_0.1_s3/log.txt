@@ -1,0 +1,134 @@
+============================================================
+  accwt_dirichlet_0.1_s3  (new run)
+  client=avg | λ=0.0 | aggregation=server_accuracy | T=10 | seed=3
+============================================================
+  Client 0: 32 train samples
+  Client 1: 337 train samples
+  Client 2: 1965 train samples
+  Client 3: 1839 train samples
+  Client 4: 2087 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.1090
+  Client 1 done | n=337 | train_loss=0.0191
+  Client 2 done | n=1965 | train_loss=0.0177
+  Client 3 done | n=1839 | train_loss=0.0084
+  Client 4 done | n=2087 | train_loss=0.0131
+  Server accuracy on V: [0.38, 0.48, 0.38, 0.36, 0.28] (4.29s for 5 clients)
+  Aggregation weights: [0.1027, 0.1304, 0.2571, 0.2463, 0.2635]  (β=0.5000)
+  Val  QWK 0.8133 | acc 0.7879 | loss 1.1924  ⭐ new best
+  Test QWK 0.6451 | acc 0.6883
+  Round time 4.5 min
+
+── Round 2/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.0367
+  Client 1 done | n=337 | train_loss=0.0273
+  Client 2 done | n=1965 | train_loss=0.0110
+  Client 3 done | n=1839 | train_loss=0.0089
+  Client 4 done | n=2087 | train_loss=0.0176
+  Server accuracy on V: [0.4, 0.44, 0.42, 0.34, 0.26] (1.14s for 5 clients)
+  Aggregation weights: [0.105, 0.1303, 0.2577, 0.2451, 0.2619]  (β=0.4924)
+  Val  QWK 0.8075 | acc 0.7627 | loss 1.1237
+  Test QWK 0.6566 | acc 0.6797
+  Round time 3.1 min
+
+── Round 3/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.1646
+  Client 1 done | n=337 | train_loss=0.0223
+  Client 2 done | n=1965 | train_loss=0.0086
+  Client 3 done | n=1839 | train_loss=0.0051
+  Client 4 done | n=2087 | train_loss=0.0104
+  Server accuracy on V: [0.4, 0.5, 0.32, 0.4, 0.26] (1.13s for 5 clients)
+  Aggregation weights: [0.1092, 0.1358, 0.2515, 0.2449, 0.2586]  (β=0.4698)
+  Val  QWK 0.7975 | acc 0.7647 | loss 1.2408
+  Test QWK 0.6178 | acc 0.6686
+  Round time 3.1 min
+
+── Round 4/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.0290
+  Client 1 done | n=337 | train_loss=0.0265
+  Client 2 done | n=1965 | train_loss=0.0033
+  Client 3 done | n=1839 | train_loss=0.0069
+  Client 4 done | n=2087 | train_loss=0.0101
+  Server accuracy on V: [0.4, 0.46, 0.4, 0.42, 0.24] (1.16s for 5 clients)
+  Aggregation weights: [0.1162, 0.1396, 0.2499, 0.2419, 0.2524]  (β=0.4330)
+  Val  QWK 0.7607 | acc 0.7263 | loss 1.2589
+  Test QWK 0.6045 | acc 0.6460
+  Round time 3.1 min
+
+── Round 5/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.1984
+  Client 1 done | n=337 | train_loss=0.0225
+  Client 2 done | n=1965 | train_loss=0.0308
+  Client 3 done | n=1839 | train_loss=0.0083
+  Client 4 done | n=2087 | train_loss=0.0043
+  Server accuracy on V: [0.38, 0.46, 0.34, 0.38, 0.26] (1.14s for 5 clients)
+  Aggregation weights: [0.126, 0.148, 0.2426, 0.2365, 0.2469]  (β=0.3830)
+  Val  QWK 0.7994 | acc 0.7483 | loss 1.2735
+  Test QWK 0.6322 | acc 0.6630
+  Round time 3.1 min
+
+── Round 6/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.0298
+  Client 1 done | n=337 | train_loss=0.0343
+  Client 2 done | n=1965 | train_loss=0.0028
+  Client 3 done | n=1839 | train_loss=0.0023
+  Client 4 done | n=2087 | train_loss=0.0201
+  Server accuracy on V: [0.38, 0.42, 0.38, 0.38, 0.26] (1.18s for 5 clients)
+  Aggregation weights: [0.1381, 0.1556, 0.2373, 0.2308, 0.2382]  (β=0.3214)
+  Val  QWK 0.7187 | acc 0.6812 | loss 1.3461
+  Test QWK 0.6198 | acc 0.6482
+  Round time 3.1 min
+
+── Round 7/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.2699
+  Client 1 done | n=337 | train_loss=0.0390
+  Client 2 done | n=1965 | train_loss=0.0098
+  Client 3 done | n=1839 | train_loss=0.0095
+  Client 4 done | n=2087 | train_loss=0.0030
+  Server accuracy on V: [0.38, 0.5, 0.32, 0.38, 0.34] (1.17s for 5 clients)
+  Aggregation weights: [0.151, 0.1693, 0.2253, 0.2232, 0.2311]  (β=0.2500)
+  Val  QWK 0.7736 | acc 0.7299 | loss 1.4711
+  Test QWK 0.6043 | acc 0.6433
+  Round time 3.1 min
+
+── Round 8/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.0020
+  Client 1 done | n=337 | train_loss=0.0145
+  Client 2 done | n=1965 | train_loss=0.0013
+  Client 3 done | n=1839 | train_loss=0.0011
+  Client 4 done | n=2087 | train_loss=0.0396
+  Server accuracy on V: [0.38, 0.36, 0.4, 0.42, 0.22] (1.15s for 5 clients)
+  Aggregation weights: [0.168, 0.1752, 0.2219, 0.2196, 0.2154]  (β=0.1710)
+  Val  QWK 0.7427 | acc 0.7219 | loss 1.2293
+  Test QWK 0.6314 | acc 0.6657
+  Round time 3.1 min
+
+── Round 9/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.2781
+  Client 1 done | n=337 | train_loss=0.0228
+  Client 2 done | n=1965 | train_loss=0.0069
+  Client 3 done | n=1839 | train_loss=0.0064
+  Client 4 done | n=2087 | train_loss=0.0028
+  Server accuracy on V: [0.4, 0.48, 0.24, 0.36, 0.32] (1.19s for 5 clients)
+  Aggregation weights: [0.1855, 0.1947, 0.2027, 0.2081, 0.2091]  (β=0.0868)
+  Val  QWK 0.7397 | acc 0.7159 | loss 1.4958
+  Test QWK 0.5770 | acc 0.6374
+  Round time 3.1 min
+
+── Round 10/10  [accwt_dirichlet_0.1_s3] ──────────
+  Client 0 done | n=32 | train_loss=0.0010
+  Client 1 done | n=337 | train_loss=0.0315
+  Client 2 done | n=1965 | train_loss=0.0011
+  Client 3 done | n=1839 | train_loss=0.0008
+  Client 4 done | n=2087 | train_loss=0.0253
+  Server accuracy on V: [0.38, 0.44, 0.32, 0.34, 0.26] (1.15s for 5 clients)
+  Aggregation weights: [0.2021, 0.2062, 0.1981, 0.1994, 0.1942]  (β=0.0000)
+  Val  QWK 0.7809 | acc 0.7391 | loss 1.2144
+  Test QWK 0.6399 | acc 0.6676
+  Round time 3.1 min
+
+[Done] accwt_dirichlet_0.1_s3
+  Best val QWK 0.8133 at round 1 → test QWK 0.6451
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_dirichlet_0.1_s3

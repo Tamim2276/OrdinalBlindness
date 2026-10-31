@@ -1,0 +1,23 @@
+{
+  "run_name": "fedprox_iid_s1",
+  "config": {
+    "method": "fedprox",
+    "partition": "iid",
+    "seed": 1,
+    "rounds": 10,
+    "client": "prox",
+    "lam": 0.0,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 9,
+  "best_val_qwk": 0.8543556923728199,
+  "test_qwk_at_best": 0.6779922818293908,
+  "final_val_qwk": 0.8512590944219286,
+  "final_test_qwk": 0.6742621412551778,
+  "total_round_time_min": 33.51215658187866
+}

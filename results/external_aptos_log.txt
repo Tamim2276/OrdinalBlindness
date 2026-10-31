@@ -1,0 +1,339 @@
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+[Device] Using XPU: Intel(R) Arc(TM) B580 Graphics
+APTOS 2019: 3662 images
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\best_centralised.pth'
+[Checkpoint] Metadata: {'epoch': 23, 'best_qwk': 0.834168}
+  centralised                          QWK 0.6406 | acc 0.5216
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_ordloss', 'seed': 1, 'round': 1, 'best_qwk': 0.8078388468904405}
+  abl_ordloss_dirichlet_0.1_s1         QWK 0.6379 | acc 0.5396
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_ordloss', 'seed': 2, 'round': 1, 'best_qwk': 0.8142625771577461}
+  abl_ordloss_dirichlet_0.1_s2         QWK 0.6031 | acc 0.4907
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_ordloss', 'seed': 3, 'round': 1, 'best_qwk': 0.8158942613697833}
+  abl_ordloss_dirichlet_0.1_s3         QWK 0.6570 | acc 0.5598
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_ordloss', 'seed': 1, 'round': 5, 'best_qwk': 0.8433105700855565}
+  abl_ordloss_real_site_s1             QWK 0.6164 | acc 0.5754
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_ordloss', 'seed': 2, 'round': 2, 'best_qwk': 0.8377916325658775}
+  abl_ordloss_real_site_s2             QWK 0.6282 | acc 0.5358
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_ordloss', 'seed': 3, 'round': 10, 'best_qwk': 0.8406165590819432}
+  abl_ordloss_real_site_s3             QWK 0.6264 | acc 0.5707
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_qwkagg_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_qwkagg', 'seed': 1, 'round': 1, 'best_qwk': 0.8232379360458171}
+  abl_qwkagg_dirichlet_0.1_s1          QWK 0.6396 | acc 0.5295
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_qwkagg_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_qwkagg', 'seed': 2, 'round': 1, 'best_qwk': 0.82068761577372}
+  abl_qwkagg_dirichlet_0.1_s2          QWK 0.6043 | acc 0.5101
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_qwkagg_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_qwkagg', 'seed': 3, 'round': 1, 'best_qwk': 0.8189361874852462}
+  abl_qwkagg_dirichlet_0.1_s3          QWK 0.6912 | acc 0.6013
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_qwkagg_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_qwkagg', 'seed': 1, 'round': 6, 'best_qwk': 0.841486111916532}
+  abl_qwkagg_real_site_s1              QWK 0.6592 | acc 0.5991
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_qwkagg_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_qwkagg', 'seed': 2, 'round': 1, 'best_qwk': 0.8461615426898634}
+  abl_qwkagg_real_site_s2              QWK 0.6269 | acc 0.5644
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_qwkagg_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_qwkagg', 'seed': 3, 'round': 9, 'best_qwk': 0.830935260004497}
+  abl_qwkagg_real_site_s3              QWK 0.5897 | acc 0.5508
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_uniform', 'seed': 1, 'round': 10, 'best_qwk': 0.8264930900446633}
+  abl_uniform_dirichlet_0.1_s1         QWK 0.5635 | acc 0.5229
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_uniform', 'seed': 2, 'round': 1, 'best_qwk': 0.8193809182141859}
+  abl_uniform_dirichlet_0.1_s2         QWK 0.6543 | acc 0.5568
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'abl_uniform', 'seed': 3, 'round': 8, 'best_qwk': 0.8185480012111876}
+  abl_uniform_dirichlet_0.1_s3         QWK 0.5207 | acc 0.4738
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_uniform', 'seed': 1, 'round': 5, 'best_qwk': 0.8391104219114941}
+  abl_uniform_real_site_s1             QWK 0.6089 | acc 0.5522
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_uniform', 'seed': 2, 'round': 1, 'best_qwk': 0.8431519390146931}
+  abl_uniform_real_site_s2             QWK 0.6091 | acc 0.5350
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\abl_uniform_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'abl_uniform', 'seed': 3, 'round': 2, 'best_qwk': 0.8385542082527506}
+  abl_uniform_real_site_s3             QWK 0.6266 | acc 0.5259
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'accwt', 'seed': 1, 'round': 1, 'best_qwk': 0.8256224565950224}
+  accwt_dirichlet_0.1_s1               QWK 0.6327 | acc 0.5270
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'accwt', 'seed': 2, 'round': 1, 'best_qwk': 0.8188760266191629}
+  accwt_dirichlet_0.1_s2               QWK 0.6147 | acc 0.5139
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'accwt', 'seed': 3, 'round': 1, 'best_qwk': 0.8133060635718201}
+  accwt_dirichlet_0.1_s3               QWK 0.6868 | acc 0.5928
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'accwt', 'seed': 1, 'round': 6, 'best_qwk': 0.843764784392036}
+  accwt_real_site_s1                   QWK 0.6481 | acc 0.5882
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'accwt', 'seed': 2, 'round': 1, 'best_qwk': 0.8451569921511359}
+  accwt_real_site_s2                   QWK 0.6210 | acc 0.5549
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\accwt_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'accwt', 'seed': 3, 'round': 10, 'best_qwk': 0.8294296654607681}
+  accwt_real_site_s3                   QWK 0.6428 | acc 0.5939
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'fedavg', 'seed': 1, 'round': 1, 'best_qwk': 0.8243292138223144}
+  fedavg_dirichlet_0.1_s1              QWK 0.6134 | acc 0.5109
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'fedavg', 'seed': 2, 'round': 1, 'best_qwk': 0.8191978361628687}
+  fedavg_dirichlet_0.1_s2              QWK 0.5712 | acc 0.4907
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+D:\OrdinalFed\OrdinalBlindness\src\model.py:83: UserWarning: get_model(pretrained=False) — model weights are random. Only use this for architecture smoke tests, never for real training.
+  warnings.warn(
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'fedavg', 'seed': 3, 'round': 1, 'best_qwk': 0.8124983719051788}
+  fedavg_dirichlet_0.1_s3              QWK 0.6832 | acc 0.5975
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_iid_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'fedavg', 'seed': 1, 'round': 3, 'best_qwk': 0.8452468793906484}
+  fedavg_iid_s1                        QWK 0.6319 | acc 0.5571
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_iid_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'fedavg', 'seed': 2, 'round': 5, 'best_qwk': 0.844918644414469}
+  fedavg_iid_s2                        QWK 0.5798 | acc 0.5440
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_iid_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'fedavg', 'seed': 3, 'round': 1, 'best_qwk': 0.8496845665422925}
+  fedavg_iid_s3                        QWK 0.6324 | acc 0.5825
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'fedavg', 'seed': 1, 'round': 8, 'best_qwk': 0.8394366086068782}
+  fedavg_real_site_s1                  QWK 0.6676 | acc 0.5937
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'fedavg', 'seed': 2, 'round': 1, 'best_qwk': 0.8450987080772785}
+  fedavg_real_site_s2                  QWK 0.6426 | acc 0.5816
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedavg_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'fedavg', 'seed': 3, 'round': 2, 'best_qwk': 0.8378438623425266}
+  fedavg_real_site_s3                  QWK 0.6569 | acc 0.5789
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'fedprox', 'seed': 1, 'round': 1, 'best_qwk': 0.8258428781747036}
+  fedprox_dirichlet_0.1_s1             QWK 0.6374 | acc 0.5423
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'fedprox', 'seed': 2, 'round': 5, 'best_qwk': 0.8245199404683823}
+  fedprox_dirichlet_0.1_s2             QWK 0.5580 | acc 0.4981
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'fedprox', 'seed': 3, 'round': 3, 'best_qwk': 0.8165635825724411}
+  fedprox_dirichlet_0.1_s3             QWK 0.6263 | acc 0.5448
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_iid_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'fedprox', 'seed': 1, 'round': 9, 'best_qwk': 0.8543556923728199}
+  fedprox_iid_s1                       QWK 0.6005 | acc 0.5467
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_iid_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'fedprox', 'seed': 2, 'round': 1, 'best_qwk': 0.8401704997743205}
+  fedprox_iid_s2                       QWK 0.6056 | acc 0.5481
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_iid_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'fedprox', 'seed': 3, 'round': 6, 'best_qwk': 0.8492138147553353}
+  fedprox_iid_s3                       QWK 0.5938 | acc 0.5552
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'fedprox', 'seed': 1, 'round': 8, 'best_qwk': 0.8380994605195142}
+  fedprox_real_site_s1                 QWK 0.6753 | acc 0.6136
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'fedprox', 'seed': 2, 'round': 3, 'best_qwk': 0.8446612407830565}
+  fedprox_real_site_s2                 QWK 0.6396 | acc 0.5855
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'fedprox', 'seed': 3, 'round': 2, 'best_qwk': 0.8346015160069274}
+  fedprox_real_site_s3                 QWK 0.6603 | acc 0.5836
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'ordinalfed', 'seed': 1, 'round': 1, 'best_qwk': 0.8116469372038898}
+  ordinalfed_dirichlet_0.1_s1          QWK 0.6387 | acc 0.5423
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'ordinalfed', 'seed': 2, 'round': 1, 'best_qwk': 0.8151949292901999}
+  ordinalfed_dirichlet_0.1_s2          QWK 0.6427 | acc 0.5401
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'ordinalfed', 'seed': 3, 'round': 1, 'best_qwk': 0.8178003455243971}
+  ordinalfed_dirichlet_0.1_s3          QWK 0.6710 | acc 0.5655
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_iid_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'ordinalfed', 'seed': 1, 'round': 4, 'best_qwk': 0.8500947235006677}
+  ordinalfed_iid_s1                    QWK 0.6021 | acc 0.5404
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_iid_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'ordinalfed', 'seed': 2, 'round': 9, 'best_qwk': 0.8429176265259068}
+  ordinalfed_iid_s2                    QWK 0.5758 | acc 0.5374
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_iid_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'iid', 'method': 'ordinalfed', 'seed': 3, 'round': 7, 'best_qwk': 0.8458326040183025}
+  ordinalfed_iid_s3                    QWK 0.6198 | acc 0.5642
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'ordinalfed_prox', 'seed': 1, 'round': 1, 'best_qwk': 0.8232623065683915}
+  ordinalfed_prox_dirichlet_0.1_s1     QWK 0.6443 | acc 0.5434
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'ordinalfed_prox', 'seed': 2, 'round': 2, 'best_qwk': 0.8150695789696896}
+  ordinalfed_prox_dirichlet_0.1_s2     QWK 0.5732 | acc 0.4874
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'ordinalfed_prox', 'seed': 3, 'round': 1, 'best_qwk': 0.8219295791779047}
+  ordinalfed_prox_dirichlet_0.1_s3     QWK 0.6652 | acc 0.5688
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'ordinalfed_prox', 'seed': 1, 'round': 7, 'best_qwk': 0.8438151308969986}
+  ordinalfed_prox_real_site_s1         QWK 0.6090 | acc 0.5584
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'ordinalfed_prox', 'seed': 2, 'round': 1, 'best_qwk': 0.8433274990138112}
+  ordinalfed_prox_real_site_s2         QWK 0.5992 | acc 0.5281
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'ordinalfed_prox', 'seed': 3, 'round': 9, 'best_qwk': 0.8350697531118872}
+  ordinalfed_prox_real_site_s3         QWK 0.5833 | acc 0.5341
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_real_site_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'ordinalfed', 'seed': 1, 'round': 4, 'best_qwk': 0.836291233463221}
+  ordinalfed_real_site_s1              QWK 0.6713 | acc 0.5956
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_real_site_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'ordinalfed', 'seed': 2, 'round': 6, 'best_qwk': 0.8397822090630496}
+  ordinalfed_real_site_s2              QWK 0.6751 | acc 0.5694
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_real_site_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'real_site', 'method': 'ordinalfed', 'seed': 3, 'round': 7, 'best_qwk': 0.8363139492669758}
+  ordinalfed_real_site_s3              QWK 0.5760 | acc 0.5303
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_beta00_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_beta00', 'seed': 1, 'round': 4, 'best_qwk': 0.818262252594836}
+  sens_beta00_dirichlet_0.1_s1         QWK 0.6221 | acc 0.5303
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_beta00_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_beta00', 'seed': 2, 'round': 2, 'best_qwk': 0.8198071712851613}
+  sens_beta00_dirichlet_0.1_s2         QWK 0.5793 | acc 0.4984
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_beta00_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_beta00', 'seed': 3, 'round': 1, 'best_qwk': 0.8199739781306387}
+  sens_beta00_dirichlet_0.1_s3         QWK 0.6888 | acc 0.5797
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_lam01_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_lam01', 'seed': 1, 'round': 1, 'best_qwk': 0.8153850334431931}
+  sens_lam01_dirichlet_0.1_s1          QWK 0.6328 | acc 0.5344
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_lam01_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_lam01', 'seed': 2, 'round': 1, 'best_qwk': 0.8216345610299124}
+  sens_lam01_dirichlet_0.1_s2          QWK 0.5957 | acc 0.5019
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_lam01_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_lam01', 'seed': 3, 'round': 1, 'best_qwk': 0.8163815106982892}
+  sens_lam01_dirichlet_0.1_s3          QWK 0.6962 | acc 0.6019
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_tau05_dirichlet_0.1_s1\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_tau05', 'seed': 1, 'round': 10, 'best_qwk': 0.8256727873929892}
+  sens_tau05_dirichlet_0.1_s1          QWK 0.6348 | acc 0.5636
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_tau05_dirichlet_0.1_s2\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_tau05', 'seed': 2, 'round': 10, 'best_qwk': 0.826393244811914}
+  sens_tau05_dirichlet_0.1_s2          QWK 0.6716 | acc 0.6212
+[Checkpoint] Loaded from 'D:\OrdinalFed\OrdinalBlindness\results\runs\sens_tau05_dirichlet_0.1_s3\best.pth'
+[Checkpoint] Metadata: {'partition': 'dirichlet_0.1', 'method': 'sens_tau05', 'seed': 3, 'round': 1, 'best_qwk': 0.8191256818360882}
+  sens_tau05_dirichlet_0.1_s3          QWK 0.6825 | acc 0.5814
+
+Saved 67 results to D:\OrdinalFed\OrdinalBlindness\results\external_aptos.json

@@ -1,0 +1,143 @@
+============================================================
+  fedprox_real_site_s1  (new run)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=1
+============================================================
+  Client 0: 2534 train samples
+  Client 1: 1351 train samples
+  Client 2: 643 train samples
+  Client 3: 1166 train samples
+  Client 4: 566 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0157
+  Client 1 done | n=1351 | train_loss=0.0253
+  Client 2 done | n=643 | train_loss=0.1073
+  Client 3 done | n=1166 | train_loss=0.0146
+  Client 4 done | n=566 | train_loss=0.0086
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8261 | acc 0.7926 | loss 1.3037  ⭐ new best
+  Test QWK 0.6616 | acc 0.6929
+  Round time 4.4 min
+
+── Round 2/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0073
+  Client 1 done | n=1351 | train_loss=0.0390
+  Client 2 done | n=643 | train_loss=0.3201
+  Client 3 done | n=1166 | train_loss=0.0196
+  Client 4 done | n=566 | train_loss=0.0076
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8341 | acc 0.7962 | loss 1.2889  ⭐ new best
+  Test QWK 0.6672 | acc 0.6953
+  Round time 3.1 min
+
+── Round 3/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0130
+  Client 1 done | n=1351 | train_loss=0.0110
+  Client 2 done | n=643 | train_loss=0.1230
+  Client 3 done | n=1166 | train_loss=0.0160
+  Client 4 done | n=566 | train_loss=0.0085
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8226 | acc 0.8018 | loss 1.3457
+  Test QWK 0.6479 | acc 0.6921
+  Round time 3.1 min
+
+── Round 4/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0150
+  Client 1 done | n=1351 | train_loss=0.0521
+  Client 2 done | n=643 | train_loss=0.1795
+  Client 3 done | n=1166 | train_loss=0.0172
+  Client 4 done | n=566 | train_loss=0.0151
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8192 | acc 0.7918 | loss 1.2994
+  Test QWK 0.6430 | acc 0.6881
+  Round time 3.1 min
+
+── Round 5/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0036
+  Client 1 done | n=1351 | train_loss=0.0059
+  Client 2 done | n=643 | train_loss=0.1935
+  Client 3 done | n=1166 | train_loss=0.0231
+  Client 4 done | n=566 | train_loss=0.0080
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8346 | acc 0.7974 | loss 1.2967  ⭐ new best
+  Test QWK 0.6699 | acc 0.6988
+  Round time 3.1 min
+
+── Round 6/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0027
+  Client 1 done | n=1351 | train_loss=0.0121
+  Client 2 done | n=643 | train_loss=0.1410
+  Client 3 done | n=1166 | train_loss=0.0174
+  Client 4 done | n=566 | train_loss=0.0069
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8282 | acc 0.7986 | loss 1.3208
+  Test QWK 0.6496 | acc 0.6908
+  Round time 3.1 min
+
+── Round 7/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0034
+  Client 1 done | n=1351 | train_loss=0.0109
+  Client 2 done | n=643 | train_loss=0.1249
+  Client 3 done | n=1166 | train_loss=0.0066
+  Client 4 done | n=566 | train_loss=0.0049
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+============================================================
+  fedprox_real_site_s1  (resuming)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=1
+============================================================
+  Client 0: 2534 train samples
+  Client 1: 1351 train samples
+  Client 2: 643 train samples
+  Client 3: 1166 train samples
+  Client 4: 566 train samples
+  Val: 2503 | Test (minus V): 3709
+[Resume] Resuming from round 7 (loaded state.pt)
+
+── Round 7/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0034
+  Client 1 done | n=1351 | train_loss=0.0113
+  Client 2 done | n=643 | train_loss=0.1248
+  Client 3 done | n=1166 | train_loss=0.0065
+  Client 4 done | n=566 | train_loss=0.0050
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8209 | acc 0.7926 | loss 1.3827
+  Test QWK 0.6488 | acc 0.6891
+  Round time 4.4 min
+
+── Round 8/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0024
+  Client 1 done | n=1351 | train_loss=0.0096
+  Client 2 done | n=643 | train_loss=0.1939
+  Client 3 done | n=1166 | train_loss=0.0188
+  Client 4 done | n=566 | train_loss=0.0057
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8381 | acc 0.8018 | loss 1.3487  ⭐ new best
+  Test QWK 0.6708 | acc 0.7013
+  Round time 3.0 min
+
+── Round 9/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0061
+  Client 1 done | n=1351 | train_loss=0.0396
+  Client 2 done | n=643 | train_loss=0.4065
+  Client 3 done | n=1166 | train_loss=0.0072
+  Client 4 done | n=566 | train_loss=0.0054
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8314 | acc 0.8010 | loss 1.3242
+  Test QWK 0.6706 | acc 0.6996
+  Round time 3.0 min
+
+── Round 10/10  [fedprox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0287
+  Client 1 done | n=1351 | train_loss=0.0166
+  Client 2 done | n=643 | train_loss=0.3371
+  Client 3 done | n=1166 | train_loss=0.0056
+  Client 4 done | n=566 | train_loss=0.0064
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8142 | acc 0.7958 | loss 1.3183
+  Test QWK 0.6488 | acc 0.6924
+  Round time 3.0 min
+
+[Done] fedprox_real_site_s1
+  Best val QWK 0.8381 at round 8 → test QWK 0.6708
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_real_site_s1

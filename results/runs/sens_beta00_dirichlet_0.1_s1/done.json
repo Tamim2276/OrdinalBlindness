@@ -1,0 +1,24 @@
+{
+  "run_name": "sens_beta00_dirichlet_0.1_s1",
+  "config": {
+    "method": "sens_beta00",
+    "partition": "dirichlet_0.1",
+    "seed": 1,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.5,
+    "aggregation": "server_qwk",
+    "beta0": 0.0,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 4,
+  "best_val_qwk": 0.818262252594836,
+  "test_qwk_at_best": 0.6554257369953365,
+  "final_val_qwk": 0.7768041212564121,
+  "final_test_qwk": 0.641631165107353,
+  "total_round_time_min": 33.970197387536366
+}

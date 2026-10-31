@@ -1,0 +1,23 @@
+{
+  "run_name": "abl_uniform_real_site_s2",
+  "config": {
+    "method": "abl_uniform",
+    "partition": "real_site",
+    "seed": 2,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "uniform",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8431519390146931,
+  "test_qwk_at_best": 0.6903193150031661,
+  "final_val_qwk": 0.820976075308506,
+  "final_test_qwk": 0.662756722628599,
+  "total_round_time_min": 34.2277449965477
+}

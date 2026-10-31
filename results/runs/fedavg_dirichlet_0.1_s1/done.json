@@ -1,0 +1,23 @@
+{
+  "run_name": "fedavg_dirichlet_0.1_s1",
+  "config": {
+    "method": "fedavg",
+    "partition": "dirichlet_0.1",
+    "seed": 1,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8243292138223144,
+  "test_qwk_at_best": 0.6426311071042392,
+  "final_val_qwk": 0.5410545118562298,
+  "final_test_qwk": 0.4962493888685824,
+  "total_round_time_min": 34.178649099667865
+}

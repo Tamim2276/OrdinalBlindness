@@ -1,0 +1,24 @@
+{
+  "run_name": "ordinalfed_prox_real_site_s1",
+  "config": {
+    "method": "ordinalfed_prox",
+    "partition": "real_site",
+    "seed": 1,
+    "rounds": 10,
+    "client": "prox",
+    "lam": 0.5,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 7,
+  "best_val_qwk": 0.8438151308969986,
+  "test_qwk_at_best": 0.6699958083822277,
+  "final_val_qwk": 0.8319336348606059,
+  "final_test_qwk": 0.6512701533507773,
+  "total_round_time_min": 35.236315139134724
+}

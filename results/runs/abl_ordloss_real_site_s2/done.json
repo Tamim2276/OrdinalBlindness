@@ -1,0 +1,23 @@
+{
+  "run_name": "abl_ordloss_real_site_s2",
+  "config": {
+    "method": "abl_ordloss",
+    "partition": "real_site",
+    "seed": 2,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.5,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 2,
+  "best_val_qwk": 0.8377916325658775,
+  "test_qwk_at_best": 0.6698111792470157,
+  "final_val_qwk": 0.8175410195224975,
+  "final_test_qwk": 0.6382585242806418,
+  "total_round_time_min": 33.7234263420105
+}

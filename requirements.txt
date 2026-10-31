@@ -60,6 +60,7 @@ pandas==2.3.3
 pathspec==0.12.1
 pillow==12.2.0
 protobuf==6.33.6
+pyarrow==25.0.1
 pycparser==3.0
 pycryptodome==3.23.0
 pyelftools==0.32

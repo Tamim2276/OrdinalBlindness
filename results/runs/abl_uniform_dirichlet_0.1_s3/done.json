@@ -1,0 +1,23 @@
+{
+  "run_name": "abl_uniform_dirichlet_0.1_s3",
+  "config": {
+    "method": "abl_uniform",
+    "partition": "dirichlet_0.1",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "uniform",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 8,
+  "best_val_qwk": 0.8185480012111876,
+  "test_qwk_at_best": 0.6769748766374207,
+  "final_val_qwk": 0.8132179179306239,
+  "final_test_qwk": 0.6676065450799269,
+  "total_round_time_min": 32.564533730347954
+}

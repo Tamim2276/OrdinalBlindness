@@ -1,0 +1,23 @@
+{
+  "run_name": "fedprox_real_site_s1",
+  "config": {
+    "method": "fedprox",
+    "partition": "real_site",
+    "seed": 1,
+    "rounds": 10,
+    "client": "prox",
+    "lam": 0.0,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 8,
+  "best_val_qwk": 0.8380994605195142,
+  "test_qwk_at_best": 0.6707663909942432,
+  "final_val_qwk": 0.8142217365766745,
+  "final_test_qwk": 0.6488499298594107,
+  "total_round_time_min": 33.346660832564034
+}

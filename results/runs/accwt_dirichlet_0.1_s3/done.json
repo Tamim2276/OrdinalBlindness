@@ -1,0 +1,23 @@
+{
+  "run_name": "accwt_dirichlet_0.1_s3",
+  "config": {
+    "method": "accwt",
+    "partition": "dirichlet_0.1",
+    "seed": 3,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "server_accuracy",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8133060635718201,
+  "test_qwk_at_best": 0.6450644196114808,
+  "final_val_qwk": 0.7809060886393822,
+  "final_test_qwk": 0.6399069579885992,
+  "total_round_time_min": 32.41139276822408
+}

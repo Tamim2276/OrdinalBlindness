@@ -1,0 +1,23 @@
+{
+  "run_name": "fedavg_iid_s1",
+  "config": {
+    "method": "fedavg",
+    "partition": "iid",
+    "seed": 1,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.0,
+    "aggregation": "samples",
+    "beta0": 0.5,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 3,
+  "best_val_qwk": 0.8452468793906484,
+  "test_qwk_at_best": 0.6699670432625452,
+  "final_val_qwk": 0.8441014437429453,
+  "final_test_qwk": 0.6674763120302567,
+  "total_round_time_min": 32.23214202721913
+}

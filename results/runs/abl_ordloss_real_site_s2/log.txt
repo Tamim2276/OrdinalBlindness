@@ -1,0 +1,124 @@
+============================================================
+  abl_ordloss_real_site_s2  (new run)
+  client=avg | λ=0.5 | aggregation=samples | T=10 | seed=2
+============================================================
+  Client 0: 2534 train samples
+  Client 1: 1351 train samples
+  Client 2: 643 train samples
+  Client 3: 1166 train samples
+  Client 4: 566 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0165
+  Client 1 done | n=1351 | train_loss=0.0166
+  Client 2 done | n=643 | train_loss=0.0715
+  Client 3 done | n=1166 | train_loss=0.0215
+  Client 4 done | n=566 | train_loss=0.0100
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8353 | acc 0.8018 | loss 1.2163  ⭐ new best
+  Test QWK 0.6693 | acc 0.7007
+  Round time 4.7 min
+
+── Round 2/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0190
+  Client 1 done | n=1351 | train_loss=0.0363
+  Client 2 done | n=643 | train_loss=0.1664
+  Client 3 done | n=1166 | train_loss=0.0186
+  Client 4 done | n=566 | train_loss=0.0204
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8378 | acc 0.7879 | loss 1.2647  ⭐ new best
+  Test QWK 0.6698 | acc 0.6932
+  Round time 3.3 min
+
+── Round 3/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0088
+  Client 1 done | n=1351 | train_loss=0.0194
+  Client 2 done | n=643 | train_loss=0.2289
+  Client 3 done | n=1166 | train_loss=0.0287
+  Client 4 done | n=566 | train_loss=0.0123
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8306 | acc 0.8030 | loss 1.3198
+  Test QWK 0.6554 | acc 0.6964
+  Round time 3.2 min
+
+── Round 4/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0104
+  Client 1 done | n=1351 | train_loss=0.0211
+  Client 2 done | n=643 | train_loss=0.2031
+  Client 3 done | n=1166 | train_loss=0.0209
+  Client 4 done | n=566 | train_loss=0.0095
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8223 | acc 0.8006 | loss 1.2956
+  Test QWK 0.6536 | acc 0.7015
+  Round time 3.2 min
+
+── Round 5/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0071
+  Client 1 done | n=1351 | train_loss=0.0302
+  Client 2 done | n=643 | train_loss=0.2077
+  Client 3 done | n=1166 | train_loss=0.0188
+  Client 4 done | n=566 | train_loss=0.0120
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8334 | acc 0.7819 | loss 1.3155
+  Test QWK 0.6659 | acc 0.6918
+  Round time 3.2 min
+
+── Round 6/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0072
+  Client 1 done | n=1351 | train_loss=0.0237
+  Client 2 done | n=643 | train_loss=0.1837
+  Client 3 done | n=1166 | train_loss=0.0155
+  Client 4 done | n=566 | train_loss=0.0086
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8337 | acc 0.8022 | loss 1.2862
+  Test QWK 0.6589 | acc 0.6991
+  Round time 3.2 min
+
+── Round 7/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0049
+  Client 1 done | n=1351 | train_loss=0.0382
+  Client 2 done | n=643 | train_loss=0.1259
+  Client 3 done | n=1166 | train_loss=0.0181
+  Client 4 done | n=566 | train_loss=0.0174
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8242 | acc 0.7851 | loss 1.3601
+  Test QWK 0.6411 | acc 0.6810
+  Round time 3.2 min
+
+── Round 8/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0044
+  Client 1 done | n=1351 | train_loss=0.0213
+  Client 2 done | n=643 | train_loss=0.0951
+  Client 3 done | n=1166 | train_loss=0.0265
+  Client 4 done | n=566 | train_loss=0.0124
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8168 | acc 0.7946 | loss 1.3432
+  Test QWK 0.6397 | acc 0.6862
+  Round time 3.2 min
+
+── Round 9/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0120
+  Client 1 done | n=1351 | train_loss=0.0058
+  Client 2 done | n=643 | train_loss=0.1777
+  Client 3 done | n=1166 | train_loss=0.0105
+  Client 4 done | n=566 | train_loss=0.0110
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8173 | acc 0.7974 | loss 1.3540
+  Test QWK 0.6422 | acc 0.6894
+  Round time 3.3 min
+
+── Round 10/10  [abl_ordloss_real_site_s2] ──────────
+  Client 0 done | n=2534 | train_loss=0.0030
+  Client 1 done | n=1351 | train_loss=0.0238
+  Client 2 done | n=643 | train_loss=0.2198
+  Client 3 done | n=1166 | train_loss=0.0244
+  Client 4 done | n=566 | train_loss=0.0163
+  Aggregation weights: [0.4048, 0.2158, 0.1027, 0.1863, 0.0904]
+  Val  QWK 0.8175 | acc 0.7978 | loss 1.3246
+  Test QWK 0.6383 | acc 0.6848
+  Round time 3.3 min
+
+[Done] abl_ordloss_real_site_s2
+  Best val QWK 0.8378 at round 2 → test QWK 0.6698
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\abl_ordloss_real_site_s2

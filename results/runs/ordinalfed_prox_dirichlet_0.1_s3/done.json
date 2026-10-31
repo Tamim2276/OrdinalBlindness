@@ -1,0 +1,24 @@
+{
+  "run_name": "ordinalfed_prox_dirichlet_0.1_s3",
+  "config": {
+    "method": "ordinalfed_prox",
+    "partition": "dirichlet_0.1",
+    "seed": 3,
+    "rounds": 10,
+    "client": "prox",
+    "lam": 0.5,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8219295791779047,
+  "test_qwk_at_best": 0.6582868774850612,
+  "final_val_qwk": 0.8215783442926945,
+  "final_test_qwk": 0.6647471992436875,
+  "total_round_time_min": 34.861860259373984
+}

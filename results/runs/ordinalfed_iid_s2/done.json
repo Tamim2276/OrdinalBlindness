@@ -1,0 +1,24 @@
+{
+  "run_name": "ordinalfed_iid_s2",
+  "config": {
+    "method": "ordinalfed",
+    "partition": "iid",
+    "seed": 2,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.5,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 9,
+  "best_val_qwk": 0.8429176265259068,
+  "test_qwk_at_best": 0.6766594842096607,
+  "final_val_qwk": 0.8330483270033662,
+  "final_test_qwk": 0.6703802359979331,
+  "total_round_time_min": 33.79985446532567
+}

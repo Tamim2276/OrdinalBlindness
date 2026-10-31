@@ -4,27 +4,51 @@ ordinalfed_env/
 venv/
 env/
 
-# Local data and downloads
-data/
+# Datasets and image caches: download them again (see SETUP.md).
+# The exact client splits and the 50-image server set ARE tracked.
+data/*
+!data/partitions/
+
+# Model checkpoints are large (about 43 MB each) and stay on your machine.
+# Everything else in results/ (metrics, logs, tables) is tracked.
+*.pth
+*.pt
+*.ckpt
+
+# Archives and rebuilt Overleaf uploads
 *.zip
 *.tar
 *.tar.gz
 
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
 # Python cache and test artifacts
 __pycache__/
 *.py[cod]
-*.pyo   
-*.pyd
 .pytest_cache/
 .ipynb_checkpoints/
 
 # Editor and OS files
 .vscode/
+.idea/
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Project-local notes and outputs
-implementation_plan.md
-*.log
-results/
-outputs/
+# Personal and conference-private documents never belong in this public repo.
+# They live in the separate private archive (OrdinalBlindness-private).
+private/
+*payment*
+*student*.pdf
+*copyright*.pdf
+*id card*/
+*id_card*/
+Screenshot*
+CMT_*

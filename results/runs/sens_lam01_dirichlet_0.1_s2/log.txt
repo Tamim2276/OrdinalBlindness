@@ -1,0 +1,144 @@
+============================================================
+  sens_lam01_dirichlet_0.1_s2  (new run)
+  client=avg | λ=0.1 | aggregation=server_qwk | T=10 | seed=2
+============================================================
+  Client 0: 32 train samples
+  Client 1: 337 train samples
+  Client 2: 1965 train samples
+  Client 3: 1839 train samples
+  Client 4: 2087 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1142
+  Client 1 done | n=337 | train_loss=0.0342
+  Client 2 done | n=1965 | train_loss=0.0157
+  Client 3 done | n=1839 | train_loss=0.0079
+  Client 4 done | n=2087 | train_loss=0.0137
+  Server qwk on V: [0.6776, 0.728, 0.5507, 0.7121, 0.5298] (4.22s for 5 clients)
+  Aggregation weights: [0.1038, 0.1299, 0.254, 0.2493, 0.2631]  (β=0.5000)
+  Val  QWK 0.8216 | acc 0.7735 | loss 1.1669  ⭐ new best
+  Test QWK 0.6671 | acc 0.6864
+  Round time 4.7 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 2/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0870
+  Client 1 done | n=337 | train_loss=0.0357
+  Client 2 done | n=1965 | train_loss=0.0050
+  Client 3 done | n=1839 | train_loss=0.0106
+  Client 4 done | n=2087 | train_loss=0.0220
+  Server qwk on V: [0.6031, 0.7712, 0.4245, 0.6992, 0.3566] (1.21s for 5 clients)
+  Aggregation weights: [0.105, 0.1349, 0.2511, 0.2505, 0.2586]  (β=0.4924)
+  Val  QWK 0.7989 | acc 0.7575 | loss 1.1788
+  Test QWK 0.6460 | acc 0.6751
+  Round time 3.4 min
+  GPU memory peak 7.0 GB reserved
+
+── Round 3/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1448
+  Client 1 done | n=337 | train_loss=0.0280
+  Client 2 done | n=1965 | train_loss=0.0142
+  Client 3 done | n=1839 | train_loss=0.0063
+  Client 4 done | n=2087 | train_loss=0.0073
+  Server qwk on V: [0.664, 0.687, 0.391, 0.7619, 0.177] (1.18s for 5 clients)
+  Aggregation weights: [0.1128, 0.1365, 0.2482, 0.252, 0.2505]  (β=0.4698)
+  Val  QWK 0.8023 | acc 0.7667 | loss 1.2276
+  Test QWK 0.6309 | acc 0.6748
+  Round time 3.3 min
+  GPU memory peak 6.8 GB reserved
+
+── Round 4/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0159
+  Client 1 done | n=337 | train_loss=0.0158
+  Client 2 done | n=1965 | train_loss=0.0032
+  Client 3 done | n=1839 | train_loss=0.0086
+  Client 4 done | n=2087 | train_loss=0.0129
+  Server qwk on V: [0.654, 0.5394, 0.5177, 0.5846, 0.281] (1.18s for 5 clients)
+  Aggregation weights: [0.1209, 0.1375, 0.2493, 0.2432, 0.2491]  (β=0.4330)
+  Val  QWK 0.8078 | acc 0.7695 | loss 1.1348
+  Test QWK 0.6609 | acc 0.6913
+  Round time 3.2 min
+  GPU memory peak 6.7 GB reserved
+
+── Round 5/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1129
+  Client 1 done | n=337 | train_loss=0.0260
+  Client 2 done | n=1965 | train_loss=0.0054
+  Client 3 done | n=1839 | train_loss=0.0079
+  Client 4 done | n=2087 | train_loss=0.0040
+  Server qwk on V: [0.6964, 0.7592, 0.2749, 0.7082, 0.2393] (1.20s for 5 clients)
+  Aggregation weights: [0.1318, 0.1532, 0.233, 0.2428, 0.2392]  (β=0.3830)
+  Val  QWK 0.7807 | acc 0.7431 | loss 1.3413
+  Test QWK 0.6055 | acc 0.6546
+  Round time 3.2 min
+  GPU memory peak 6.8 GB reserved
+
+── Round 6/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0108
+  Client 1 done | n=337 | train_loss=0.0158
+  Client 2 done | n=1965 | train_loss=0.0014
+  Client 3 done | n=1839 | train_loss=0.0015
+  Client 4 done | n=2087 | train_loss=0.0210
+  Server qwk on V: [0.6296, 0.6183, 0.5072, 0.744, 0.2261] (1.18s for 5 clients)
+  Aggregation weights: [0.141, 0.1561, 0.2347, 0.2392, 0.229]  (β=0.3214)
+  Val  QWK 0.7661 | acc 0.7295 | loss 1.2190
+  Test QWK 0.6340 | acc 0.6721
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 7/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.2406
+  Client 1 done | n=337 | train_loss=0.0249
+  Client 2 done | n=1965 | train_loss=0.0267
+  Client 3 done | n=1839 | train_loss=0.0055
+  Client 4 done | n=2087 | train_loss=0.0039
+  Server qwk on V: [0.6693, 0.6041, 0.2292, 0.685, 0.4965] (1.18s for 5 clients)
+  Aggregation weights: [0.1578, 0.1666, 0.2136, 0.2308, 0.2311]  (β=0.2500)
+  Val  QWK 0.7324 | acc 0.7263 | loss 1.4826
+  Test QWK 0.5534 | acc 0.6325
+  Round time 3.3 min
+  GPU memory peak 6.7 GB reserved
+
+── Round 8/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0019
+  Client 1 done | n=337 | train_loss=0.0307
+  Client 2 done | n=1965 | train_loss=0.0033
+  Client 3 done | n=1839 | train_loss=0.0016
+  Client 4 done | n=2087 | train_loss=0.0226
+  Server qwk on V: [0.5971, 0.6459, 0.6093, 0.7206, 0.1947] (1.24s for 5 clients)
+  Aggregation weights: [0.1688, 0.1799, 0.2223, 0.2252, 0.2038]  (β=0.1710)
+  Val  QWK 0.7873 | acc 0.7463 | loss 1.1829
+  Test QWK 0.6501 | acc 0.6781
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 9/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.2158
+  Client 1 done | n=337 | train_loss=0.0198
+  Client 2 done | n=1965 | train_loss=0.0119
+  Client 3 done | n=1839 | train_loss=0.0084
+  Client 4 done | n=2087 | train_loss=0.0027
+  Server qwk on V: [0.7206, 0.6452, 0.1156, 0.6265, 0.3175] (1.17s for 5 clients)
+  Aggregation weights: [0.1974, 0.1968, 0.1883, 0.2164, 0.2012]  (β=0.0868)
+  Val  QWK 0.7412 | acc 0.7199 | loss 1.4863
+  Test QWK 0.5609 | acc 0.6325
+  Round time 3.2 min
+  GPU memory peak 6.6 GB reserved
+
+── Round 10/10  [sens_lam01_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0015
+  Client 1 done | n=337 | train_loss=0.0168
+  Client 2 done | n=1965 | train_loss=0.0008
+  Client 3 done | n=1839 | train_loss=0.0009
+  Client 4 done | n=2087 | train_loss=0.0288
+  Server qwk on V: [0.5182, 0.6807, 0.5182, 0.753, 0.1835] (1.18s for 5 clients)
+  Aggregation weights: [0.1987, 0.2098, 0.1987, 0.2149, 0.1778]  (β=0.0000)
+  Val  QWK 0.8036 | acc 0.7567 | loss 1.1396
+  Test QWK 0.6573 | acc 0.6862
+  Round time 3.2 min
+  GPU memory peak 6.7 GB reserved
+
+[Done] sens_lam01_dirichlet_0.1_s2
+  Best val QWK 0.8216 at round 1 → test QWK 0.6671
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\sens_lam01_dirichlet_0.1_s2

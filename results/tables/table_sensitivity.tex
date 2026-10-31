@@ -1,0 +1,16 @@
+\begin{table}[!t]
+\centering
+\caption{Sensitivity of OrdinalFed to $\lambda$, $\beta_0$ and $\tau$ ($\alpha=0.1$). Default: $\lambda=0.5$, $\beta_0=0.5$, $\tau=3$.}
+\label{tab:sensitivity}
+\begin{tabular}{lccc}
+\toprule
+Setting & Mean val QWK & Test QWK & Worst val QWK \\
+\midrule
+\textbf{OrdinalFed (Ours)} & 0.761 $\pm$ 0.003 & 0.640 $\pm$ 0.007 & 0.690 $\pm$ 0.024 \\
+OrdinalFed, $\lambda=0.1$ & 0.776 $\pm$ 0.007 & 0.649 $\pm$ 0.016 & 0.719 $\pm$ 0.015 \\
+OrdinalFed, $\beta_0=0$ & 0.793 $\pm$ 0.005 & 0.658 $\pm$ 0.018 & 0.751 $\pm$ 0.007 \\
+OrdinalFed, $\tau=0.5$ & \textbf{0.795 $\pm$ 0.006} & 0.657 $\pm$ 0.019 & 0.760 $\pm$ 0.017 \\
+\bottomrule
+\end{tabular}
+\\[2pt]{\footnotesize Mean $\pm$ std over 3 seeds. Settings fixed before the runs; bold marks the selection criterion (mean validation QWK over the 10 rounds).}
+\end{table}

@@ -1,0 +1,21 @@
+\begin{table}[!t]
+\centering
+\caption{Contribution of each component and setting under $\alpha=0.1$. CE: class-weighted cross-entropy. Mean val / mean test: QWK averaged over the 10 rounds; worst test: lowest round.}
+\label{tab:ablation}
+\begin{tabular}{lccc}
+\toprule
+Configuration & Mean val & Mean test & Worst test \\
+\midrule
+CE + image-count weights (FedAvg) & 0.670 $\pm$ 0.011 & 0.535 $\pm$ 0.004 & 0.378 $\pm$ 0.035 \\
+OrdinalLoss + image-count weights & 0.659 $\pm$ 0.015 & 0.522 $\pm$ 0.011 & 0.380 $\pm$ 0.018 \\
+CE + QWK weights & 0.786 $\pm$ 0.006 & 0.633 $\pm$ 0.010 & 0.586 $\pm$ 0.006 \\
+CE + equal weights & 0.810 $\pm$ 0.007 & 0.658 $\pm$ 0.006 & 0.630 $\pm$ 0.021 \\
+\midrule
+OrdinalFed ($\lambda=0.5$, $\beta_0=0.5$, $\tau=3$) & 0.761 $\pm$ 0.003 & 0.604 $\pm$ 0.005 & 0.514 $\pm$ 0.027 \\
+\quad with $\lambda=0.1$ & 0.776 $\pm$ 0.007 & 0.622 $\pm$ 0.006 & 0.571 $\pm$ 0.019 \\
+\quad with $\beta_0=0$ & 0.793 $\pm$ 0.005 & 0.631 $\pm$ 0.009 & 0.571 $\pm$ 0.011 \\
+\quad with $\tau=0.5$ & 0.795 $\pm$ 0.006 & 0.637 $\pm$ 0.005 & 0.592 $\pm$ 0.009 \\
+\bottomrule
+\end{tabular}
+\\[2pt]{\footnotesize Mean $\pm$ std over 3 seeds. The three settings in the lower block were fixed before the runs and are compared on mean validation QWK only.}
+\end{table}

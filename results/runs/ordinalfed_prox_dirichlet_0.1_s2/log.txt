@@ -1,0 +1,134 @@
+============================================================
+  ordinalfed_prox_dirichlet_0.1_s2  (new run)
+  client=prox | λ=0.5 | aggregation=server_qwk | T=10 | seed=2
+============================================================
+  Client 0: 32 train samples
+  Client 1: 337 train samples
+  Client 2: 1965 train samples
+  Client 3: 1839 train samples
+  Client 4: 2087 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1391
+  Client 1 done | n=337 | train_loss=0.0325
+  Client 2 done | n=1965 | train_loss=0.0097
+  Client 3 done | n=1839 | train_loss=0.0090
+  Client 4 done | n=2087 | train_loss=0.0116
+  Server qwk on V: [0.6776, 0.6899, 0.4259, 0.6719, 0.6557] (4.30s for 5 clients)
+  Aggregation weights: [0.1043, 0.1291, 0.2505, 0.2484, 0.2677]  (β=0.5000)
+  Val  QWK 0.8119 | acc 0.7775 | loss 1.1767  ⭐ new best
+  Test QWK 0.6457 | acc 0.6843
+  Round time 4.6 min
+
+── Round 2/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0604
+  Client 1 done | n=337 | train_loss=0.0418
+  Client 2 done | n=1965 | train_loss=0.0035
+  Client 3 done | n=1839 | train_loss=0.0258
+  Client 4 done | n=2087 | train_loss=0.0163
+  Server qwk on V: [0.6154, 0.7773, 0.5092, 0.6877, 0.3852] (1.24s for 5 clients)
+  Aggregation weights: [0.1046, 0.1343, 0.2531, 0.2493, 0.2587]  (β=0.4924)
+  Val  QWK 0.8151 | acc 0.7743 | loss 1.1497  ⭐ new best
+  Test QWK 0.6716 | acc 0.6967
+  Round time 3.2 min
+
+── Round 3/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.1670
+  Client 1 done | n=337 | train_loss=0.0230
+  Client 2 done | n=1965 | train_loss=0.0159
+  Client 3 done | n=1839 | train_loss=0.0041
+  Client 4 done | n=2087 | train_loss=0.0082
+  Server qwk on V: [0.6891, 0.7167, 0.2868, 0.7611, 0.4526] (1.21s for 5 clients)
+  Aggregation weights: [0.1121, 0.136, 0.2434, 0.2504, 0.258]  (β=0.4698)
+  Val  QWK 0.7995 | acc 0.7667 | loss 1.2061
+  Test QWK 0.6214 | acc 0.6775
+  Round time 3.2 min
+
+── Round 4/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0123
+  Client 1 done | n=337 | train_loss=0.0138
+  Client 2 done | n=1965 | train_loss=0.0023
+  Client 3 done | n=1839 | train_loss=0.0050
+  Client 4 done | n=2087 | train_loss=0.0100
+  Server qwk on V: [0.6056, 0.6271, 0.5971, 0.684, 0.3622] (1.21s for 5 clients)
+  Aggregation weights: [0.1167, 0.1386, 0.2501, 0.2447, 0.2499]  (β=0.4330)
+  Val  QWK 0.8150 | acc 0.7671 | loss 1.1503
+  Test QWK 0.6702 | acc 0.6959
+  Round time 3.2 min
+
+── Round 5/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0625
+  Client 1 done | n=337 | train_loss=0.0140
+  Client 2 done | n=1965 | train_loss=0.0038
+  Client 3 done | n=1839 | train_loss=0.0058
+  Client 4 done | n=2087 | train_loss=0.0052
+  Server qwk on V: [0.7054, 0.6122, 0.5385, 0.7143, 0.3942] (1.21s for 5 clients)
+  Aggregation weights: [0.13, 0.1447, 0.2413, 0.2409, 0.2431]  (β=0.3830)
+  Val  QWK 0.7934 | acc 0.7483 | loss 1.2330
+  Test QWK 0.6342 | acc 0.6740
+  Round time 3.2 min
+
+── Round 6/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0176
+  Client 1 done | n=337 | train_loss=0.0131
+  Client 2 done | n=1965 | train_loss=0.0026
+  Client 3 done | n=1839 | train_loss=0.0024
+  Client 4 done | n=2087 | train_loss=0.0110
+  Server qwk on V: [0.6486, 0.5725, 0.5072, 0.6559, 0.2222] (1.21s for 5 clients)
+  Aggregation weights: [0.1431, 0.1552, 0.2358, 0.2362, 0.2298]  (β=0.3214)
+  Val  QWK 0.8115 | acc 0.7675 | loss 1.1385
+  Test QWK 0.6655 | acc 0.6978
+  Round time 3.2 min
+
+── Round 7/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0547
+  Client 1 done | n=337 | train_loss=0.0218
+  Client 2 done | n=1965 | train_loss=0.0057
+  Client 3 done | n=1839 | train_loss=0.0173
+  Client 4 done | n=2087 | train_loss=0.0027
+  Server qwk on V: [0.6802, 0.5254, 0.3028, 0.7339, 0.5503] (1.22s for 5 clients)
+  Aggregation weights: [0.1573, 0.1616, 0.216, 0.2323, 0.2328]  (β=0.2500)
+  Val  QWK 0.8039 | acc 0.7719 | loss 1.1638
+  Test QWK 0.6496 | acc 0.6891
+  Round time 3.4 min
+
+── Round 8/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0113
+  Client 1 done | n=337 | train_loss=0.0205
+  Client 2 done | n=1965 | train_loss=0.0028
+  Client 3 done | n=1839 | train_loss=0.0033
+  Client 4 done | n=2087 | train_loss=0.0145
+  Server qwk on V: [0.6279, 0.5785, 0.5236, 0.6831, 0.2667] (1.21s for 5 clients)
+  Aggregation weights: [0.1716, 0.1772, 0.2186, 0.2242, 0.2084]  (β=0.1710)
+  Val  QWK 0.8075 | acc 0.7615 | loss 1.1036
+  Test QWK 0.6743 | acc 0.6956
+  Round time 3.4 min
+
+── Round 9/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0448
+  Client 1 done | n=337 | train_loss=0.0102
+  Client 2 done | n=1965 | train_loss=0.0048
+  Client 3 done | n=1839 | train_loss=0.0026
+  Client 4 done | n=2087 | train_loss=0.0054
+  Server qwk on V: [0.6802, 0.6154, 0.4775, 0.6534, 0.272] (1.23s for 5 clients)
+  Aggregation weights: [0.1916, 0.1917, 0.2059, 0.215, 0.1958]  (β=0.0868)
+  Val  QWK 0.8060 | acc 0.7523 | loss 1.2136
+  Test QWK 0.6368 | acc 0.6689
+  Round time 3.4 min
+
+── Round 10/10  [ordinalfed_prox_dirichlet_0.1_s2] ──────────
+  Client 0 done | n=32 | train_loss=0.0040
+  Client 1 done | n=337 | train_loss=0.0109
+  Client 2 done | n=1965 | train_loss=0.0012
+  Client 3 done | n=1839 | train_loss=0.0013
+  Client 4 done | n=2087 | train_loss=0.0086
+  Server qwk on V: [0.6486, 0.6161, 0.617, 0.75, 0.336] (1.22s for 5 clients)
+  Aggregation weights: [0.2035, 0.2013, 0.2014, 0.2105, 0.1834]  (β=0.0000)
+  Val  QWK 0.8116 | acc 0.7539 | loss 1.1388
+  Test QWK 0.6774 | acc 0.6926
+  Round time 3.4 min
+
+[Done] ordinalfed_prox_dirichlet_0.1_s2
+  Best val QWK 0.8151 at round 2 → test QWK 0.6716
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_dirichlet_0.1_s2

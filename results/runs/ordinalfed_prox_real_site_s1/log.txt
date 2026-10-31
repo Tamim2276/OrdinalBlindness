@@ -1,0 +1,134 @@
+============================================================
+  ordinalfed_prox_real_site_s1  (new run)
+  client=prox | λ=0.5 | aggregation=server_qwk | T=10 | seed=1
+============================================================
+  Client 0: 2534 train samples
+  Client 1: 1351 train samples
+  Client 2: 643 train samples
+  Client 3: 1166 train samples
+  Client 4: 566 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0134
+  Client 1 done | n=1351 | train_loss=0.0244
+  Client 2 done | n=643 | train_loss=0.1223
+  Client 3 done | n=1166 | train_loss=0.0141
+  Client 4 done | n=566 | train_loss=0.0105
+  Server qwk on V: [0.5863, 0.7544, 0.5763, 0.7149, 0.7313] (4.32s for 5 clients)
+  Aggregation weights: [0.2995, 0.2106, 0.1482, 0.1945, 0.1471]  (β=0.5000)
+  Val  QWK 0.8336 | acc 0.7966 | loss 1.2461  ⭐ new best
+  Test QWK 0.6639 | acc 0.6929
+  Round time 4.7 min
+
+── Round 2/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0159
+  Client 1 done | n=1351 | train_loss=0.0332
+  Client 2 done | n=643 | train_loss=0.1090
+  Client 3 done | n=1166 | train_loss=0.0145
+  Client 4 done | n=566 | train_loss=0.0082
+  Server qwk on V: [0.5703, 0.6778, 0.4854, 0.6321, 0.7355] (1.23s for 5 clients)
+  Aggregation weights: [0.2991, 0.2097, 0.1476, 0.1936, 0.15]  (β=0.4924)
+  Val  QWK 0.8315 | acc 0.7978 | loss 1.2620
+  Test QWK 0.6579 | acc 0.6970
+  Round time 3.3 min
+
+── Round 3/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0194
+  Client 1 done | n=1351 | train_loss=0.0162
+  Client 2 done | n=643 | train_loss=0.0796
+  Client 3 done | n=1166 | train_loss=0.0152
+  Client 4 done | n=566 | train_loss=0.0045
+  Server qwk on V: [0.5128, 0.6763, 0.6847, 0.7117, 0.7094] (1.25s for 5 clients)
+  Aggregation weights: [0.2911, 0.208, 0.1552, 0.1954, 0.1503]  (β=0.4698)
+  Val  QWK 0.8381 | acc 0.8054 | loss 1.2553  ⭐ new best
+  Test QWK 0.6620 | acc 0.7010
+  Round time 3.3 min
+
+── Round 4/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0111
+  Client 1 done | n=1351 | train_loss=0.0336
+  Client 2 done | n=643 | train_loss=0.1140
+  Client 3 done | n=1166 | train_loss=0.0236
+  Client 4 done | n=566 | train_loss=0.0080
+  Server qwk on V: [0.6316, 0.5991, 0.5854, 0.6286, 0.6941] (1.21s for 5 clients)
+  Aggregation weights: [0.2888, 0.2058, 0.1563, 0.1941, 0.1551]  (β=0.4330)
+  Val  QWK 0.8363 | acc 0.8054 | loss 1.2378
+  Test QWK 0.6723 | acc 0.7056
+  Round time 3.3 min
+
+── Round 5/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0077
+  Client 1 done | n=1351 | train_loss=0.0153
+  Client 2 done | n=643 | train_loss=0.0650
+  Client 3 done | n=1166 | train_loss=0.0093
+  Client 4 done | n=566 | train_loss=0.0043
+  Server qwk on V: [0.6478, 0.6198, 0.5888, 0.6752, 0.642] (1.23s for 5 clients)
+  Aggregation weights: [0.279, 0.2054, 0.1609, 0.1964, 0.1583]  (β=0.3830)
+  Val  QWK 0.8297 | acc 0.7986 | loss 1.3146
+  Test QWK 0.6514 | acc 0.6899
+  Round time 3.4 min
+
+── Round 6/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0073
+  Client 1 done | n=1351 | train_loss=0.0313
+  Client 2 done | n=643 | train_loss=0.0684
+  Client 3 done | n=1166 | train_loss=0.0060
+  Client 4 done | n=566 | train_loss=0.0096
+  Server qwk on V: [0.6964, 0.7364, 0.6637, 0.717, 0.5418] (1.22s for 5 clients)
+  Aggregation weights: [0.2669, 0.208, 0.1684, 0.1976, 0.159]  (β=0.3214)
+  Val  QWK 0.8353 | acc 0.7942 | loss 1.2821
+  Test QWK 0.6761 | acc 0.7064
+  Round time 3.5 min
+
+── Round 7/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0043
+  Client 1 done | n=1351 | train_loss=0.0191
+  Client 2 done | n=643 | train_loss=0.2367
+  Client 3 done | n=1166 | train_loss=0.0106
+  Client 4 done | n=566 | train_loss=0.0045
+  Server qwk on V: [0.6853, 0.6154, 0.5741, 0.6339, 0.6862] (1.24s for 5 clients)
+  Aggregation weights: [0.2535, 0.2028, 0.1725, 0.1963, 0.175]  (β=0.2500)
+  Val  QWK 0.8438 | acc 0.8062 | loss 1.2764  ⭐ new best
+  Test QWK 0.6700 | acc 0.7015
+  Round time 3.5 min
+
+── Round 8/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0085
+  Client 1 done | n=1351 | train_loss=0.0028
+  Client 2 done | n=643 | train_loss=0.2127
+  Client 3 done | n=1166 | train_loss=0.0133
+  Client 4 done | n=566 | train_loss=0.0020
+  Server qwk on V: [0.5926, 0.7078, 0.5818, 0.6457, 0.6753] (1.22s for 5 clients)
+  Aggregation weights: [0.2324, 0.2064, 0.1801, 0.1979, 0.1832]  (β=0.1710)
+  Val  QWK 0.8382 | acc 0.8002 | loss 1.2854
+  Test QWK 0.6571 | acc 0.6972
+  Round time 3.5 min
+
+── Round 9/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0050
+  Client 1 done | n=1351 | train_loss=0.0446
+  Client 2 done | n=643 | train_loss=0.0744
+  Client 3 done | n=1166 | train_loss=0.0059
+  Client 4 done | n=566 | train_loss=0.0038
+  Server qwk on V: [0.5259, 0.7123, 0.7081, 0.6697, 0.6167] (1.22s for 5 clients)
+  Aggregation weights: [0.2105, 0.2054, 0.1953, 0.2002, 0.1886]  (β=0.0868)
+  Val  QWK 0.8357 | acc 0.7978 | loss 1.2511
+  Test QWK 0.6756 | acc 0.7067
+  Round time 3.5 min
+
+── Round 10/10  [ordinalfed_prox_real_site_s1] ──────────
+  Client 0 done | n=2534 | train_loss=0.0103
+  Client 1 done | n=1351 | train_loss=0.0062
+  Client 2 done | n=643 | train_loss=0.0568
+  Client 3 done | n=1166 | train_loss=0.0040
+  Client 4 done | n=566 | train_loss=0.0059
+  Server qwk on V: [0.6033, 0.6909, 0.5899, 0.6814, 0.5887] (1.23s for 5 clients)
+  Aggregation weights: [0.1981, 0.204, 0.1973, 0.2034, 0.1972]  (β=0.0000)
+  Val  QWK 0.8319 | acc 0.7982 | loss 1.2728
+  Test QWK 0.6513 | acc 0.6932
+  Round time 3.5 min
+
+[Done] ordinalfed_prox_real_site_s1
+  Best val QWK 0.8438 at round 7 → test QWK 0.6700
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\ordinalfed_prox_real_site_s1

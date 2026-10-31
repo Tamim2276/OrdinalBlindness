@@ -1,0 +1,124 @@
+============================================================
+  fedprox_iid_s1  (new run)
+  client=prox | λ=0.0 | aggregation=samples | T=10 | seed=1
+============================================================
+  Client 0: 1252 train samples
+  Client 1: 1252 train samples
+  Client 2: 1252 train samples
+  Client 3: 1252 train samples
+  Client 4: 1252 train samples
+  Val: 2503 | Test (minus V): 3709
+
+── Round 1/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0162
+  Client 1 done | n=1252 | train_loss=0.0110
+  Client 2 done | n=1252 | train_loss=0.0138
+  Client 3 done | n=1252 | train_loss=0.0116
+  Client 4 done | n=1252 | train_loss=0.0153
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8370 | acc 0.8050 | loss 1.2836  ⭐ new best
+  Test QWK 0.6754 | acc 0.7059
+  Round time 4.3 min
+
+── Round 2/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0096
+  Client 1 done | n=1252 | train_loss=0.0057
+  Client 2 done | n=1252 | train_loss=0.0072
+  Client 3 done | n=1252 | train_loss=0.0132
+  Client 4 done | n=1252 | train_loss=0.0129
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8423 | acc 0.8074 | loss 1.2918  ⭐ new best
+  Test QWK 0.6840 | acc 0.7150
+  Round time 3.1 min
+
+── Round 3/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0120
+  Client 1 done | n=1252 | train_loss=0.0070
+  Client 2 done | n=1252 | train_loss=0.0142
+  Client 3 done | n=1252 | train_loss=0.0142
+  Client 4 done | n=1252 | train_loss=0.0099
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8406 | acc 0.8042 | loss 1.3427
+  Test QWK 0.6787 | acc 0.7053
+  Round time 3.1 min
+
+── Round 4/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0038
+  Client 1 done | n=1252 | train_loss=0.0141
+  Client 2 done | n=1252 | train_loss=0.0042
+  Client 3 done | n=1252 | train_loss=0.0043
+  Client 4 done | n=1252 | train_loss=0.0054
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8432 | acc 0.8102 | loss 1.3727  ⭐ new best
+  Test QWK 0.6845 | acc 0.7126
+  Round time 3.7 min
+
+── Round 5/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0037
+  Client 1 done | n=1252 | train_loss=0.0096
+  Client 2 done | n=1252 | train_loss=0.0044
+  Client 3 done | n=1252 | train_loss=0.0146
+  Client 4 done | n=1252 | train_loss=0.0054
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8355 | acc 0.8102 | loss 1.3736
+  Test QWK 0.6765 | acc 0.7115
+  Round time 3.1 min
+
+── Round 6/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0130
+  Client 1 done | n=1252 | train_loss=0.0095
+  Client 2 done | n=1252 | train_loss=0.0057
+  Client 3 done | n=1252 | train_loss=0.0041
+  Client 4 done | n=1252 | train_loss=0.0034
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8246 | acc 0.7994 | loss 1.4523
+  Test QWK 0.6552 | acc 0.6937
+  Round time 3.3 min
+
+── Round 7/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0121
+  Client 1 done | n=1252 | train_loss=0.0072
+  Client 2 done | n=1252 | train_loss=0.0034
+  Client 3 done | n=1252 | train_loss=0.0056
+  Client 4 done | n=1252 | train_loss=0.0037
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8436 | acc 0.8094 | loss 1.4171  ⭐ new best
+  Test QWK 0.6699 | acc 0.7032
+  Round time 3.3 min
+
+── Round 8/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0049
+  Client 1 done | n=1252 | train_loss=0.0019
+  Client 2 done | n=1252 | train_loss=0.0076
+  Client 3 done | n=1252 | train_loss=0.0036
+  Client 4 done | n=1252 | train_loss=0.0072
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8391 | acc 0.8038 | loss 1.4477
+  Test QWK 0.6762 | acc 0.7075
+  Round time 3.3 min
+
+── Round 9/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0074
+  Client 1 done | n=1252 | train_loss=0.0013
+  Client 2 done | n=1252 | train_loss=0.0486
+  Client 3 done | n=1252 | train_loss=0.0032
+  Client 4 done | n=1252 | train_loss=0.0031
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8544 | acc 0.8166 | loss 1.4096  ⭐ new best
+  Test QWK 0.6780 | acc 0.7096
+  Round time 3.3 min
+
+── Round 10/10  [fedprox_iid_s1] ──────────
+  Client 0 done | n=1252 | train_loss=0.0260
+  Client 1 done | n=1252 | train_loss=0.0022
+  Client 2 done | n=1252 | train_loss=0.0026
+  Client 3 done | n=1252 | train_loss=0.0051
+  Client 4 done | n=1252 | train_loss=0.0111
+  Aggregation weights: [0.2, 0.2, 0.2, 0.2, 0.2]
+  Val  QWK 0.8513 | acc 0.8178 | loss 1.4197
+  Test QWK 0.6743 | acc 0.7102
+  Round time 3.4 min
+
+[Done] fedprox_iid_s1
+  Best val QWK 0.8544 at round 9 → test QWK 0.6780
+  Results: D:\OrdinalFed\OrdinalBlindness\results\runs\fedprox_iid_s1

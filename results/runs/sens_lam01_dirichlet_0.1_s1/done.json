@@ -1,0 +1,24 @@
+{
+  "run_name": "sens_lam01_dirichlet_0.1_s1",
+  "config": {
+    "method": "sens_lam01",
+    "partition": "dirichlet_0.1",
+    "seed": 1,
+    "rounds": 10,
+    "client": "avg",
+    "lam": 0.1,
+    "aggregation": "server_qwk",
+    "beta0": 0.5,
+    "tau": 3.0,
+    "mu": 0.01,
+    "num_clients": 5,
+    "local_epochs": 5,
+    "batch_size": 64
+  },
+  "best_round": 1,
+  "best_val_qwk": 0.8153850334431931,
+  "test_qwk_at_best": 0.6402301940287922,
+  "final_val_qwk": 0.7966874480856239,
+  "final_test_qwk": 0.656889414553236,
+  "total_round_time_min": 33.58596303462982
+}
